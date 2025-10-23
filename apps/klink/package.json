@@ -13,13 +13,15 @@
     "test:run": "vitest run"
   },
   "dependencies": {
+    "@atcute/atproto": "^3.1.8",
+    "@atcute/client": "^4.0.3",
+    "@atcute/lexicons": "^1.2.2",
+    "@atcute/oauth-browser-client": "^1.0.26",
+    "@heroicons/react": "^2.2.0",
     "@klink-app/lexicon": "workspace:*",
     "@kpaste-app/atproto-auth": "^0.1.0",
     "@kpaste-app/atproto-utils": "^0.1.0",
     "@kpaste-app/ui": "^0.1.1",
-    "@atcute/client": "^4.0.3",
-    "@atcute/oauth-browser-client": "^1.0.26",
-    "@heroicons/react": "^2.2.0",
     "@tamagui/button": "^1.134.0",
     "@tamagui/card": "^1.134.0",
     "@tamagui/config": "^1.134.0",

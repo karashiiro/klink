@@ -14,9 +14,15 @@ importers:
 
   apps/klink:
     dependencies:
+      '@atcute/atproto':
+        specifier: ^3.1.8
+        version: 3.1.8
       '@atcute/client':
         specifier: ^4.0.3
         version: 4.0.5
+      '@atcute/lexicons':
+        specifier: ^1.2.2
+        version: 1.2.2
       '@atcute/oauth-browser-client':
         specifier: ^1.0.26
         version: 1.0.27
@@ -165,6 +171,9 @@ packages:
 
   '@asamuzakjp/css-color@3.2.0':
     resolution: {integrity: sha512-K1A6z8tS3XsmCMM86xoWdn7Fkdn9m6RSVtocUrJYIwZnFVkng/PvkEoWtOWmP+Scc6saYWHWZYbndEEXxl24jw==}
+
+  '@atcute/atproto@3.1.8':
+    resolution: {integrity: sha512-Miu+S7RSgAYbmQWtHJKfSFUN5Kliqoo4YH0rILPmBtfmlZieORJgXNj9oO/Uive0/ulWkiRse07ATIcK8JxMnw==}
 
   '@atcute/client@4.0.5':
     resolution: {integrity: sha512-R8Qen8goGmEkynYGg2m6XFlVmz0GTDvQ+9w+4QqOob+XMk8/WDpF4aImev7WKEde/rV2gjcqW7zM8E6W9NShDA==}
@@ -3491,6 +3500,10 @@ snapshots:
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
       lru-cache: 10.4.3
+
+  '@atcute/atproto@3.1.8':
+    dependencies:
+      '@atcute/lexicons': 1.2.2
 
   '@atcute/client@4.0.5':
     dependencies:
