@@ -4,17 +4,37 @@ import { createHashRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { TamaguiProvider, createTamagui, Theme } from "@tamagui/core";
 import { defaultConfig } from "@tamagui/config/v4";
-import { LoadingFallback } from "@kpaste-app/ui";
-import { ErrorBoundary } from "react-error-boundary";
+import { LoadingFallback, AppErrorBoundary } from "@kpaste-app/ui";
 
-const App = lazy(() => import("./App.tsx").then((m) => ({ default: m.App })));
+function reloadOnFailure() {
+  // Reload since this is usually due to a redeployment causing chunk load failures
+  window.location.reload();
+  return {
+    // Not actually rendered, just for type checking
+    default: () => <span>Reloading...</span>,
+  };
+}
+
+const App = lazy(() =>
+  import("./App.tsx")
+    .then((m) => ({
+      default: m.App,
+    }))
+    .catch(reloadOnFailure),
+);
 const Home = lazy(() =>
-  import("./components/pages/Home.tsx").then((m) => ({ default: m.Home })),
+  import("./components/pages/Home.tsx")
+    .then((m) => ({
+      default: m.Home,
+    }))
+    .catch(reloadOnFailure),
 );
 const OAuthCallbackHash = lazy(() =>
-  import("./components/pages/OAuthCallbackHash.tsx").then((m) => ({
-    default: m.OAuthCallbackHash,
-  })),
+  import("./components/pages/OAuthCallbackHash.tsx")
+    .then((m) => ({
+      default: m.OAuthCallbackHash,
+    }))
+    .catch(reloadOnFailure),
 );
 
 const tamaguiConfig = createTamagui({
@@ -120,19 +140,12 @@ const router = createHashRouter(
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ErrorBoundary
-      fallback={
-        <div style={{ padding: "20px", color: "white" }}>
-          <h1>Something went wrong!</h1>
-          <p>Check the console for errors.</p>
-        </div>
-      }
-    >
+    <AppErrorBoundary>
       <TamaguiProvider config={tamaguiConfig}>
         <Theme name="dark">
           <RouterProvider router={router} />
         </Theme>
       </TamaguiProvider>
-    </ErrorBoundary>
+    </AppErrorBoundary>
   </StrictMode>,
 );
