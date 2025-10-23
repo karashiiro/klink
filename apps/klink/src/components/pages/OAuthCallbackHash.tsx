@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { YStack } from "@tamagui/stacks";
 import { H2 } from "@tamagui/text";
@@ -9,26 +9,33 @@ export function OAuthCallbackHash() {
   const navigate = useNavigate();
   const { handleOAuthCallback } = useAuth();
 
+  // Helper function to handle navigation with return URL cleanup
+  const navigateWithReturnUrl = useCallback(
+    (defaultPath: string = "/") => {
+      const returnUrl = localStorage.getItem("kpaste_return_url");
+      localStorage.removeItem("kpaste_return_url");
+      navigate(returnUrl || defaultPath, { replace: true });
+    },
+    [navigate],
+  );
+
   useEffect(() => {
     const processCallback = async () => {
       try {
         // Retrieve OAuth parameters from localStorage
-        const storedData = localStorage.getItem("klink_oauth_callback");
-
-        if (!storedData) {
-          console.error("No OAuth callback data found");
-          navigate("/");
+        const oauthDataStr = localStorage.getItem("klink_oauth_callback");
+        if (!oauthDataStr) {
+          navigateWithReturnUrl();
           return;
         }
 
-        const { params, timestamp } = JSON.parse(storedData);
+        const { params, timestamp } = JSON.parse(oauthDataStr);
 
         // Check if the data is not too old (5 minutes)
         const now = Date.now();
         if (now - timestamp > 5 * 60 * 1000) {
-          console.error("OAuth callback data expired");
           localStorage.removeItem("klink_oauth_callback");
-          navigate("/");
+          navigateWithReturnUrl();
           return;
         }
 
@@ -41,16 +48,20 @@ export function OAuthCallbackHash() {
         // Handle the OAuth callback
         await handleOAuthCallback(oauthParams);
 
-        // Navigate to home page after successful authentication
-        navigate("/");
-      } catch (error) {
-        console.error("Error processing OAuth callback:", error);
-        navigate("/");
+        // Small delay to ensure auth state is updated
+        setTimeout(() => {
+          navigateWithReturnUrl();
+        }, 100);
+      } catch {
+        // Redirect to original page after delay
+        setTimeout(() => {
+          navigateWithReturnUrl();
+        }, 3000);
       }
     };
 
     processCallback();
-  }, [handleOAuthCallback, navigate]);
+  }, [handleOAuthCallback, navigateWithReturnUrl]);
 
   return (
     <YStack

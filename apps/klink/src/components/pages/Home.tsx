@@ -4,9 +4,11 @@ import { Button } from "@tamagui/button";
 import { Card } from "@tamagui/card";
 import { useAuth } from "@kpaste-app/atproto-auth";
 import { Loader } from "@tamagui/lucide-icons";
+import { useAuthModal } from "@kpaste-app/ui";
 
 export function Home() {
   const { authState, startLogin, logout, session } = useAuth();
+  const { openAuthModal } = useAuthModal();
 
   return (
     <YStack
@@ -50,7 +52,7 @@ export function Home() {
               pressStyle={{ backgroundColor: "$greenPress" }}
               color="$greenText"
               fontWeight="bold"
-              onPress={() => startLogin({ handle: "user.bsky.social" })}
+              onPress={openAuthModal}
               width="100%"
             >
               Login with ATProto
