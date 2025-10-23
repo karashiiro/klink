@@ -1,0 +1,15 @@
+{
+  "client_id": "https://klink.krs.moe/oauth-client-metadata.json",
+  "client_name": "KLink",
+  "client_uri": "https://klink.krs.moe",
+  "logo_uri": "https://klink.krs.moe/klink.webp",
+  "tos_uri": "https://klink.krs.moe",
+  "policy_uri": "https://klink.krs.moe",
+  "redirect_uris": ["https://klink.krs.moe/oauth/callback.html"],
+  "scope": "atproto transition:generic",
+  "grant_types": ["authorization_code", "refresh_token"],
+  "response_types": ["code"],
+  "application_type": "web",
+  "token_endpoint_auth_method": "none",
+  "dpop_bound_access_tokens": true
+}

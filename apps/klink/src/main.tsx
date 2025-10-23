@@ -1,0 +1,138 @@
+import { StrictMode, lazy, Suspense } from "react";
+import { createRoot } from "react-dom/client";
+import { createHashRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
+import { TamaguiProvider, createTamagui, Theme } from "@tamagui/core";
+import { defaultConfig } from "@tamagui/config/v4";
+import { LoadingFallback } from "@kpaste-app/ui";
+import { ErrorBoundary } from "react-error-boundary";
+
+const App = lazy(() => import("./App.tsx").then((m) => ({ default: m.App })));
+const Home = lazy(() =>
+  import("./components/pages/Home.tsx").then((m) => ({ default: m.Home })),
+);
+const OAuthCallbackHash = lazy(() =>
+  import("./components/pages/OAuthCallbackHash.tsx").then((m) => ({
+    default: m.OAuthCallbackHash,
+  })),
+);
+
+const tamaguiConfig = createTamagui({
+  ...defaultConfig,
+  themes: {
+    ...defaultConfig.themes,
+    dark: {
+      ...defaultConfig.themes.dark,
+      // Background color
+      background: "hsla(249, 17%, 16%, 1.00)",
+
+      // Primary colors (header/accent)
+      primary: "#364163",
+
+      // Golden/accent colors
+      accent: "#a58431", // rgba(165, 132, 49, 1)
+      accentOverlay: "rgba(221, 189, 158, 1)", // transparent accent for loading overlay
+      accentText: "#534116", // rgba(83, 65, 22, 1)
+
+      // Green colors
+      greenBase: "rgba(124, 255, 104, 1)", // soft green base color
+      greenHover: "rgba(101, 233, 81, 1)", // slightly darker green for hover
+      greenPress: "rgba(78, 197, 60, 1)", // darker green for press
+      greenText: "rgba(29, 94, 19, 1)", // darker green for text on green backgrounds
+      greenDisabled: "rgba(124, 255, 104, 0.5)", // faded green for disabled state
+
+      // Blue colors
+      blueBase: "rgba(61, 154, 253, 1)", // soft sky blue base color
+      blueHover: "rgba(44, 130, 223, 1)", // slightly darker blue for hover
+      bluePress: "rgba(31, 110, 196, 1)", // darker blue for press
+      blueText: "rgba(30, 68, 114, 1)", // darker blue for text on blue backgrounds
+      blueDisabled: "rgba(61, 154, 253, 0.5)", // faded blue for disabled state
+
+      // Yellow colors (for create button)
+      yellowBase: "#F4D03F", // bright sunny yellow base
+      yellowHover: "#F1C40F", // golden yellow for hover
+      yellowPress: "#D4AC0D", // deeper gold for press
+      yellowText: "#4A3D08", // dark golden text for readability
+
+      // Red colors (for delete button)
+      redBase: "#E74C3C", // bright red base
+      redHover: "#C0392B", // darker red for hover
+      redPress: "#A93226", // deep red for press
+      redText: "#640000",
+
+      // Overlay colors
+      overlay: "rgba(255, 255, 255, 0.1)",
+
+      // Shadow colors
+      shadow: "rgba(0, 0, 0, 0.25)",
+
+      // Text colors
+      textTitle: "#ecf1ff",
+      textMuted: "#999999",
+
+      // InsetCard styling
+      insetCardBackground: "#364163", // background for the outer card
+      insetCardPublicBackground: "#F7A5A5", // cute peachy-pink for public cards
+      insetCardBorderRadius: "12px", // outer border radius
+      insetCardInnerRadius: "8px", // inner border radius
+      insetCardBorderWidth: "2px", // border thickness
+      insetCardPadding: "$2", // default inset padding
+    },
+  },
+});
+
+const router = createHashRouter(
+  [
+    {
+      path: "/",
+      element: (
+        <Suspense fallback={<LoadingFallback />}>
+          <App />
+        </Suspense>
+      ),
+      HydrateFallback: LoadingFallback,
+      children: [
+        {
+          index: true,
+          element: (
+            <Suspense fallback={<LoadingFallback />}>
+              <Home />
+            </Suspense>
+          ),
+        },
+        {
+          path: "oauth-callback",
+          element: (
+            <Suspense fallback={<LoadingFallback />}>
+              <OAuthCallbackHash />
+            </Suspense>
+          ),
+        },
+      ],
+    },
+  ],
+  {
+    future: {
+      v7_partialHydration: true,
+    },
+  },
+);
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <ErrorBoundary
+      fallback={
+        <div style={{ padding: "20px", color: "white" }}>
+          <h1>Something went wrong!</h1>
+          <p>Check the console for errors.</p>
+        </div>
+      }
+    >
+      <TamaguiProvider config={tamaguiConfig}>
+        <Theme name="dark">
+          <RouterProvider router={router} />
+        </Theme>
+      </TamaguiProvider>
+    </ErrorBoundary>
+  </StrictMode>,
+);
