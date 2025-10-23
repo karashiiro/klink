@@ -5,6 +5,8 @@ import { RouterProvider } from "react-router/dom";
 import { TamaguiProvider, createTamagui, Theme } from "@tamagui/core";
 import { defaultConfig } from "@tamagui/config/v4";
 import { LoadingFallback, AppErrorBoundary } from "@kpaste-app/ui";
+import { resolveUser, getRecord } from "@kpaste-app/atproto-utils";
+import type { Main } from "@klink-app/lexicon/types";
 
 function reloadOnFailure() {
   // Reload since this is usually due to a redeployment causing chunk load failures
@@ -36,6 +38,42 @@ const OAuthCallbackHash = lazy(() =>
     }))
     .catch(reloadOnFailure),
 );
+const ProfileView = lazy(() =>
+  import("./components/pages/ProfileView.tsx")
+    .then((m) => ({
+      default: m.ProfileView,
+    }))
+    .catch(reloadOnFailure),
+);
+
+// Profile loader function
+async function profileLoader({ params }: { params: { handle: string } }) {
+  try {
+    const { handle } = params;
+
+    // Resolve handle to DID and PDS
+    const { did, pdsUrl } = await resolveUser(handle);
+
+    // Get the profile record (always at "self")
+    const record = await getRecord(
+      pdsUrl,
+      "moe.karashiiro.klink.profile",
+      did,
+      "self",
+    );
+
+    return {
+      uri: record.uri,
+      cid: record.cid ?? "",
+      value: record.value as Main,
+    };
+  } catch (err) {
+    console.error("Failed to fetch profile:", err);
+
+    // Return null if profile doesn't exist (404) or other errors
+    return null;
+  }
+}
 
 const tamaguiConfig = createTamagui({
   ...defaultConfig,
@@ -127,6 +165,15 @@ const router = createHashRouter(
               <OAuthCallbackHash />
             </Suspense>
           ),
+        },
+        {
+          path: "p/:handle",
+          element: (
+            <Suspense fallback={<LoadingFallback />}>
+              <ProfileView />
+            </Suspense>
+          ),
+          loader: profileLoader,
         },
       ],
     },
