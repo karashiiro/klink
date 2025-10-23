@@ -1,0 +1,159 @@
+{
+  "lexicon": 1,
+  "id": "moe.karashiiro.klink.profile",
+  "description": "Record representing a user's link profile",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "literal:self",
+      "record": {
+        "type": "object",
+        "description": "A user's link profile with bio and links",
+        "required": ["bio", "background", "links"],
+        "properties": {
+          "profileImage": {
+            "type": "union",
+            "description": "Profile image as URL or blob",
+            "refs": ["#urlImage", "#blobImage"]
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name",
+            "maxLength": 100
+          },
+          "location": {
+            "type": "string",
+            "description": "Location text",
+            "maxLength": 100
+          },
+          "bio": {
+            "type": "string",
+            "description": "Bio text (empty string if not set)",
+            "maxLength": 500,
+            "default": ""
+          },
+          "background": {
+            "type": "union",
+            "description": "Background as color, URL, or blob",
+            "refs": ["#colorBackground", "#urlBackground", "#blobBackground"]
+          },
+          "links": {
+            "type": "array",
+            "description": "Array of links",
+            "items": {
+              "type": "ref",
+              "ref": "#link"
+            }
+          }
+        }
+      }
+    },
+    "urlImage": {
+      "type": "object",
+      "description": "Image from external URL",
+      "required": ["type", "value"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "url"
+        },
+        "value": {
+          "type": "string",
+          "format": "uri",
+          "description": "Image URL",
+          "maxLength": 2000
+        }
+      }
+    },
+    "blobImage": {
+      "type": "object",
+      "description": "Image from blob storage",
+      "required": ["type", "value"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "blob"
+        },
+        "value": {
+          "type": "blob",
+          "description": "Blob reference to image",
+          "accept": ["image/png", "image/jpeg", "image/webp", "image/gif"],
+          "maxSize": 5000000
+        }
+      }
+    },
+    "colorBackground": {
+      "type": "object",
+      "description": "Solid color background",
+      "required": ["type", "value"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "color"
+        },
+        "value": {
+          "type": "string",
+          "description": "Hex color code",
+          "maxLength": 20
+        }
+      }
+    },
+    "urlBackground": {
+      "type": "object",
+      "description": "Background image from URL",
+      "required": ["type", "value"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "url"
+        },
+        "value": {
+          "type": "string",
+          "format": "uri",
+          "description": "Background image URL",
+          "maxLength": 2000
+        }
+      }
+    },
+    "blobBackground": {
+      "type": "object",
+      "description": "Background image from blob",
+      "required": ["type", "value"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "blob"
+        },
+        "value": {
+          "type": "blob",
+          "description": "Blob reference to background image",
+          "accept": ["image/png", "image/jpeg", "image/webp", "image/gif"],
+          "maxSize": 10000000
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "description": "A single link",
+      "required": ["label", "href"],
+      "properties": {
+        "icon": {
+          "type": "union",
+          "description": "Icon as URL or blob",
+          "refs": ["#urlImage", "#blobImage"]
+        },
+        "label": {
+          "type": "string",
+          "description": "Link display text",
+          "maxLength": 100
+        },
+        "href": {
+          "type": "string",
+          "format": "uri",
+          "description": "Link URL",
+          "maxLength": 2000
+        }
+      }
+    }
+  }
+}

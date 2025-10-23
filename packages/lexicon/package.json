@@ -1,0 +1,44 @@
+{
+  "name": "@klink-app/lexicon",
+  "version": "0.1.0",
+  "description": "ATProto lexicon types for KLink",
+  "type": "module",
+  "main": "./src/lexicons/index.ts",
+  "types": "./src/lexicons/index.ts",
+  "exports": {
+    ".": "./src/lexicons/index.ts",
+    "./types": "./src/lexicons/types/moe/karashiiro/klink/profile.ts"
+  },
+  "files": [
+    "src",
+    "lexicons",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "generate": "lex-cli generate -c ./lex.config.js",
+    "publish-lexicon": "node scripts/publish-lexicon.js"
+  },
+  "keywords": [
+    "atproto",
+    "lexicon",
+    "klink",
+    "links",
+    "profile",
+    "bluesky"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karashiiro/klink.git",
+    "directory": "packages/lexicon"
+  },
+  "author": "karashiiro",
+  "license": "MIT",
+  "devDependencies": {
+    "@atcute/lex-cli": "^2.2.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@atcute/lexicons": "^1.2.2"
+  }
+}

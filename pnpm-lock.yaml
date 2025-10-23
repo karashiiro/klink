@@ -23,6 +23,9 @@ importers:
       '@heroicons/react':
         specifier: ^2.2.0
         version: 2.2.0(react@19.2.0)
+      '@klink-app/lexicon':
+        specifier: workspace:*
+        version: link:../../packages/lexicon
       '@kpaste-app/atproto-auth':
         specifier: ^0.1.0
         version: 0.1.0(@atcute/client@4.0.5)(@atcute/oauth-browser-client@1.0.27)(react@19.2.0)
@@ -139,6 +142,19 @@ importers:
         specifier: ^3.0.4
         version: 3.2.4(@types/node@24.9.1)(jsdom@26.1.0)(terser@5.44.0)(yaml@2.8.1)
 
+  packages/lexicon:
+    dependencies:
+      '@atcute/lexicons':
+        specifier: ^1.2.2
+        version: 1.2.2
+    devDependencies:
+      '@atcute/lex-cli':
+        specifier: ^2.2.0
+        version: 2.3.0(typescript@5.7.3)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.7.3
+
   packages/tsconfig: {}
 
 packages:
@@ -155,6 +171,13 @@ packages:
 
   '@atcute/identity@1.1.1':
     resolution: {integrity: sha512-zax42n693VEhnC+5tndvO2KLDTMkHOz8UExwmklvJv7R9VujfEwiSWhcv6Jgwb3ellaG8wjiQ1lMOIjLLvwh0Q==}
+
+  '@atcute/lex-cli@2.3.0':
+    resolution: {integrity: sha512-ax8QgLJ7NTPMXV/fOt84IN7t8hydT8UZ3OUiDxKCYIoALTdtEs/2EZqMglij9KtppfipGqrH/qQOgqXKVi2FVg==}
+    hasBin: true
+
+  '@atcute/lexicon-doc@1.1.3':
+    resolution: {integrity: sha512-HlQBmB4NCZPzREyVzr7lzjRxSiRHook2xfa7DgA3dk3oYZ+KnnPEtS6M1sAmAAddtUdrOrJ+0xJPQHkfElZmpQ==}
 
   '@atcute/lexicons@1.2.2':
     resolution: {integrity: sha512-bgEhJq5Z70/0TbK5sx+tAkrR8FsCODNiL2gUEvS5PuJfPxmFmRYNWaMGehxSPaXWpU2+Oa9ckceHiYbrItDTkA==}
@@ -840,6 +863,14 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@optique/core@0.6.1':
+    resolution: {integrity: sha512-e3J5zCL9aBAheZkLgYUoeAt1wKSkFbSn0+h0kB4VYabOGUnesVuSxZe00BY4jLnXr36HqaSf6ZTJi8bxbLH0Zg==}
+    engines: {bun: '>=1.2.0', deno: '>=2.3.0', node: '>=20.0.0'}
+
+  '@optique/run@0.6.1':
+    resolution: {integrity: sha512-P3E5ZAAwhAg8RYp2M4MPtwUr1wdZD7/IxHGKwW+Ie8eFbmfXnfvrygyqh5At0mQXVxbzKYlVrfl1vdoKVoxD7Q==}
+    engines: {bun: '>=1.2.0', deno: '>=2.3.0', node: '>=20.0.0'}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -3232,6 +3263,14 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
+  valibot@1.1.0:
+    resolution: {integrity: sha512-Nk8lX30Qhu+9txPYTwM0cFlWLdPFsFr6LblzqIySfbZph9+BFsAHsNvHOymEviUepeIW6KFHzpX8TKhbptBXXw==}
+    peerDependencies:
+      typescript: '>=5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   vite-node@3.2.4:
     resolution: {integrity: sha512-EbKSKh+bh1E1IFxeO0pg1n4dvoOTt0UDiXMd/qn++r98+jPO1xtJilvXldeuQ8giIB5IkpjCgMleHMNEsGH6pg==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
@@ -3461,6 +3500,22 @@ snapshots:
   '@atcute/identity@1.1.1':
     dependencies:
       '@atcute/lexicons': 1.2.2
+      '@badrap/valita': 0.4.6
+
+  '@atcute/lex-cli@2.3.0(typescript@5.7.3)':
+    dependencies:
+      '@atcute/lexicon-doc': 1.1.3
+      '@badrap/valita': 0.4.6
+      '@optique/core': 0.6.1
+      '@optique/run': 0.6.1
+      picocolors: 1.1.1
+      prettier: 3.6.2
+      valibot: 1.1.0(typescript@5.7.3)
+    transitivePeerDependencies:
+      - typescript
+
+  '@atcute/lexicon-doc@1.1.3':
+    dependencies:
       '@badrap/valita': 0.4.6
 
   '@atcute/lexicons@1.2.2':
@@ -4186,6 +4241,12 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
+
+  '@optique/core@0.6.1': {}
+
+  '@optique/run@0.6.1':
+    dependencies:
+      '@optique/core': 0.6.1
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -7100,6 +7161,10 @@ snapshots:
       punycode: 2.3.1
 
   utils-merge@1.0.1: {}
+
+  valibot@1.1.0(typescript@5.7.3):
+    optionalDependencies:
+      typescript: 5.7.3
 
   vite-node@3.2.4(@types/node@24.9.1)(terser@5.44.0)(yaml@2.8.1):
     dependencies:
