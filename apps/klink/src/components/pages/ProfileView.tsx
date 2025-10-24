@@ -111,25 +111,29 @@ export function ProfileView() {
                       window.open(link.href, "_blank");
                     }
                   }}
+                  icon={
+                    <>
+                      {link.icon && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: "12px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        >
+                          <AtProtoImage
+                            image={link.icon}
+                            pdsUrl={pdsUrl}
+                            did={did}
+                            width={40}
+                            height={40}
+                          />
+                        </div>
+                      )}
+                    </>
+                  }
                 >
-                  {link.icon && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: "12px",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                      }}
-                    >
-                      <AtProtoImage
-                        image={link.icon}
-                        pdsUrl={pdsUrl}
-                        did={did}
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                  )}
                   <Paragraph color="white" fontWeight="bold">
                     {link.label}
                   </Paragraph>
