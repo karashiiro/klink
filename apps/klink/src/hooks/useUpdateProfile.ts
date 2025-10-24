@@ -7,7 +7,13 @@ export interface UpdateProfileForm {
   name?: string;
   location?: string;
   bio: string;
-  background: { type: "color" | "url" | "blob"; value: string | Blob };
+  background:
+    | { type: "color"; value: string }
+    | {
+        type: "url" | "blob";
+        value: string | Blob;
+        objectFit?: "cover" | "contain" | "fill" | "scale-down" | "none";
+      };
   links: Array<{
     icon?: { type: "url" | "blob"; value: string | Blob };
     label: string;
@@ -45,7 +51,14 @@ export function useUpdateProfile() {
               value: image.value as `${string}:${string}`,
             };
           }
-          // Upload blob
+          // Check if this is already an ATProto blob reference (has ref.$link)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if ((image.value as any)?.ref?.$link) {
+            // Already a blob reference, return as-is
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return image as any;
+          }
+          // Upload new blob
           const blobResponse = await client.post(
             "com.atproto.repo.uploadBlob",
             {

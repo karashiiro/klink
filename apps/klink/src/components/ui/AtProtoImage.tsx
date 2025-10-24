@@ -1,7 +1,7 @@
 import { Image } from "@tamagui/image";
 import type { Main } from "@klink-app/lexicon/types";
 
-interface ProfileImageProps {
+interface AtProtoImageProps {
   image: Main["profileImage"];
   pdsUrl: string;
   did: string;
@@ -10,14 +10,14 @@ interface ProfileImageProps {
   borderRadius?: number;
 }
 
-export function ProfileImage({
+export function AtProtoImage({
   image,
   pdsUrl,
   did,
   width,
   height,
   borderRadius,
-}: ProfileImageProps) {
+}: AtProtoImageProps) {
   if (!image) return null;
 
   const imageUrl =

@@ -6,6 +6,20 @@ const _blobBackgroundSchema = /*#__PURE__*/ v.object({
   $type: /*#__PURE__*/ v.optional(
     /*#__PURE__*/ v.literal("moe.karashiiro.klink.profile#blobBackground"),
   ),
+  /**
+   * CSS object-fit property for background image
+   * @default "cover"
+   */
+  objectFit: /*#__PURE__*/ v.optional(
+    /*#__PURE__*/ v.literalEnum([
+      "contain",
+      "cover",
+      "fill",
+      "none",
+      "scale-down",
+    ]),
+    "cover",
+  ),
   type: /*#__PURE__*/ v.literal("blob"),
   /**
    * Blob reference to background image
@@ -128,6 +142,20 @@ const _mainSchema = /*#__PURE__*/ v.record(
 const _urlBackgroundSchema = /*#__PURE__*/ v.object({
   $type: /*#__PURE__*/ v.optional(
     /*#__PURE__*/ v.literal("moe.karashiiro.klink.profile#urlBackground"),
+  ),
+  /**
+   * CSS object-fit property for background image
+   * @default "cover"
+   */
+  objectFit: /*#__PURE__*/ v.optional(
+    /*#__PURE__*/ v.literalEnum([
+      "contain",
+      "cover",
+      "fill",
+      "none",
+      "scale-down",
+    ]),
+    "cover",
   ),
   type: /*#__PURE__*/ v.literal("url"),
   /**

@@ -7,7 +7,13 @@ export interface CreateProfileForm {
   name?: string;
   location?: string;
   bio: string;
-  background: { type: "color" | "url" | "blob"; value: string | Blob };
+  background:
+    | { type: "color"; value: string }
+    | {
+        type: "url" | "blob";
+        value: string | Blob;
+        objectFit?: "cover" | "contain" | "fill" | "scale-down" | "none";
+      };
   links: Array<{
     icon?: { type: "url" | "blob"; value: string | Blob };
     label: string;

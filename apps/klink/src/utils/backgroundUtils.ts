@@ -14,9 +14,11 @@ export function getBackgroundStyle(
       ? background.value
       : `${pdsUrl}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${background.value.ref.$link}`;
 
+  const objectFit = background.objectFit || "cover";
+
   return {
     backgroundImage: `url(${imageUrl})`,
-    backgroundSize: "cover",
+    backgroundSize: objectFit,
     backgroundPosition: "center",
   };
 }

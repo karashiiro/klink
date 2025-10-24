@@ -10,12 +10,16 @@ interface BackgroundSelectorProps {
   backgroundColor: string;
   backgroundImageUrl: string;
   backgroundImageBlob: Blob | null;
+  backgroundObjectFit: "cover" | "contain" | "fill" | "scale-down" | "none";
   hasExistingBlob?: boolean;
   colorInputRef: RefObject<HTMLInputElement | null>;
   onTypeChange: (type: "color" | "url" | "blob") => void;
   onColorChange: (e: BlurEvent) => void;
   onUrlChange: (e: FormEvent<HTMLInputElement> | TextInputChangeEvent) => void;
   onFileChange: (e: FormEvent<HTMLInputElement> | TextInputChangeEvent) => void;
+  onObjectFitChange: (
+    objectFit: "cover" | "contain" | "fill" | "scale-down" | "none",
+  ) => void;
   onClearBlob?: () => void;
 }
 
@@ -24,12 +28,14 @@ export function BackgroundSelector({
   backgroundColor,
   backgroundImageUrl,
   backgroundImageBlob,
+  backgroundObjectFit,
   hasExistingBlob = false,
   colorInputRef,
   onTypeChange,
   onColorChange,
   onUrlChange,
   onFileChange,
+  onObjectFitChange,
   onClearBlob,
 }: BackgroundSelectorProps) {
   return (
@@ -73,15 +79,36 @@ export function BackgroundSelector({
           size="$4"
         />
       ) : backgroundType === "url" ? (
-        <Input
-          placeholder="Background Image URL"
-          value={backgroundImageUrl}
-          onChange={onUrlChange}
-          backgroundColor="$secondary"
-          color="$textBody"
-          borderColor="$border"
-          size="$4"
-        />
+        <YStack gap="$2">
+          <Input
+            placeholder="Background Image URL"
+            value={backgroundImageUrl}
+            onChange={onUrlChange}
+            backgroundColor="$secondary"
+            color="$textBody"
+            borderColor="$border"
+            size="$4"
+          />
+          <Paragraph color="$textMuted" fontSize="$2">
+            Image fit:
+          </Paragraph>
+          <XStack gap="$2" flexWrap="wrap">
+            {(
+              ["cover", "contain", "fill", "scale-down", "none"] as const
+            ).map((fit) => (
+              <Button
+                key={fit}
+                size="$2"
+                backgroundColor={
+                  backgroundObjectFit === fit ? "$accent" : "$secondary"
+                }
+                onPress={() => onObjectFitChange(fit)}
+              >
+                {fit}
+              </Button>
+            ))}
+          </XStack>
+        </YStack>
       ) : (
         <YStack gap="$2">
           <Input
@@ -127,6 +154,25 @@ export function BackgroundSelector({
               )}
             </XStack>
           )}
+          <Paragraph color="$textMuted" fontSize="$2">
+            Image fit:
+          </Paragraph>
+          <XStack gap="$2" flexWrap="wrap">
+            {(
+              ["cover", "contain", "fill", "scale-down", "none"] as const
+            ).map((fit) => (
+              <Button
+                key={fit}
+                size="$2"
+                backgroundColor={
+                  backgroundObjectFit === fit ? "$accent" : "$secondary"
+                }
+                onPress={() => onObjectFitChange(fit)}
+              >
+                {fit}
+              </Button>
+            ))}
+          </XStack>
         </YStack>
       )}
     </YStack>

@@ -44,6 +44,9 @@ export function Home() {
   const [backgroundType, setBackgroundType] = useState<
     "color" | "url" | "blob"
   >("color");
+  const [backgroundObjectFit, setBackgroundObjectFit] = useState<
+    "cover" | "contain" | "fill" | "scale-down" | "none"
+  >("cover");
   const [links, setLinks] = useState<
     Array<{ icon?: string | Blob; label: string; href: string }>
   >([]);
@@ -72,6 +75,10 @@ export function Home() {
       } else if (profile.value.background.type === "url") {
         setBackgroundType("url");
         setBackgroundImageUrl(profile.value.background.value);
+        setBackgroundObjectFit(profile.value.background.objectFit || "cover");
+      } else if (profile.value.background.type === "blob") {
+        setBackgroundType("blob");
+        setBackgroundObjectFit(profile.value.background.objectFit || "cover");
       }
 
       // Links
@@ -301,11 +308,13 @@ export function Home() {
                     backgroundColor={backgroundColor}
                     backgroundImageUrl={backgroundImageUrl}
                     backgroundImageBlob={backgroundImageBlob}
+                    backgroundObjectFit={backgroundObjectFit}
                     colorInputRef={colorInputRef}
                     onTypeChange={setBackgroundType}
                     onColorChange={handleColorChange}
                     onUrlChange={handleBackgroundImageChange}
                     onFileChange={handleBackgroundImageFile}
+                    onObjectFitChange={setBackgroundObjectFit}
                   />
 
                   <LinkEditor
@@ -333,12 +342,19 @@ export function Home() {
                         name: name || undefined,
                         location: location || undefined,
                         bio,
-                        background:
-                          backgroundType === "color"
-                            ? { type: "color", value: backgroundColor }
-                            : backgroundType === "blob"
-                              ? { type: "blob", value: backgroundImageBlob! }
-                              : { type: "url", value: backgroundImageUrl },
+                        background: (backgroundType === "color"
+                          ? { type: "color" as const, value: backgroundColor }
+                          : backgroundType === "blob"
+                            ? {
+                                type: "blob" as const,
+                                value: backgroundImageBlob!,
+                                objectFit: backgroundObjectFit,
+                              }
+                            : {
+                                type: "url" as const,
+                                value: backgroundImageUrl,
+                                objectFit: backgroundObjectFit,
+                              }),
                         links: links.map((link) => ({
                           icon: link.icon
                             ? link.icon instanceof Blob
@@ -410,12 +426,14 @@ export function Home() {
                     backgroundColor={backgroundColor}
                     backgroundImageUrl={backgroundImageUrl}
                     backgroundImageBlob={backgroundImageBlob}
+                    backgroundObjectFit={backgroundObjectFit}
                     hasExistingBlob={profile?.value.background.type === "blob"}
                     colorInputRef={colorInputRef}
                     onTypeChange={setBackgroundType}
                     onColorChange={handleColorChange}
                     onUrlChange={handleBackgroundImageChange}
                     onFileChange={handleBackgroundImageFile}
+                    onObjectFitChange={setBackgroundObjectFit}
                     onClearBlob={clearBackgroundImage}
                   />
 
@@ -458,14 +476,22 @@ export function Home() {
                             backgroundType === "color"
                               ? { type: "color", value: backgroundColor }
                               : backgroundType === "blob" && backgroundImageBlob
-                                ? { type: "blob", value: backgroundImageBlob }
+                                ? {
+                                    type: "blob",
+                                    value: backgroundImageBlob,
+                                    objectFit: backgroundObjectFit,
+                                  }
                                 : backgroundType === "blob" &&
                                     !backgroundImageBlob &&
                                     profile?.value.background.type === "blob"
                                   ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                     (profile.value.background as any)
                                   : backgroundType === "url"
-                                    ? { type: "url", value: backgroundImageUrl }
+                                    ? {
+                                        type: "url",
+                                        value: backgroundImageUrl,
+                                        objectFit: backgroundObjectFit,
+                                      }
                                     : { type: "color", value: backgroundColor },
                           links: links.map((link, index) => ({
                             icon: link.icon

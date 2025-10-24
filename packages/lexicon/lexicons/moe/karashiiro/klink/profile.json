@@ -112,6 +112,12 @@
           "format": "uri",
           "description": "Background image URL",
           "maxLength": 2000
+        },
+        "objectFit": {
+          "type": "string",
+          "description": "CSS object-fit property for background image",
+          "enum": ["cover", "contain", "fill", "scale-down", "none"],
+          "default": "cover"
         }
       }
     },
@@ -129,6 +135,12 @@
           "description": "Blob reference to background image",
           "accept": ["image/png", "image/jpeg", "image/webp", "image/gif"],
           "maxSize": 10000000
+        },
+        "objectFit": {
+          "type": "string",
+          "description": "CSS object-fit property for background image",
+          "enum": ["cover", "contain", "fill", "scale-down", "none"],
+          "default": "cover"
         }
       }
     },

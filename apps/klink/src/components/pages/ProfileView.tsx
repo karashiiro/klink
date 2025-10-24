@@ -4,7 +4,7 @@ import { H1, Paragraph } from "@tamagui/text";
 import { Card } from "@tamagui/card";
 import { Button } from "@tamagui/button";
 import type { ProfileRecord } from "../../hooks/useReadProfile";
-import { ProfileImage } from "../ui/ProfileImage";
+import { AtProtoImage } from "../ui/AtProtoImage";
 import { getBackgroundStyle } from "../../utils/backgroundUtils";
 
 export function ProfileView() {
@@ -65,7 +65,7 @@ export function ProfileView() {
       >
         <YStack gap="$4" alignItems="center">
           {/* Profile Image */}
-          <ProfileImage
+          <AtProtoImage
             image={value.profileImage}
             pdsUrl={pdsUrl}
             did={did}
@@ -111,7 +111,7 @@ export function ProfileView() {
                 >
                   <XStack gap="$2" alignItems="center">
                     {link.icon && (
-                      <ProfileImage
+                      <AtProtoImage
                         image={link.icon}
                         pdsUrl={pdsUrl}
                         did={did}
