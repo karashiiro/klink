@@ -66,6 +66,9 @@ async function profileLoader({ params }: { params: { handle: string } }) {
       uri: record.uri,
       cid: record.cid ?? "",
       value: record.value as Main,
+      // Pass along PDS URL and DID for blob resolution
+      pdsUrl,
+      did,
     };
   } catch (err) {
     console.error("Failed to fetch profile:", err);

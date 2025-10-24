@@ -1,15 +1,16 @@
 import { useLoaderData } from "react-router";
 import { YStack, XStack } from "@tamagui/stacks";
-import { H1, H2, Paragraph } from "@tamagui/text";
+import { H1, Paragraph } from "@tamagui/text";
 import { Card } from "@tamagui/card";
-import { Image } from "@tamagui/image";
 import { Button } from "@tamagui/button";
 import type { ProfileRecord } from "../../hooks/useReadProfile";
+import { ProfileImage } from "../ui/ProfileImage";
+import { getBackgroundStyle } from "../../utils/backgroundUtils";
 
 export function ProfileView() {
-  const profile = useLoaderData() as ProfileRecord | null;
+  const data = useLoaderData() as (ProfileRecord & { pdsUrl: string; did: string }) | null;
 
-  if (!profile) {
+  if (!data) {
     return (
       <YStack
         flex={1}
@@ -39,17 +40,8 @@ export function ProfileView() {
     );
   }
 
-  const { value } = profile;
-  const backgroundStyle =
-    value.background.type === "color"
-      ? { backgroundColor: value.background.value }
-      : value.background.type === "url"
-        ? {
-            backgroundImage: `url(${value.background.value})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }
-        : {};
+  const { value, pdsUrl, did } = data;
+  const backgroundStyle = getBackgroundStyle(value.background, pdsUrl, did);
 
   return (
     <YStack
@@ -59,6 +51,8 @@ export function ProfileView() {
       paddingHorizontal="$4"
       alignItems="center"
       justifyContent="center"
+      minHeight="100vh"
+      width="100%"
     >
       <Card
         elevate
@@ -71,15 +65,14 @@ export function ProfileView() {
       >
         <YStack gap="$4" alignItems="center">
           {/* Profile Image */}
-          {value.profileImage?.type === "url" && (
-            <Image
-              source={{ uri: value.profileImage.value }}
-              width={120}
-              height={120}
-              borderRadius="$12"
-              backgroundColor="$secondary"
-            />
-          )}
+          <ProfileImage
+            image={value.profileImage}
+            pdsUrl={pdsUrl}
+            did={did}
+            width={120}
+            height={120}
+            borderRadius={60}
+          />
 
           {/* Name */}
           {value.name && (
@@ -117,12 +110,14 @@ export function ProfileView() {
                   }}
                 >
                   <XStack gap="$2" alignItems="center">
-                    {link.icon?.type === "url" && (
-                      <Image
-                        source={{ uri: link.icon.value }}
+                    {link.icon && (
+                      <ProfileImage
+                        image={link.icon}
+                        pdsUrl={pdsUrl}
+                        did={did}
                         width={20}
                         height={20}
-                        borderRadius="$2"
+                        borderRadius={4}
                       />
                     )}
                     <Paragraph color="white" fontWeight="bold">

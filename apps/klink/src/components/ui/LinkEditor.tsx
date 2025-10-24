@@ -13,6 +13,7 @@ interface Link {
 
 interface LinkEditorProps {
   links: Link[];
+  existingBlobIcons?: boolean[];
   onAddLink: () => void;
   onUpdateLink: (
     index: number,
@@ -24,14 +25,17 @@ interface LinkEditorProps {
     index: number,
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
   ) => void;
+  onClearIcon?: (index: number) => void;
 }
 
 export function LinkEditor({
   links,
+  existingBlobIcons = [],
   onAddLink,
   onUpdateLink,
   onRemoveLink,
   onIconFileChange,
+  onClearIcon,
 }: LinkEditorProps) {
   return (
     <YStack gap="$2">
@@ -114,9 +118,38 @@ export function LinkEditor({
               size="$3"
             />
             {link.icon instanceof Blob && (
-              <Paragraph color="$accent" fontSize="$1">
-                File: {(link.icon as File).name || "image"}
-              </Paragraph>
+              <XStack alignItems="center" gap="$2">
+                <Paragraph color="$accent" fontSize="$1" flex={1}>
+                  File: {(link.icon as File).name || "image"}
+                </Paragraph>
+                {onClearIcon && (
+                  <Button
+                    size="$2"
+                    backgroundColor="$redBase"
+                    hoverStyle={{ backgroundColor: "$redHover" }}
+                    onPress={() => onClearIcon(index)}
+                  >
+                    Clear
+                  </Button>
+                )}
+              </XStack>
+            )}
+            {!(link.icon instanceof Blob) && existingBlobIcons[index] && (
+              <XStack alignItems="center" gap="$2">
+                <Paragraph color="$greenBase" fontSize="$1" flex={1}>
+                  ✓ Icon uploaded (choose new file to replace)
+                </Paragraph>
+                {onClearIcon && (
+                  <Button
+                    size="$2"
+                    backgroundColor="$redBase"
+                    hoverStyle={{ backgroundColor: "$redHover" }}
+                    onPress={() => onClearIcon(index)}
+                  >
+                    Remove
+                  </Button>
+                )}
+              </XStack>
             )}
           </YStack>
         </YStack>

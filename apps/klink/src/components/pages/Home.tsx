@@ -170,6 +170,24 @@ export function Home() {
     setLinks(links.filter((_, i) => i !== index));
   };
 
+  // Clear handlers for removing uploaded images
+  const clearProfileImage = () => {
+    setProfileImageBlob(null);
+    setProfileImageUrl("");
+  };
+
+  const clearBackgroundImage = () => {
+    setBackgroundImageBlob(null);
+    setBackgroundImageUrl("");
+    setBackgroundType("color");
+  };
+
+  const clearLinkIcon = (index: number) => {
+    const newLinks = [...links];
+    newLinks[index].icon = "";
+    setLinks(newLinks);
+  };
+
   return (
     <YStack
       flex={1}
@@ -351,8 +369,10 @@ export function Home() {
                     label="Profile Image (optional)"
                     urlValue={profileImageUrl}
                     blob={profileImageBlob}
+                    hasExistingBlob={profile?.value.profileImage?.type === "blob"}
                     onUrlChange={handleProfileImageChange}
                     onFileChange={handleProfileImageFile}
+                    onClear={clearProfileImage}
                   />
 
                   <Input
@@ -390,19 +410,27 @@ export function Home() {
                     backgroundColor={backgroundColor}
                     backgroundImageUrl={backgroundImageUrl}
                     backgroundImageBlob={backgroundImageBlob}
+                    hasExistingBlob={profile?.value.background.type === "blob"}
                     colorInputRef={colorInputRef}
                     onTypeChange={setBackgroundType}
                     onColorChange={handleColorChange}
                     onUrlChange={handleBackgroundImageChange}
                     onFileChange={handleBackgroundImageFile}
+                    onClearBlob={clearBackgroundImage}
                   />
 
                   <LinkEditor
                     links={links}
+                    existingBlobIcons={
+                      profile?.value.links?.map(
+                        (link) => link.icon?.type === "blob",
+                      ) || []
+                    }
                     onAddLink={addLink}
                     onUpdateLink={updateLink}
                     onRemoveLink={removeLink}
                     onIconFileChange={handleLinkIconFile}
+                    onClearIcon={clearLinkIcon}
                   />
 
                   <XStack gap="$2">
@@ -419,22 +447,36 @@ export function Home() {
                             ? { type: "blob", value: profileImageBlob }
                             : profileImageUrl
                               ? { type: "url", value: profileImageUrl }
-                              : undefined,
+                              : profile?.value.profileImage?.type === "blob"
+                                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                  (profile.value.profileImage as any)
+                                : undefined,
                           name: name || undefined,
                           location: location || undefined,
                           bio,
                           background:
                             backgroundType === "color"
                               ? { type: "color", value: backgroundColor }
-                              : backgroundType === "blob"
-                                ? { type: "blob", value: backgroundImageBlob! }
-                                : { type: "url", value: backgroundImageUrl },
-                          links: links.map((link) => ({
+                              : backgroundType === "blob" && backgroundImageBlob
+                                ? { type: "blob", value: backgroundImageBlob }
+                                : backgroundType === "blob" &&
+                                    !backgroundImageBlob &&
+                                    profile?.value.background.type === "blob"
+                                  ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    (profile.value.background as any)
+                                  : backgroundType === "url"
+                                    ? { type: "url", value: backgroundImageUrl }
+                                    : { type: "color", value: backgroundColor },
+                          links: links.map((link, index) => ({
                             icon: link.icon
                               ? link.icon instanceof Blob
                                 ? { type: "blob", value: link.icon }
                                 : { type: "url", value: link.icon }
-                              : undefined,
+                              : profile?.value.links?.[index]?.icon?.type ===
+                                  "blob"
+                                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                  (profile.value.links[index].icon as any)
+                                : undefined,
                             label: link.label,
                             href: link.href,
                           })),

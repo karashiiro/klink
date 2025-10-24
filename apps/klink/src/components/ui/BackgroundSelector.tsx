@@ -10,11 +10,13 @@ interface BackgroundSelectorProps {
   backgroundColor: string;
   backgroundImageUrl: string;
   backgroundImageBlob: Blob | null;
+  hasExistingBlob?: boolean;
   colorInputRef: RefObject<HTMLInputElement | null>;
   onTypeChange: (type: "color" | "url" | "blob") => void;
   onColorChange: (e: BlurEvent) => void;
   onUrlChange: (e: FormEvent<HTMLInputElement> | TextInputChangeEvent) => void;
   onFileChange: (e: FormEvent<HTMLInputElement> | TextInputChangeEvent) => void;
+  onClearBlob?: () => void;
 }
 
 export function BackgroundSelector({
@@ -22,11 +24,13 @@ export function BackgroundSelector({
   backgroundColor,
   backgroundImageUrl,
   backgroundImageBlob,
+  hasExistingBlob = false,
   colorInputRef,
   onTypeChange,
   onColorChange,
   onUrlChange,
   onFileChange,
+  onClearBlob,
 }: BackgroundSelectorProps) {
   return (
     <YStack gap="$2">
@@ -90,9 +94,38 @@ export function BackgroundSelector({
             size="$4"
           />
           {backgroundImageBlob && (
-            <Paragraph color="$accent" fontSize="$2">
-              File selected: {(backgroundImageBlob as File).name || "image"}
-            </Paragraph>
+            <XStack alignItems="center" gap="$2">
+              <Paragraph color="$accent" fontSize="$2" flex={1}>
+                File selected: {(backgroundImageBlob as File).name || "image"}
+              </Paragraph>
+              {onClearBlob && (
+                <Button
+                  size="$2"
+                  backgroundColor="$redBase"
+                  hoverStyle={{ backgroundColor: "$redHover" }}
+                  onPress={onClearBlob}
+                >
+                  Clear
+                </Button>
+              )}
+            </XStack>
+          )}
+          {!backgroundImageBlob && hasExistingBlob && (
+            <XStack alignItems="center" gap="$2">
+              <Paragraph color="$greenBase" fontSize="$2" flex={1}>
+                ✓ Image uploaded (choose new file to replace)
+              </Paragraph>
+              {onClearBlob && (
+                <Button
+                  size="$2"
+                  backgroundColor="$redBase"
+                  hoverStyle={{ backgroundColor: "$redHover" }}
+                  onPress={onClearBlob}
+                >
+                  Remove
+                </Button>
+              )}
+            </XStack>
           )}
         </YStack>
       )}
