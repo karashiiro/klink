@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router";
-import { YStack, XStack } from "@tamagui/stacks";
+import { YStack } from "@tamagui/stacks";
 import { H1, Paragraph } from "@tamagui/text";
 import { Card } from "@tamagui/card";
 import { Button } from "@tamagui/button";
@@ -8,7 +8,9 @@ import { AtProtoImage } from "../ui/AtProtoImage";
 import { getBackgroundStyle } from "../../utils/backgroundUtils";
 
 export function ProfileView() {
-  const data = useLoaderData() as (ProfileRecord & { pdsUrl: string; did: string }) | null;
+  const data = useLoaderData() as
+    | (ProfileRecord & { pdsUrl: string; did: string })
+    | null;
 
   if (!data) {
     return (
@@ -76,7 +78,7 @@ export function ProfileView() {
 
           {/* Name */}
           {value.name && (
-            <H1 color="$textTitle" textAlign="center">
+            <H1 color="$textTitle" textAlign="center" size="$9">
               {value.name}
             </H1>
           )}
@@ -103,27 +105,34 @@ export function ProfileView() {
                   backgroundColor="$accent"
                   hoverStyle={{ opacity: 0.8 }}
                   pressStyle={{ opacity: 0.6 }}
+                  position="relative"
                   onPress={() => {
                     if (typeof window !== "undefined") {
                       window.open(link.href, "_blank");
                     }
                   }}
                 >
-                  <XStack gap="$2" alignItems="center">
-                    {link.icon && (
+                  {link.icon && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "12px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
                       <AtProtoImage
                         image={link.icon}
                         pdsUrl={pdsUrl}
                         did={did}
-                        width={20}
-                        height={20}
-                        borderRadius={4}
+                        width={40}
+                        height={40}
                       />
-                    )}
-                    <Paragraph color="white" fontWeight="bold">
-                      {link.label}
-                    </Paragraph>
-                  </XStack>
+                    </div>
+                  )}
+                  <Paragraph color="white" fontWeight="bold">
+                    {link.label}
+                  </Paragraph>
                 </Button>
               ))}
             </YStack>
