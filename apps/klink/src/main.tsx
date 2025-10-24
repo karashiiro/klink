@@ -69,6 +69,7 @@ async function profileLoader({ params }: { params: { handle: string } }) {
       // Pass along PDS URL and DID for blob resolution
       pdsUrl,
       did,
+      handle,
     };
   } catch (err) {
     console.error("Failed to fetch profile:", err);

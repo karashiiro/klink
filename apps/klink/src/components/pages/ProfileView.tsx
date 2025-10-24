@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router";
-import { YStack } from "@tamagui/stacks";
+import { YStack, XStack } from "@tamagui/stacks";
 import { H1, Paragraph } from "@tamagui/text";
 import { Card } from "@tamagui/card";
 import { Button } from "@tamagui/button";
@@ -9,7 +9,7 @@ import { getBackgroundStyle } from "../../utils/backgroundUtils";
 
 export function ProfileView() {
   const data = useLoaderData() as
-    | (ProfileRecord & { pdsUrl: string; did: string })
+    | (ProfileRecord & { pdsUrl: string; did: string; handle: string })
     | null;
 
   if (!data) {
@@ -42,7 +42,7 @@ export function ProfileView() {
     );
   }
 
-  const { value, pdsUrl, did } = data;
+  const { value, pdsUrl, did, handle } = data;
   const backgroundStyle = getBackgroundStyle(value.background, pdsUrl, did);
 
   return (
@@ -76,22 +76,47 @@ export function ProfileView() {
             borderRadius={60}
           />
 
-          {/* Name */}
-          {value.name && (
+          {/* Name & Handle */}
+          {value.name ? (
+            <XStack
+              gap="$2"
+              alignItems="baseline"
+              flexWrap="wrap"
+              justifyContent="center"
+            >
+              <H1 color="$textTitle" textAlign="center" size="$9">
+                {value.name}
+              </H1>
+              <Paragraph color="$textMuted" textAlign="center" fontSize="$6">
+                @{handle}
+              </Paragraph>
+            </XStack>
+          ) : (
             <H1 color="$textTitle" textAlign="center" size="$9">
-              {value.name}
+              @{handle}
             </H1>
           )}
 
           {/* Location */}
           {value.location && (
-            <Paragraph color="$textMuted" textAlign="center">
+            <Paragraph
+              color="$textMuted"
+              textAlign="center"
+              fontSize="$3"
+              marginTop="$-2"
+            >
               📍 {value.location}
             </Paragraph>
           )}
 
           {/* Bio */}
-          <Paragraph color="$textBody" textAlign="center" fontSize="$5">
+          <Paragraph
+            color="$textBody"
+            textAlign="center"
+            fontSize="$5"
+            maxWidth={500}
+            lineHeight="$6"
+          >
             {value.bio}
           </Paragraph>
 
