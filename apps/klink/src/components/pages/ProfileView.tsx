@@ -65,56 +65,51 @@ export function ProfileView() {
         width="100%"
         padding="$6"
       >
-        <YStack gap="$4" alignItems="center">
-          {/* Profile Image */}
-          <AtProtoImage
-            image={value.profileImage}
-            pdsUrl={pdsUrl}
-            did={did}
-            width={120}
-            height={120}
-            borderRadius={60}
-          />
+        <YStack gap="$4">
+          {/* Profile Header with Image + Name/Handle/Location */}
+          <XStack gap="$4" alignItems="flex-start">
+            {/* Profile Image */}
+            <AtProtoImage
+              image={value.profileImage}
+              pdsUrl={pdsUrl}
+              did={did}
+              width={120}
+              height={120}
+              borderRadius={60}
+            />
 
-          {/* Name & Handle */}
-          {value.name ? (
-            <XStack
-              gap="$2"
-              alignItems="baseline"
-              flexWrap="wrap"
-              justifyContent="center"
-            >
-              <H1 color="$textTitle" textAlign="center" size="$9">
-                {value.name}
-              </H1>
-              <Paragraph color="$textMuted" textAlign="center" fontSize="$6">
-                @{handle}
-              </Paragraph>
-            </XStack>
-          ) : (
-            <H1 color="$textTitle" textAlign="center" size="$9">
-              @{handle}
-            </H1>
-          )}
+            {/* Name, Handle, and Location */}
+            <YStack gap="$2" flex={1} justifyContent="center">
+              {/* Name & Handle */}
+              {value.name ? (
+                <>
+                  <H1 color="$textTitle" size="$9">
+                    {value.name}
+                  </H1>
+                  <Paragraph color="$textMuted" fontSize="$6">
+                    @{handle}
+                  </Paragraph>
+                </>
+              ) : (
+                <H1 color="$textTitle" size="$9">
+                  @{handle}
+                </H1>
+              )}
 
-          {/* Location */}
-          {value.location && (
-            <Paragraph
-              color="$textMuted"
-              textAlign="center"
-              fontSize="$3"
-              marginTop="$-2"
-            >
-              📍 {value.location}
-            </Paragraph>
-          )}
+              {/* Location */}
+              {value.location && (
+                <Paragraph color="$textMuted" fontSize="$3">
+                  📍 {value.location}
+                </Paragraph>
+              )}
+            </YStack>
+          </XStack>
 
           {/* Bio */}
           <Paragraph
             color="$textBody"
             textAlign="center"
             fontSize="$5"
-            maxWidth={500}
             lineHeight="$6"
           >
             {value.bio}
