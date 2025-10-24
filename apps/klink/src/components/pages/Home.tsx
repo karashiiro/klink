@@ -17,7 +17,7 @@ import { LinkEditor } from "../ui/LinkEditor";
 import type { BlurEvent, TextInputChangeEvent } from "react-native";
 
 export function Home() {
-  const { authState, startLogin, logout, session } = useAuth();
+  const { authState, logout, session } = useAuth();
   const { openAuthModal } = useAuthModal();
 
   // Read user's profile
@@ -342,19 +342,20 @@ export function Home() {
                         name: name || undefined,
                         location: location || undefined,
                         bio,
-                        background: (backgroundType === "color"
-                          ? { type: "color" as const, value: backgroundColor }
-                          : backgroundType === "blob"
-                            ? {
-                                type: "blob" as const,
-                                value: backgroundImageBlob!,
-                                objectFit: backgroundObjectFit,
-                              }
-                            : {
-                                type: "url" as const,
-                                value: backgroundImageUrl,
-                                objectFit: backgroundObjectFit,
-                              }),
+                        background:
+                          backgroundType === "color"
+                            ? { type: "color" as const, value: backgroundColor }
+                            : backgroundType === "blob"
+                              ? {
+                                  type: "blob" as const,
+                                  value: backgroundImageBlob!,
+                                  objectFit: backgroundObjectFit,
+                                }
+                              : {
+                                  type: "url" as const,
+                                  value: backgroundImageUrl,
+                                  objectFit: backgroundObjectFit,
+                                },
                         links: links.map((link) => ({
                           icon: link.icon
                             ? link.icon instanceof Blob
@@ -385,7 +386,9 @@ export function Home() {
                     label="Profile Image (optional)"
                     urlValue={profileImageUrl}
                     blob={profileImageBlob}
-                    hasExistingBlob={profile?.value.profileImage?.type === "blob"}
+                    hasExistingBlob={
+                      profile?.value.profileImage?.type === "blob"
+                    }
                     onUrlChange={handleProfileImageChange}
                     onFileChange={handleProfileImageFile}
                     onClear={clearProfileImage}
@@ -570,7 +573,7 @@ export function Home() {
                 hoverStyle={{ backgroundColor: "$greenHover" }}
                 pressStyle={{ backgroundColor: "$greenPress" }}
                 color="$greenText"
-                onPress={() => startLogin({ handle: "user.bsky.social" })}
+                onPress={openAuthModal}
               >
                 Retry Login
               </Button>
