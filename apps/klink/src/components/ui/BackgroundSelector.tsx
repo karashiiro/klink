@@ -93,20 +93,20 @@ export function BackgroundSelector({
             Image fit:
           </Paragraph>
           <XStack gap="$2" flexWrap="wrap">
-            {(
-              ["cover", "contain", "fill", "scale-down", "none"] as const
-            ).map((fit) => (
-              <Button
-                key={fit}
-                size="$2"
-                backgroundColor={
-                  backgroundObjectFit === fit ? "$accent" : "$secondary"
-                }
-                onPress={() => onObjectFitChange(fit)}
-              >
-                {fit}
-              </Button>
-            ))}
+            {(["cover", "contain", "fill", "scale-down", "none"] as const).map(
+              (fit) => (
+                <Button
+                  key={fit}
+                  size="$2"
+                  backgroundColor={
+                    backgroundObjectFit === fit ? "$accent" : "$secondary"
+                  }
+                  onPress={() => onObjectFitChange(fit)}
+                >
+                  {fit}
+                </Button>
+              ),
+            )}
           </XStack>
         </YStack>
       ) : (
@@ -158,20 +158,20 @@ export function BackgroundSelector({
             Image fit:
           </Paragraph>
           <XStack gap="$2" flexWrap="wrap">
-            {(
-              ["cover", "contain", "fill", "scale-down", "none"] as const
-            ).map((fit) => (
-              <Button
-                key={fit}
-                size="$2"
-                backgroundColor={
-                  backgroundObjectFit === fit ? "$accent" : "$secondary"
-                }
-                onPress={() => onObjectFitChange(fit)}
-              >
-                {fit}
-              </Button>
-            ))}
+            {(["cover", "contain", "fill", "scale-down", "none"] as const).map(
+              (fit) => (
+                <Button
+                  key={fit}
+                  size="$2"
+                  backgroundColor={
+                    backgroundObjectFit === fit ? "$accent" : "$secondary"
+                  }
+                  onPress={() => onObjectFitChange(fit)}
+                >
+                  {fit}
+                </Button>
+              ),
+            )}
           </XStack>
         </YStack>
       )}

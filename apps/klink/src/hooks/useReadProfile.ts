@@ -8,7 +8,14 @@ export interface ProfileRecord {
   value: Main;
 }
 
-export function useReadProfile(handle?: string) {
+export interface ReadProfileResult {
+  profile: ProfileRecord | null;
+  loading: boolean;
+  error: string | null;
+  refetch: (targetHandle: string) => Promise<ProfileRecord | null>;
+}
+
+export function useReadProfile(handle?: string): ReadProfileResult {
   const [profile, setProfile] = useState<ProfileRecord | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

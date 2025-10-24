@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { splitAtom } from "jotai/utils";
 
 export const profileAtom = atom({
   name: "",
@@ -18,3 +19,64 @@ export const profileAtom = atom({
     | "none",
   links: [] as { icon?: string | Blob; label: string; href: string }[],
 });
+
+export const nameAtom = atom(
+  (get) => get(profileAtom).name,
+  (get, set, newValue: string) =>
+    set(profileAtom, { ...get(profileAtom), name: newValue }),
+);
+
+export const locationAtom = atom(
+  (get) => get(profileAtom).location,
+  (get, set, newValue: string) =>
+    set(profileAtom, { ...get(profileAtom), location: newValue }),
+);
+
+export const bioAtom = atom(
+  (get) => get(profileAtom).bio,
+  (get, set, newValue: string) =>
+    set(profileAtom, { ...get(profileAtom), bio: newValue }),
+);
+
+export const profileImageUrlAtom = atom(
+  (get) => get(profileAtom).profileImageUrl,
+);
+export const profileImageBlobAtom = atom(
+  (get) => get(profileAtom).profileImageBlob,
+);
+export const backgroundImageUrlAtom = atom(
+  (get) => get(profileAtom).backgroundImageUrl,
+);
+export const backgroundImageBlobAtom = atom(
+  (get) => get(profileAtom).backgroundImageBlob,
+);
+export const backgroundColorAtom = atom(
+  (get) => get(profileAtom).backgroundColor,
+);
+export const backgroundTypeAtom = atom(
+  (get) => get(profileAtom).backgroundType,
+);
+export const backgroundObjectFitAtom = atom(
+  (get) => get(profileAtom).backgroundObjectFit,
+);
+
+export const linksAtom = atom(
+  (get) => get(profileAtom).links,
+  (
+    get,
+    set,
+    newValue:
+      | { icon?: string | Blob; label: string; href: string }[]
+      | ((
+          prev: { icon?: string | Blob; label: string; href: string }[],
+        ) => { icon?: string | Blob; label: string; href: string }[]),
+  ) => {
+    const updatedValue =
+      typeof newValue === "function"
+        ? newValue(get(profileAtom).links)
+        : newValue;
+    set(profileAtom, { ...get(profileAtom), links: updatedValue });
+  },
+);
+
+export const linksAtomsAtom = splitAtom(linksAtom);
