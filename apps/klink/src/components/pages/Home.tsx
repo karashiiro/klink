@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, type FormEvent } from "react";
+import { useEffect, useRef, type FormEvent } from "react";
+import { useAtom } from "jotai";
 import { YStack, XStack } from "@tamagui/stacks";
 import { H1, H3, Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
@@ -14,6 +15,7 @@ import { useDeleteProfile } from "../../hooks/useDeleteProfile";
 import { ImageInput } from "../ui/ImageInput";
 import { BackgroundSelector } from "../ui/BackgroundSelector";
 import { LinkEditor } from "../ui/LinkEditor";
+import { profileAtom } from "../../atoms/profile";
 import type { BlurEvent, TextInputChangeEvent } from "react-native";
 
 export function Home() {
@@ -30,98 +32,98 @@ export function Home() {
   const { updateProfile, loading: updateLoading } = useUpdateProfile();
   const { deleteProfile, loading: deleteLoading } = useDeleteProfile();
 
-  // Form state
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [bio, setBio] = useState("");
-  const [profileImageUrl, setProfileImageUrl] = useState("");
-  const [profileImageBlob, setProfileImageBlob] = useState<Blob | null>(null);
-  const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
-  const [backgroundImageBlob, setBackgroundImageBlob] = useState<Blob | null>(
-    null,
-  );
-  const [backgroundColor, setBackgroundColor] = useState("#1a1a1a");
-  const [backgroundType, setBackgroundType] = useState<
-    "color" | "url" | "blob"
-  >("color");
-  const [backgroundObjectFit, setBackgroundObjectFit] = useState<
-    "cover" | "contain" | "fill" | "scale-down" | "none"
-  >("cover");
-  const [links, setLinks] = useState<
-    Array<{ icon?: string | Blob; label: string; href: string }>
-  >([]);
+  // Form state - now using jotai!! ✨
+  const [formData, setFormData] = useAtom(profileAtom);
   const colorInputRef = useRef<HTMLInputElement>(null);
 
   // Load profile data into form when it exists
   useEffect(() => {
     if (profile) {
-      setName(profile.value.name || "");
-      setLocation(profile.value.location || "");
-      setBio(profile.value.bio || "");
+      setFormData({
+        name: profile.value.name || "",
+        location: profile.value.location || "",
+        bio: profile.value.bio || "",
+        profileImageUrl:
+          profile.value.profileImage?.type === "url"
+            ? profile.value.profileImage.value
+            : "",
+        profileImageBlob: null,
+        backgroundImageUrl:
+          profile.value.background.type === "url"
+            ? profile.value.background.value
+            : "",
+        backgroundImageBlob: null,
+        backgroundColor:
+          profile.value.background.type === "color"
+            ? profile.value.background.value
+            : "#1a1a1a",
+        backgroundType: profile.value.background.type,
+        backgroundObjectFit:
+          profile.value.background.type !== "color"
+            ? profile.value.background.objectFit || "cover"
+            : "cover",
+        links: (profile.value.links || []).map((link) => ({
+          icon: link.icon?.type === "url" ? link.icon.value : undefined,
+          label: link.label,
+          href: link.href,
+        })),
+      });
 
-      // Profile image
-      if (profile.value.profileImage?.type === "url") {
-        setProfileImageUrl(profile.value.profileImage.value);
+      // Update color input ref
+      if (profile.value.background.type === "color" && colorInputRef.current) {
+        colorInputRef.current.value = profile.value.background.value;
       }
-
-      // Background
-      if (profile.value.background.type === "color") {
-        setBackgroundType("color");
-        const newColor = profile.value.background.value;
-        setBackgroundColor(newColor);
-        if (colorInputRef.current) {
-          colorInputRef.current.value = newColor;
-        }
-      } else if (profile.value.background.type === "url") {
-        setBackgroundType("url");
-        setBackgroundImageUrl(profile.value.background.value);
-        setBackgroundObjectFit(profile.value.background.objectFit || "cover");
-      } else if (profile.value.background.type === "blob") {
-        setBackgroundType("blob");
-        setBackgroundObjectFit(profile.value.background.objectFit || "cover");
-      }
-
-      // Links
-      const loadedLinks = (profile.value.links || []).map((link) => ({
-        icon: link.icon?.type === "url" ? link.icon.value : undefined,
-        label: link.label,
-        href: link.href,
-      }));
-      setLinks(loadedLinks);
     }
-  }, [profile]);
+  }, [profile, setFormData]);
 
-  // Input handlers
   const handleNameChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
-  ) => setName((e.target as HTMLInputElement).value);
+  ) =>
+    setFormData((prev) => ({
+      ...prev,
+      name: (e.target as HTMLInputElement).value,
+    }));
 
   const handleLocationChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
-  ) => setLocation((e.target as HTMLInputElement).value);
+  ) =>
+    setFormData((prev) => ({
+      ...prev,
+      location: (e.target as HTMLInputElement).value,
+    }));
 
   const handleBioChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
-  ) => setBio((e.target as HTMLInputElement).value);
+  ) =>
+    setFormData((prev) => ({
+      ...prev,
+      bio: (e.target as HTMLInputElement).value,
+    }));
 
   const handleProfileImageChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
   ) => {
-    setProfileImageUrl((e.target as HTMLInputElement).value);
-    setProfileImageBlob(null); // Clear blob when URL is entered
+    setFormData((prev) => ({
+      ...prev,
+      profileImageUrl: (e.target as HTMLInputElement).value,
+      profileImageBlob: null,
+    }));
   };
 
   const handleBackgroundImageChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
   ) => {
-    setBackgroundImageUrl((e.target as HTMLInputElement).value);
-    setBackgroundImageBlob(null); // Clear blob when URL is entered
+    setFormData((prev) => ({
+      ...prev,
+      backgroundImageUrl: (e.target as HTMLInputElement).value,
+      backgroundImageBlob: null,
+    }));
   };
 
   // Color change handler - only update state when done selecting
   const handleColorChange = (e: BlurEvent) => {
     const newColor = (e.target as unknown as HTMLInputElement).value;
-    setBackgroundColor(newColor);
+    setFormData((prev) => ({ ...prev, backgroundColor: newColor }));
   };
 
   // File upload handlers
@@ -130,8 +132,11 @@ export function Home() {
   ) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (file) {
-      setProfileImageBlob(file);
-      setProfileImageUrl(""); // Clear URL when file is selected
+      setFormData((prev) => ({
+        ...prev,
+        profileImageBlob: file,
+        profileImageUrl: "",
+      }));
     }
   };
 
@@ -140,9 +145,12 @@ export function Home() {
   ) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (file) {
-      setBackgroundImageBlob(file);
-      setBackgroundImageUrl(""); // Clear URL when file is selected
-      setBackgroundType("blob");
+      setFormData((prev) => ({
+        ...prev,
+        backgroundImageBlob: file,
+        backgroundImageUrl: "",
+        backgroundType: "blob",
+      }));
     }
   };
 
@@ -152,15 +160,20 @@ export function Home() {
   ) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (file) {
-      const newLinks = [...links];
-      newLinks[index].icon = file;
-      setLinks(newLinks);
+      setFormData((prev) => {
+        const newLinks = [...prev.links];
+        newLinks[index].icon = file;
+        return { ...prev, links: newLinks };
+      });
     }
   };
 
   // Link management
   const addLink = () => {
-    setLinks([...links, { icon: "", label: "", href: "" }]);
+    setFormData((prev) => ({
+      ...prev,
+      links: [...prev.links, { icon: "", label: "", href: "" }],
+    }));
   };
 
   const updateLink = (
@@ -168,31 +181,44 @@ export function Home() {
     field: "icon" | "label" | "href",
     value: string,
   ) => {
-    const newLinks = [...links];
-    newLinks[index][field] = value;
-    setLinks(newLinks);
+    setFormData((prev) => {
+      const newLinks = [...prev.links];
+      newLinks[index][field] = value;
+      return { ...prev, links: newLinks };
+    });
   };
 
   const removeLink = (index: number) => {
-    setLinks(links.filter((_, i) => i !== index));
+    setFormData((prev) => ({
+      ...prev,
+      links: prev.links.filter((_, i) => i !== index),
+    }));
   };
 
   // Clear handlers for removing uploaded images
   const clearProfileImage = () => {
-    setProfileImageBlob(null);
-    setProfileImageUrl("");
+    setFormData((prev) => ({
+      ...prev,
+      profileImageBlob: null,
+      profileImageUrl: "",
+    }));
   };
 
   const clearBackgroundImage = () => {
-    setBackgroundImageBlob(null);
-    setBackgroundImageUrl("");
-    setBackgroundType("color");
+    setFormData((prev) => ({
+      ...prev,
+      backgroundImageBlob: null,
+      backgroundImageUrl: "",
+      backgroundType: "color",
+    }));
   };
 
   const clearLinkIcon = (index: number) => {
-    const newLinks = [...links];
-    newLinks[index].icon = "";
-    setLinks(newLinks);
+    setFormData((prev) => {
+      const newLinks = [...prev.links];
+      newLinks[index].icon = "";
+      return { ...prev, links: newLinks };
+    });
   };
 
   return (
@@ -267,15 +293,15 @@ export function Home() {
 
                   <ImageInput
                     label="Profile Image (optional)"
-                    urlValue={profileImageUrl}
-                    blob={profileImageBlob}
+                    urlValue={formData.profileImageUrl}
+                    blob={formData.profileImageBlob}
                     onUrlChange={handleProfileImageChange}
                     onFileChange={handleProfileImageFile}
                   />
 
                   <Input
                     placeholder="Name (optional)"
-                    value={name}
+                    value={formData.name}
                     onChange={handleNameChange}
                     backgroundColor="$secondary"
                     color="$textBody"
@@ -285,7 +311,7 @@ export function Home() {
 
                   <Input
                     placeholder="Location (optional)"
-                    value={location}
+                    value={formData.location}
                     onChange={handleLocationChange}
                     backgroundColor="$secondary"
                     color="$textBody"
@@ -295,7 +321,7 @@ export function Home() {
 
                   <Input
                     placeholder="Bio (required)"
-                    value={bio}
+                    value={formData.bio}
                     onChange={handleBioChange}
                     backgroundColor="$secondary"
                     color="$textBody"
@@ -304,21 +330,28 @@ export function Home() {
                   />
 
                   <BackgroundSelector
-                    backgroundType={backgroundType}
-                    backgroundColor={backgroundColor}
-                    backgroundImageUrl={backgroundImageUrl}
-                    backgroundImageBlob={backgroundImageBlob}
-                    backgroundObjectFit={backgroundObjectFit}
+                    backgroundType={formData.backgroundType}
+                    backgroundColor={formData.backgroundColor}
+                    backgroundImageUrl={formData.backgroundImageUrl}
+                    backgroundImageBlob={formData.backgroundImageBlob}
+                    backgroundObjectFit={formData.backgroundObjectFit}
                     colorInputRef={colorInputRef}
-                    onTypeChange={setBackgroundType}
+                    onTypeChange={(type) =>
+                      setFormData((prev) => ({ ...prev, backgroundType: type }))
+                    }
                     onColorChange={handleColorChange}
                     onUrlChange={handleBackgroundImageChange}
                     onFileChange={handleBackgroundImageFile}
-                    onObjectFitChange={setBackgroundObjectFit}
+                    onObjectFitChange={(fit) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        backgroundObjectFit: fit,
+                      }))
+                    }
                   />
 
                   <LinkEditor
-                    links={links}
+                    links={formData.links}
                     onAddLink={addLink}
                     onUpdateLink={updateLink}
                     onRemoveLink={removeLink}
@@ -331,32 +364,35 @@ export function Home() {
                     hoverStyle={{ backgroundColor: "$greenHover" }}
                     pressStyle={{ backgroundColor: "$greenPress" }}
                     color="$greenText"
-                    disabled={createLoading || !bio.trim()}
+                    disabled={createLoading || !formData.bio.trim()}
                     onPress={async () => {
                       const result = await createProfile({
-                        profileImage: profileImageBlob
-                          ? { type: "blob", value: profileImageBlob }
-                          : profileImageUrl
-                            ? { type: "url", value: profileImageUrl }
+                        profileImage: formData.profileImageBlob
+                          ? { type: "blob", value: formData.profileImageBlob }
+                          : formData.profileImageUrl
+                            ? { type: "url", value: formData.profileImageUrl }
                             : undefined,
-                        name: name || undefined,
-                        location: location || undefined,
-                        bio,
+                        name: formData.name || undefined,
+                        location: formData.location || undefined,
+                        bio: formData.bio,
                         background:
-                          backgroundType === "color"
-                            ? { type: "color" as const, value: backgroundColor }
-                            : backgroundType === "blob"
+                          formData.backgroundType === "color"
+                            ? {
+                                type: "color" as const,
+                                value: formData.backgroundColor,
+                              }
+                            : formData.backgroundType === "blob"
                               ? {
                                   type: "blob" as const,
-                                  value: backgroundImageBlob!,
-                                  objectFit: backgroundObjectFit,
+                                  value: formData.backgroundImageBlob!,
+                                  objectFit: formData.backgroundObjectFit,
                                 }
                               : {
                                   type: "url" as const,
-                                  value: backgroundImageUrl,
-                                  objectFit: backgroundObjectFit,
+                                  value: formData.backgroundImageUrl,
+                                  objectFit: formData.backgroundObjectFit,
                                 },
-                        links: links.map((link) => ({
+                        links: formData.links.map((link) => ({
                           icon: link.icon
                             ? link.icon instanceof Blob
                               ? { type: "blob", value: link.icon }
@@ -384,8 +420,8 @@ export function Home() {
 
                   <ImageInput
                     label="Profile Image (optional)"
-                    urlValue={profileImageUrl}
-                    blob={profileImageBlob}
+                    urlValue={formData.profileImageUrl}
+                    blob={formData.profileImageBlob}
                     hasExistingBlob={
                       profile?.value.profileImage?.type === "blob"
                     }
@@ -396,7 +432,7 @@ export function Home() {
 
                   <Input
                     placeholder="Name (optional)"
-                    value={name}
+                    value={formData.name}
                     onChange={handleNameChange}
                     backgroundColor="$secondary"
                     color="$textBody"
@@ -406,7 +442,7 @@ export function Home() {
 
                   <Input
                     placeholder="Location (optional)"
-                    value={location}
+                    value={formData.location}
                     onChange={handleLocationChange}
                     backgroundColor="$secondary"
                     color="$textBody"
@@ -416,7 +452,7 @@ export function Home() {
 
                   <Input
                     placeholder="Bio (required)"
-                    value={bio}
+                    value={formData.bio}
                     onChange={handleBioChange}
                     backgroundColor="$secondary"
                     color="$textBody"
@@ -425,23 +461,30 @@ export function Home() {
                   />
 
                   <BackgroundSelector
-                    backgroundType={backgroundType}
-                    backgroundColor={backgroundColor}
-                    backgroundImageUrl={backgroundImageUrl}
-                    backgroundImageBlob={backgroundImageBlob}
-                    backgroundObjectFit={backgroundObjectFit}
+                    backgroundType={formData.backgroundType}
+                    backgroundColor={formData.backgroundColor}
+                    backgroundImageUrl={formData.backgroundImageUrl}
+                    backgroundImageBlob={formData.backgroundImageBlob}
+                    backgroundObjectFit={formData.backgroundObjectFit}
                     hasExistingBlob={profile?.value.background.type === "blob"}
                     colorInputRef={colorInputRef}
-                    onTypeChange={setBackgroundType}
+                    onTypeChange={(type) =>
+                      setFormData((prev) => ({ ...prev, backgroundType: type }))
+                    }
                     onColorChange={handleColorChange}
                     onUrlChange={handleBackgroundImageChange}
                     onFileChange={handleBackgroundImageFile}
-                    onObjectFitChange={setBackgroundObjectFit}
+                    onObjectFitChange={(fit) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        backgroundObjectFit: fit,
+                      }))
+                    }
                     onClearBlob={clearBackgroundImage}
                   />
 
                   <LinkEditor
-                    links={links}
+                    links={formData.links}
                     existingBlobIcons={
                       profile?.value.links?.map(
                         (link) => link.icon?.type === "blob",
@@ -461,42 +504,49 @@ export function Home() {
                       backgroundColor="$accent"
                       hoverStyle={{ opacity: 0.8 }}
                       color="white"
-                      disabled={updateLoading || !bio.trim()}
+                      disabled={updateLoading || !formData.bio.trim()}
                       onPress={async () => {
                         const result = await updateProfile({
-                          profileImage: profileImageBlob
-                            ? { type: "blob", value: profileImageBlob }
-                            : profileImageUrl
-                              ? { type: "url", value: profileImageUrl }
+                          profileImage: formData.profileImageBlob
+                            ? { type: "blob", value: formData.profileImageBlob }
+                            : formData.profileImageUrl
+                              ? { type: "url", value: formData.profileImageUrl }
                               : profile?.value.profileImage?.type === "blob"
                                 ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                   (profile.value.profileImage as any)
                                 : undefined,
-                          name: name || undefined,
-                          location: location || undefined,
-                          bio,
+                          name: formData.name || undefined,
+                          location: formData.location || undefined,
+                          bio: formData.bio,
                           background:
-                            backgroundType === "color"
-                              ? { type: "color", value: backgroundColor }
-                              : backgroundType === "blob" && backgroundImageBlob
+                            formData.backgroundType === "color"
+                              ? {
+                                  type: "color",
+                                  value: formData.backgroundColor,
+                                }
+                              : formData.backgroundType === "blob" &&
+                                  formData.backgroundImageBlob
                                 ? {
                                     type: "blob",
-                                    value: backgroundImageBlob,
-                                    objectFit: backgroundObjectFit,
+                                    value: formData.backgroundImageBlob,
+                                    objectFit: formData.backgroundObjectFit,
                                   }
-                                : backgroundType === "blob" &&
-                                    !backgroundImageBlob &&
+                                : formData.backgroundType === "blob" &&
+                                    !formData.backgroundImageBlob &&
                                     profile?.value.background.type === "blob"
                                   ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                     (profile.value.background as any)
-                                  : backgroundType === "url"
+                                  : formData.backgroundType === "url"
                                     ? {
                                         type: "url",
-                                        value: backgroundImageUrl,
-                                        objectFit: backgroundObjectFit,
+                                        value: formData.backgroundImageUrl,
+                                        objectFit: formData.backgroundObjectFit,
                                       }
-                                    : { type: "color", value: backgroundColor },
-                          links: links.map((link, index) => ({
+                                    : {
+                                        type: "color",
+                                        value: formData.backgroundColor,
+                                      },
+                          links: formData.links.map((link, index) => ({
                             icon: link.icon
                               ? link.icon instanceof Blob
                                 ? { type: "blob", value: link.icon }
@@ -528,16 +578,19 @@ export function Home() {
                       onPress={async () => {
                         const success = await deleteProfile();
                         if (success) {
-                          setProfileImageUrl("");
-                          setProfileImageBlob(null);
-                          setName("");
-                          setLocation("");
-                          setBio("");
-                          setBackgroundColor("#1a1a1a");
-                          setBackgroundImageUrl("");
-                          setBackgroundImageBlob(null);
-                          setBackgroundType("color");
-                          setLinks([]);
+                          setFormData({
+                            name: "",
+                            location: "",
+                            bio: "",
+                            profileImageUrl: "",
+                            profileImageBlob: null,
+                            backgroundImageUrl: "",
+                            backgroundImageBlob: null,
+                            backgroundColor: "#1a1a1a",
+                            backgroundType: "color",
+                            backgroundObjectFit: "cover",
+                            links: [],
+                          });
                           refetch(session.handle);
                         }
                       }}
