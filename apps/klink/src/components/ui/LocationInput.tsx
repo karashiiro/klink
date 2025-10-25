@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Input } from "@tamagui/input";
 import { locationAtom } from "../../atoms/profile";
@@ -8,6 +8,11 @@ export function LocationInput() {
   const atomValue = useAtomValue(locationAtom);
   const setLocation = useSetAtom(locationAtom);
   const [localValue, setLocalValue] = useState(atomValue);
+
+  // Sync local value when atom changes (e.g., when profile loads)
+  useEffect(() => {
+    setLocalValue(atomValue);
+  }, [atomValue]);
 
   const handleChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,

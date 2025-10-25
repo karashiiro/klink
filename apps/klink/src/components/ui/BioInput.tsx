@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Input } from "@tamagui/input";
 import { bioAtom } from "../../atoms/profile";
@@ -8,6 +8,11 @@ export function BioInput() {
   const atomValue = useAtomValue(bioAtom);
   const setBio = useSetAtom(bioAtom);
   const [localValue, setLocalValue] = useState(atomValue);
+
+  // Sync local value when atom changes (e.g., when profile loads)
+  useEffect(() => {
+    setLocalValue(atomValue);
+  }, [atomValue]);
 
   const handleChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
