@@ -53,6 +53,7 @@ export function useCreateProfile() {
         ) => {
           if (!image) return undefined;
           if (image.type === "url") {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const result: any = {
               type: "url" as const,
               value: image.value as `${string}:${string}`,
@@ -72,6 +73,7 @@ export function useCreateProfile() {
           if (!blobResponse.ok) {
             throw new Error(`Failed to upload image: ${blobResponse.status}`);
           }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const result: any = {
             type: "blob" as const,
             value: blobResponse.data.blob,
@@ -104,9 +106,7 @@ export function useCreateProfile() {
             },
           );
           if (!blobResponse.ok) {
-            throw new Error(
-              `Failed to upload shader: ${blobResponse.status}`,
-            );
+            throw new Error(`Failed to upload shader: ${blobResponse.status}`);
           }
           background = {
             $type: "moe.karashiiro.klink.profile#shaderBackground",
