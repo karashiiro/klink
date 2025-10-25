@@ -32,6 +32,7 @@ export function BackgroundRenderer({
       } else if (pdsUrl && did) {
         // Fetch from PDS
         const cleanPdsUrl = pdsUrl.endsWith("/") ? pdsUrl.slice(0, -1) : pdsUrl;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const blobUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${(background.value as any).ref.$link}`;
 
         console.log("[BackgroundRenderer] Fetching shader from PDS:", blobUrl);

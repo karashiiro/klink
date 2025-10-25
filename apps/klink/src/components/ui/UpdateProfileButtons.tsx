@@ -96,6 +96,7 @@ export function UpdateProfileButtons({
                   : typeof link.icon === "string"
                     ? { type: "url", value: link.icon }
                     : // It's already a Main["profileImage"] object, pass it through
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       (link.icon as any)
                 : profile?.value.links?.[index]?.icon?.type === "blob"
                   ? // eslint-disable-next-line @typescript-eslint/no-explicit-any

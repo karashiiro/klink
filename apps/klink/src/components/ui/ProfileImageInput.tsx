@@ -30,6 +30,7 @@ export function ProfileImageInput({ profile }: ProfileImageInputProps) {
     const cleanPdsUrl = session.endpoint.url.endsWith("/")
       ? session.endpoint.url.slice(0, -1)
       : session.endpoint.url;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     existingBlobUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${session.did}&cid=${(profile.value.profileImage.value as any).ref.$link}`;
   }
 

@@ -1,6 +1,5 @@
 import { useAtomValue } from "jotai";
 import { YStack } from "@tamagui/stacks";
-import { Card } from "@tamagui/card";
 import { useAuth } from "@kpaste-app/atproto-auth";
 import {
   nameAtom,
@@ -49,32 +48,46 @@ export function ProfilePreview() {
   // For preview purposes, we cast Blob instances to the expected types
   // In reality, these would be uploaded and replaced with blob references
   const profileImage: Main["profileImage"] = profileImageBlob
-    ? (profileImageBlob as any)
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (profileImageBlob as any)
     : profileImageUrl
       ? { type: "url", value: profileImageUrl }
       : undefined;
 
   const background: Main["background"] =
     backgroundType === "color"
-      ? { type: "color", value: backgroundColor }
+      ? {
+          $type: "moe.karashiiro.klink.profile#colorBackground",
+          type: "color",
+          value: backgroundColor,
+        }
       : backgroundType === "shader" && backgroundShaderCode
-        ? ({
+        ? {
+            $type: "moe.karashiiro.klink.profile#shaderBackground",
             type: "shader",
-            value: new Blob([backgroundShaderCode], { type: "text/plain" }),
-          } as any)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            value: new Blob([backgroundShaderCode], { type: "text/plain" }) as any,
+          }
         : backgroundType === "blob" && backgroundImageBlob
-          ? ({
+          ? {
+              $type: "moe.karashiiro.klink.profile#blobBackground",
               type: "blob",
-              value: backgroundImageBlob,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              value: backgroundImageBlob as any,
               objectFit: backgroundObjectFit,
-            } as any)
+            }
           : backgroundType === "url"
             ? {
+                $type: "moe.karashiiro.klink.profile#urlBackground",
                 type: "url",
-                value: backgroundImageUrl,
+                value: backgroundImageUrl as `${string}:${string}`,
                 objectFit: backgroundObjectFit,
               }
-            : { type: "color", value: backgroundColor };
+            : {
+                $type: "moe.karashiiro.klink.profile#colorBackground",
+                type: "color",
+                value: backgroundColor,
+              };
 
   const profileData: Main = {
     $type: "moe.karashiiro.klink.profile",
@@ -92,12 +105,14 @@ export function ProfilePreview() {
     links: links.map((link) => ({
       icon: link.icon
         ? link.icon instanceof Blob
-          ? (link.icon as any)
+          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (link.icon as any)
           : typeof link.icon === "string"
             ? { type: "url", value: link.icon }
             : link.icon
         : undefined,
       label: link.label,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       href: link.href as any, // href validation happens during submission
     })),
   };

@@ -52,6 +52,7 @@ export function ShaderCanvas({ shaderCode }: ShaderCanvasProps) {
 
     // Compile shader
     function compileShader(source: string, type: number): WebGLShader | null {
+      if (!gl) return null;
       const shader = gl.createShader(type);
       if (!shader) return null;
 

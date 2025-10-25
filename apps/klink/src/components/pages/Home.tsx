@@ -43,6 +43,7 @@ export function Home() {
           const cleanPdsUrl = session.endpoint.url.endsWith("/")
             ? session.endpoint.url.slice(0, -1)
             : session.endpoint.url;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const blobUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${session.did}&cid=${(profile.value.background.value as any).ref.$link}`;
 
           try {
@@ -74,7 +75,8 @@ export function Home() {
           backgroundShaderCode: shaderCode,
           backgroundType: profile.value.background.type,
           backgroundObjectFit:
-            profile.value.background.type !== "color"
+            profile.value.background.type !== "color" &&
+            profile.value.background.type !== "shader"
               ? profile.value.background.objectFit || "cover"
               : "cover",
           theme: {
