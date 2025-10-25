@@ -2,11 +2,11 @@ import { type FormEvent } from "react";
 import { useAtom } from "jotai";
 import { type PrimitiveAtom } from "jotai";
 import { YStack, XStack } from "@tamagui/stacks";
-import { Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
 import { Input } from "@tamagui/input";
 import type { TextInputChangeEvent } from "react-native";
 import type { Main } from "@klink-app/lexicon/types";
+import { ImageInput } from "./ImageInput";
 
 interface Link {
   icon?: string | Blob | Main["profileImage"];
@@ -17,6 +17,7 @@ interface Link {
 interface LinkItemProps {
   linkAtom: PrimitiveAtom<Link>;
   hasExistingBlobIcon?: boolean;
+  existingBlobUrl?: string;
   onRemove: () => void;
   onClearIcon?: () => void;
 }
@@ -24,6 +25,7 @@ interface LinkItemProps {
 export function LinkItem({
   linkAtom,
   hasExistingBlobIcon = false,
+  existingBlobUrl,
   onRemove,
   onClearIcon,
 }: LinkItemProps) {
@@ -95,64 +97,18 @@ export function LinkItem({
           ✕
         </Button>
       </XStack>
-      <YStack gap="$1">
-        <Input
-          placeholder="Icon URL (optional)"
-          value={typeof link.icon === "string" ? link.icon : ""}
-          onChange={handleIconUrlChange}
-          backgroundColor="$secondary"
-          color="$textBody"
-          borderColor="$border"
-          size="$3"
-          disabled={link.icon instanceof Blob}
-        />
-        <Paragraph color="$textMuted" fontSize="$1">
-          - or -
-        </Paragraph>
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={handleIconFileChange}
-          backgroundColor="$secondary"
-          color="$textBody"
-          borderColor="$border"
-          size="$3"
-        />
-        {link.icon instanceof Blob && (
-          <XStack alignItems="center" gap="$2">
-            <Paragraph color="$accent" fontSize="$1" flex={1}>
-              File: {(link.icon as File).name || "image"}
-            </Paragraph>
-            {onClearIcon && (
-              <Button
-                size="$2"
-                backgroundColor="$redBase"
-                hoverStyle={{ backgroundColor: "$redHover" }}
-                onPress={onClearIcon}
-              >
-                Clear
-              </Button>
-            )}
-          </XStack>
-        )}
-        {!(link.icon instanceof Blob) && hasExistingBlobIcon && (
-          <XStack alignItems="center" gap="$2">
-            <Paragraph color="$greenBase" fontSize="$1" flex={1}>
-              ✓ Icon uploaded (choose new file to replace)
-            </Paragraph>
-            {onClearIcon && (
-              <Button
-                size="$2"
-                backgroundColor="$redBase"
-                hoverStyle={{ backgroundColor: "$redHover" }}
-                onPress={onClearIcon}
-              >
-                Remove
-              </Button>
-            )}
-          </XStack>
-        )}
-      </YStack>
+
+      <ImageInput
+        label="Icon (optional)"
+        urlValue={typeof link.icon === "string" ? link.icon : ""}
+        blob={link.icon instanceof Blob ? link.icon : null}
+        hasExistingBlob={hasExistingBlobIcon}
+        existingBlobUrl={existingBlobUrl}
+        onUrlChange={handleIconUrlChange}
+        onFileChange={handleIconFileChange}
+        onClear={onClearIcon}
+        placeholder="Icon URL"
+      />
     </YStack>
   );
 }
