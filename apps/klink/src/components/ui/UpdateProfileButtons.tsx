@@ -32,9 +32,10 @@ export function UpdateProfileButtons({
       <Button
         flex={1}
         size="$4"
-        backgroundColor="$accent"
-        hoverStyle={{ opacity: 0.8 }}
-        color="white"
+        backgroundColor="$greenBase"
+        hoverStyle={{ backgroundColor: "$greenHover" }}
+        pressStyle={{ backgroundColor: "$greenPress" }}
+        color="$greenText"
         disabled={updateLoading || !bio.trim()}
         onPress={async () => {
           const data = store.get(profileAtom);

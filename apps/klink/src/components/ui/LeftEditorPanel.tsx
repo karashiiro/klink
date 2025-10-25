@@ -25,6 +25,8 @@ export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
       top={0}
       bottom={0}
       width={350}
+      borderTopLeftRadius={0}
+      borderBottomLeftRadius={0}
       padding="$4"
       backgroundColor="rgba(0, 0, 0, 0.7)"
       style={{

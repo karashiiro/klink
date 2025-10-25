@@ -166,7 +166,7 @@ export function Home() {
               onPress={openAuthModal}
               width="100%"
             >
-              Login with ATProto
+              Login
             </Button>
           )}
 

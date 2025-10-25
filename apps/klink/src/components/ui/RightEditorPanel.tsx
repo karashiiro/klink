@@ -41,6 +41,8 @@ export function RightEditorPanel({
       top={0}
       bottom={0}
       width={350}
+      borderTopRightRadius={0}
+      borderBottomRightRadius={0}
       padding="$4"
       backgroundColor="rgba(0, 0, 0, 0.7)"
       style={{

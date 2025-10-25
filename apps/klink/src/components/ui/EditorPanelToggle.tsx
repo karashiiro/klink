@@ -28,7 +28,7 @@ export function EditorPanelToggle() {
         transform: "translateX(-50%)",
       }}
     >
-      {isOpen ? "Hide Panels" : "Show Panels"}
+      {isOpen ? "Hide Editor" : "Show Editor"}
     </Button>
   );
 }

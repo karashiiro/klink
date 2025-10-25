@@ -44,7 +44,6 @@ export function ProfileView() {
 
   const { value, pdsUrl, did, handle } = data;
   const backgroundStyle = getBackgroundStyle(value.background, pdsUrl, did);
-  const primaryColor = value.theme?.primaryColor || "#364163";
 
   return (
     <YStack
@@ -62,22 +61,12 @@ export function ProfileView() {
         pdsUrl={pdsUrl}
         did={did}
       />
-      <Card
-        elevate
-        size="$4"
-        bordered
-        backgroundColor={primaryColor}
-        maxWidth={600}
-        width="100%"
-        padding="$6"
-      >
-        <ProfileDisplay
-          profileData={value}
-          handle={handle}
-          pdsUrl={pdsUrl}
-          did={did}
-        />
-      </Card>
+      <ProfileDisplay
+        profileData={value}
+        handle={handle}
+        pdsUrl={pdsUrl}
+        did={did}
+      />
     </YStack>
   );
 }

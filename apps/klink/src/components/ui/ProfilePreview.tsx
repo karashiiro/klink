@@ -124,22 +124,12 @@ export function ProfilePreview() {
         pdsUrl={session.endpoint.url}
         did={session.did}
       />
-      <Card
-        elevate
-        size="$4"
-        bordered
-        backgroundColor={primaryColor}
-        maxWidth={600}
-        width="100%"
-        padding="$6"
-      >
-        <ProfileDisplay
-          profileData={profileData}
-          handle={session.handle}
-          pdsUrl={session.endpoint.url}
-          did={session.did}
-        />
-      </Card>
+      <ProfileDisplay
+        profileData={profileData}
+        handle={session.handle}
+        pdsUrl={session.endpoint.url}
+        did={session.did}
+      />
     </YStack>
   );
 }
