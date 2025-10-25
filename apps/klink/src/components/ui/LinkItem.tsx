@@ -6,9 +6,10 @@ import { Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
 import { Input } from "@tamagui/input";
 import type { TextInputChangeEvent } from "react-native";
+import type { Main } from "@klink-app/lexicon/types";
 
 interface Link {
-  icon?: string | Blob;
+  icon?: string | Blob | Main["profileImage"];
   label: string;
   href: string;
 }

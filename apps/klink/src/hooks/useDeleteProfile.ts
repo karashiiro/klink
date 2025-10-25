@@ -52,3 +52,5 @@ export function useDeleteProfile() {
 
   return { deleteProfile, loading, error };
 }
+
+export type UseDeleteProfileReturn = ReturnType<typeof useDeleteProfile>;

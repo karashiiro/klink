@@ -9,10 +9,18 @@ export function getBackgroundStyle(
     return { backgroundColor: background.value };
   }
 
-  const imageUrl =
-    background.type === "url"
-      ? background.value
-      : `${pdsUrl}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${background.value.ref.$link}`;
+  let imageUrl: string;
+  if (background.type === "url") {
+    imageUrl = background.value;
+  } else {
+    // Handle both Blob instances (preview) and blob references (from PDS)
+    if (background.value instanceof Blob) {
+      imageUrl = URL.createObjectURL(background.value);
+    } else {
+      const cleanPdsUrl = pdsUrl.endsWith("/") ? pdsUrl.slice(0, -1) : pdsUrl;
+      imageUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${(background.value as any).ref.$link}`;
+    }
+  }
 
   const objectFit = background.objectFit || "cover";
 

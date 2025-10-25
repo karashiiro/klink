@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { YStack } from "@tamagui/stacks";
-import { H1, H3, Paragraph } from "@tamagui/text";
+import { H1, Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
 import { Card } from "@tamagui/card";
 import { useAuth } from "@kpaste-app/atproto-auth";
@@ -11,18 +11,13 @@ import { useReadProfile } from "../../hooks/useReadProfile";
 import { useCreateProfile } from "../../hooks/useCreateProfile";
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
 import { useDeleteProfile } from "../../hooks/useDeleteProfile";
-import { NameInput } from "../ui/NameInput";
-import { LocationInput } from "../ui/LocationInput";
-import { BioInput } from "../ui/BioInput";
-import { ProfileImageInput } from "../ui/ProfileImageInput";
-import { ProfileBackgroundSelector } from "../ui/ProfileBackgroundSelector";
-import { ProfileLinkEditor } from "../ui/ProfileLinkEditor";
-import { CreateProfileButton } from "../ui/CreateProfileButton";
-import { UpdateProfileButtons } from "../ui/UpdateProfileButtons";
+import { ProfilePreview } from "../ui/ProfilePreview";
+import { LeftEditorPanel } from "../ui/LeftEditorPanel";
+import { RightEditorPanel } from "../ui/RightEditorPanel";
 import { profileAtom } from "../../atoms/profile";
 
 export function Home() {
-  const { authState, logout, session } = useAuth();
+  const { authState, session } = useAuth();
   const { openAuthModal } = useAuthModal();
 
   // Read user's profile
@@ -64,13 +59,38 @@ export function Home() {
             ? profile.value.background.objectFit || "cover"
             : "cover",
         links: (profile.value.links || []).map((link) => ({
-          icon: link.icon?.type === "url" ? link.icon.value : undefined,
+          icon: link.icon,
           label: link.label,
           href: link.href,
         })),
       });
     }
   }, [profile, setFormData]);
+
+  if (authState.state === "authenticated" && session && !profileLoading) {
+    return (
+      <YStack
+        position="relative"
+        flex={1}
+        width="100%"
+        height="100vh"
+        overflow="hidden"
+      >
+        <ProfilePreview />
+        <LeftEditorPanel profile={profile} />
+        <RightEditorPanel
+          profile={profile}
+          createProfile={createProfile}
+          createLoading={createLoading}
+          updateProfile={updateProfile}
+          updateLoading={updateLoading}
+          deleteProfile={deleteProfile}
+          deleteLoading={deleteLoading}
+          onSuccess={() => refetch(session.handle)}
+        />
+      </YStack>
+    );
+  }
 
   return (
     <YStack
@@ -121,87 +141,17 @@ export function Home() {
             </Button>
           )}
 
-          {authState.state === "authenticated" && session && (
+          {authState.state === "authenticated" && session && profileLoading && (
             <YStack gap="$4" width="100%" alignItems="center">
               <Paragraph fontSize="$5" color="$textTitle" textAlign="center">
                 Welcome back, {session.handle}!
               </Paragraph>
-
-              {profileLoading && (
-                <YStack alignItems="center" gap="$2">
-                  <Loader size="$1" color="$accent" />
-                  <Paragraph color="$textMuted" fontSize="$2">
-                    Loading profile...
-                  </Paragraph>
-                </YStack>
-              )}
-
-              {!profileLoading && !profile && (
-                <YStack gap="$3" width="100%">
-                  <H3 color="$textTitle" textAlign="center">
-                    Create Your Profile
-                  </H3>
-
-                  <ProfileImageInput />
-
-                  <NameInput />
-
-                  <LocationInput />
-
-                  <BioInput />
-
-                  <ProfileBackgroundSelector />
-
-                  <ProfileLinkEditor />
-
-                  <CreateProfileButton
-                    createProfile={createProfile}
-                    createLoading={createLoading}
-                    onSuccess={() => refetch(session.handle)}
-                  />
-                </YStack>
-              )}
-
-              {!profileLoading && profile && (
-                <YStack gap="$3" width="100%">
-                  <H3 color="$textTitle" textAlign="center">
-                    Edit Your Profile
-                  </H3>
-
-                  <ProfileImageInput profile={profile} />
-
-                  <NameInput />
-
-                  <LocationInput />
-
-                  <BioInput />
-
-                  <ProfileBackgroundSelector profile={profile} />
-
-                  <ProfileLinkEditor profile={profile} />
-
-                  <UpdateProfileButtons
-                    updateProfile={updateProfile}
-                    updateLoading={updateLoading}
-                    deleteProfile={deleteProfile}
-                    deleteLoading={deleteLoading}
-                    profile={profile}
-                    onSuccess={() => refetch(session.handle)}
-                  />
-                </YStack>
-              )}
-
-              <Button
-                size="$3"
-                backgroundColor="$redBase"
-                hoverStyle={{ backgroundColor: "$redHover" }}
-                pressStyle={{ backgroundColor: "$redPress" }}
-                color="white"
-                onPress={logout}
-                marginTop="$2"
-              >
-                Logout
-              </Button>
+              <YStack alignItems="center" gap="$2">
+                <Loader size="$1" color="$accent" />
+                <Paragraph color="$textMuted" fontSize="$2">
+                  Loading profile...
+                </Paragraph>
+              </YStack>
             </YStack>
           )}
 

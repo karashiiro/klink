@@ -1,21 +1,30 @@
-import { type FormEvent } from "react";
-import { useAtom } from "jotai";
+import { useState, type FormEvent } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Input } from "@tamagui/input";
 import { nameAtom } from "../../atoms/profile";
 import type { TextInputChangeEvent } from "react-native";
 
 export function NameInput() {
-  const [name, setName] = useAtom(nameAtom);
+  const atomValue = useAtomValue(nameAtom);
+  const setName = useSetAtom(nameAtom);
+  const [localValue, setLocalValue] = useState(atomValue);
 
   const handleChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
-  ) => setName((e.target as HTMLInputElement).value);
+  ) => setLocalValue((e.target as HTMLInputElement).value);
+
+  const handleBlur = () => {
+    if (localValue !== atomValue) {
+      setName(localValue);
+    }
+  };
 
   return (
     <Input
       placeholder="Name (optional)"
-      value={name}
+      value={localValue}
       onChange={handleChange}
+      onBlur={handleBlur}
       backgroundColor="$secondary"
       color="$textBody"
       borderColor="$border"

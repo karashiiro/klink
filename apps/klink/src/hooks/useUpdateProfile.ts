@@ -137,3 +137,5 @@ export function useUpdateProfile() {
 
   return { updateProfile, loading, error };
 }
+
+export type UseUpdateProfileReturn = ReturnType<typeof useUpdateProfile>;

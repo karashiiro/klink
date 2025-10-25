@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { splitAtom } from "jotai/utils";
+import type { Main } from "@klink-app/lexicon/types";
 
 export const profileAtom = atom({
   name: "",
@@ -17,7 +18,11 @@ export const profileAtom = atom({
     | "fill"
     | "scale-down"
     | "none",
-  links: [] as { icon?: string | Blob; label: string; href: string }[],
+  links: [] as {
+    icon?: string | Blob | Main["profileImage"];
+    label: string;
+    href: string;
+  }[],
 });
 
 export const nameAtom = atom(
@@ -66,10 +71,22 @@ export const linksAtom = atom(
     get,
     set,
     newValue:
-      | { icon?: string | Blob; label: string; href: string }[]
+      | {
+          icon?: string | Blob | Main["profileImage"];
+          label: string;
+          href: string;
+        }[]
       | ((
-          prev: { icon?: string | Blob; label: string; href: string }[],
-        ) => { icon?: string | Blob; label: string; href: string }[]),
+          prev: {
+            icon?: string | Blob | Main["profileImage"];
+            label: string;
+            href: string;
+          }[],
+        ) => {
+          icon?: string | Blob | Main["profileImage"];
+          label: string;
+          href: string;
+        }[]),
   ) => {
     const updatedValue =
       typeof newValue === "function"

@@ -132,3 +132,5 @@ export function useCreateProfile() {
 
   return { createProfile, loading, error };
 }
+
+export type UseCreateProfileReturn = ReturnType<typeof useCreateProfile>;

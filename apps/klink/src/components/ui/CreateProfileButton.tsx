@@ -57,7 +57,11 @@ export function CreateProfileButton({
             icon: link.icon
               ? link.icon instanceof Blob
                 ? { type: "blob", value: link.icon }
-                : { type: "url", value: link.icon }
+                : typeof link.icon === "string"
+                  ? { type: "url", value: link.icon }
+                  : link.icon.type === "url"
+                    ? { type: "url", value: link.icon.value as string }
+                    : undefined
               : undefined,
             label: link.label,
             href: link.href,

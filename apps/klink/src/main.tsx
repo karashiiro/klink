@@ -1,6 +1,6 @@
 import { StrictMode, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import { createHashRouter } from "react-router";
+import { createHashRouter, type LoaderFunctionArgs } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { TamaguiProvider, createTamagui, Theme } from "@tamagui/core";
 import { defaultConfig } from "@tamagui/config/v4";
@@ -47,9 +47,12 @@ const ProfileView = lazy(() =>
 );
 
 // Profile loader function
-async function profileLoader({ params }: { params: { handle: string } }) {
+async function profileLoader({ params }: LoaderFunctionArgs) {
   try {
-    const { handle } = params;
+    const handle = params.handle;
+    if (!handle) {
+      throw new Error("Handle is required");
+    }
 
     // Resolve handle to DID and PDS
     const { did, pdsUrl } = await resolveUser(handle);
