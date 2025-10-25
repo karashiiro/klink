@@ -43,6 +43,7 @@ export function ProfileView() {
 
   const { value, pdsUrl, did, handle } = data;
   const backgroundStyle = getBackgroundStyle(value.background, pdsUrl, did);
+  const primaryColor = value.theme?.primaryColor || "#364163";
 
   return (
     <YStack
@@ -59,7 +60,7 @@ export function ProfileView() {
         elevate
         size="$4"
         bordered
-        backgroundColor="$primary"
+        backgroundColor={primaryColor}
         maxWidth={600}
         width="100%"
         padding="$6"
