@@ -14,6 +14,10 @@ export interface UpdateProfileForm {
         value: string | Blob;
         objectFit?: "cover" | "contain" | "fill" | "scale-down" | "none";
       };
+  theme: {
+    primaryColor: string;
+    secondaryColor: string;
+  };
   links: Array<{
     icon?: { type: "url" | "blob"; value: string | Blob };
     label: string;
@@ -99,6 +103,7 @@ export function useUpdateProfile() {
           location: form.location,
           bio: form.bio || "",
           background,
+          theme: form.theme,
           links,
         } as Omit<Main, "$type">;
 

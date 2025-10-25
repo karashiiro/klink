@@ -14,6 +14,10 @@ export interface CreateProfileForm {
         value: string | Blob;
         objectFit?: "cover" | "contain" | "fill" | "scale-down" | "none";
       };
+  theme: {
+    primaryColor: string;
+    secondaryColor: string;
+  };
   links: Array<{
     icon?: { type: "url" | "blob"; value: string | Blob };
     label: string;
@@ -92,6 +96,7 @@ export function useCreateProfile() {
           location: form.location,
           bio: form.bio || "",
           background,
+          theme: form.theme,
           links,
         } as Omit<Main, "$type">;
 

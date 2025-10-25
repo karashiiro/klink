@@ -58,6 +58,10 @@ export function Home() {
           profile.value.background.type !== "color"
             ? profile.value.background.objectFit || "cover"
             : "cover",
+        theme: {
+          primaryColor: profile.value.theme?.primaryColor || "#364163",
+          secondaryColor: profile.value.theme?.secondaryColor || "#a58431",
+        },
         links: (profile.value.links || []).map((link) => ({
           icon: link.icon,
           label: link.label,

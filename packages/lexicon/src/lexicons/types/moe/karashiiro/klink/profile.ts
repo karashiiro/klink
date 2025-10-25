@@ -137,8 +137,41 @@ const _mainSchema = /*#__PURE__*/ v.record(
         /*#__PURE__*/ v.variant([blobImageSchema, urlImageSchema]),
       );
     },
+    /**
+     * Custom color theme for profile
+     */
+    get theme() {
+      return /*#__PURE__*/ v.optional(themeSchema);
+    },
   }),
 );
+const _themeSchema = /*#__PURE__*/ v.object({
+  $type: /*#__PURE__*/ v.optional(
+    /*#__PURE__*/ v.literal("moe.karashiiro.klink.profile#theme"),
+  ),
+  /**
+   * Primary color (card background) as hex code
+   * @maxLength 20
+   * @default "#364163"
+   */
+  primaryColor: /*#__PURE__*/ v.optional(
+    /*#__PURE__*/ v.constrain(/*#__PURE__*/ v.string(), [
+      /*#__PURE__*/ v.stringLength(0, 20),
+    ]),
+    "#364163",
+  ),
+  /**
+   * Secondary color (button background) as hex code
+   * @maxLength 20
+   * @default "#a58431"
+   */
+  secondaryColor: /*#__PURE__*/ v.optional(
+    /*#__PURE__*/ v.constrain(/*#__PURE__*/ v.string(), [
+      /*#__PURE__*/ v.stringLength(0, 20),
+    ]),
+    "#a58431",
+  ),
+});
 const _urlBackgroundSchema = /*#__PURE__*/ v.object({
   $type: /*#__PURE__*/ v.optional(
     /*#__PURE__*/ v.literal("moe.karashiiro.klink.profile#urlBackground"),
@@ -185,6 +218,7 @@ type blobImage$schematype = typeof _blobImageSchema;
 type colorBackground$schematype = typeof _colorBackgroundSchema;
 type link$schematype = typeof _linkSchema;
 type main$schematype = typeof _mainSchema;
+type theme$schematype = typeof _themeSchema;
 type urlBackground$schematype = typeof _urlBackgroundSchema;
 type urlImage$schematype = typeof _urlImageSchema;
 
@@ -193,6 +227,7 @@ export interface blobImageSchema extends blobImage$schematype {}
 export interface colorBackgroundSchema extends colorBackground$schematype {}
 export interface linkSchema extends link$schematype {}
 export interface mainSchema extends main$schematype {}
+export interface themeSchema extends theme$schematype {}
 export interface urlBackgroundSchema extends urlBackground$schematype {}
 export interface urlImageSchema extends urlImage$schematype {}
 
@@ -203,6 +238,7 @@ export const colorBackgroundSchema =
   _colorBackgroundSchema as colorBackgroundSchema;
 export const linkSchema = _linkSchema as linkSchema;
 export const mainSchema = _mainSchema as mainSchema;
+export const themeSchema = _themeSchema as themeSchema;
 export const urlBackgroundSchema = _urlBackgroundSchema as urlBackgroundSchema;
 export const urlImageSchema = _urlImageSchema as urlImageSchema;
 
@@ -213,6 +249,7 @@ export interface ColorBackground
   extends v.InferInput<typeof colorBackgroundSchema> {}
 export interface Link extends v.InferInput<typeof linkSchema> {}
 export interface Main extends v.InferInput<typeof mainSchema> {}
+export interface Theme extends v.InferInput<typeof themeSchema> {}
 export interface UrlBackground
   extends v.InferInput<typeof urlBackgroundSchema> {}
 export interface UrlImage extends v.InferInput<typeof urlImageSchema> {}

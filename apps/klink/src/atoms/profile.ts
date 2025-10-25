@@ -18,6 +18,10 @@ export const profileAtom = atom({
     | "fill"
     | "scale-down"
     | "none",
+  theme: {
+    primaryColor: "#364163",
+    secondaryColor: "#a58431",
+  },
   links: [] as {
     icon?: string | Blob | Main["profileImage"];
     label: string;
@@ -97,3 +101,21 @@ export const linksAtom = atom(
 );
 
 export const linksAtomsAtom = splitAtom(linksAtom);
+
+export const primaryColorAtom = atom(
+  (get) => get(profileAtom).theme.primaryColor,
+  (get, set, newValue: string) =>
+    set(profileAtom, {
+      ...get(profileAtom),
+      theme: { ...get(profileAtom).theme, primaryColor: newValue },
+    }),
+);
+
+export const secondaryColorAtom = atom(
+  (get) => get(profileAtom).theme.secondaryColor,
+  (get, set, newValue: string) =>
+    set(profileAtom, {
+      ...get(profileAtom),
+      theme: { ...get(profileAtom).theme, secondaryColor: newValue },
+    }),
+);

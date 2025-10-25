@@ -37,6 +37,11 @@
             "description": "Background as color, URL, or blob",
             "refs": ["#colorBackground", "#urlBackground", "#blobBackground"]
           },
+          "theme": {
+            "type": "ref",
+            "description": "Custom color theme for profile",
+            "ref": "#theme"
+          },
           "links": {
             "type": "array",
             "description": "Array of links",
@@ -164,6 +169,25 @@
           "format": "uri",
           "description": "Link URL",
           "maxLength": 2000
+        }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "description": "Custom color theme for profile",
+      "required": ["primaryColor", "secondaryColor"],
+      "properties": {
+        "primaryColor": {
+          "type": "string",
+          "description": "Primary color (card background) as hex code",
+          "maxLength": 20,
+          "default": "#364163"
+        },
+        "secondaryColor": {
+          "type": "string",
+          "description": "Secondary color (button background) as hex code",
+          "maxLength": 20,
+          "default": "#a58431"
         }
       }
     }

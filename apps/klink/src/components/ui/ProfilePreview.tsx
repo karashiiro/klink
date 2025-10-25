@@ -13,6 +13,8 @@ import {
   backgroundColorAtom,
   backgroundTypeAtom,
   backgroundObjectFitAtom,
+  primaryColorAtom,
+  secondaryColorAtom,
   linksAtom,
 } from "../../atoms/profile";
 import { ProfileDisplay } from "./ProfileDisplay";
@@ -31,6 +33,8 @@ export function ProfilePreview() {
   const backgroundColor = useAtomValue(backgroundColorAtom);
   const backgroundType = useAtomValue(backgroundTypeAtom);
   const backgroundObjectFit = useAtomValue(backgroundObjectFitAtom);
+  const primaryColor = useAtomValue(primaryColorAtom);
+  const secondaryColor = useAtomValue(secondaryColorAtom);
   const links = useAtomValue(linksAtom);
 
   if (!session) return null;
@@ -67,6 +71,10 @@ export function ProfilePreview() {
     bio,
     profileImage,
     background,
+    theme: {
+      primaryColor,
+      secondaryColor,
+    },
     links: links.map((link) => ({
       icon: link.icon
         ? link.icon instanceof Blob
@@ -101,7 +109,7 @@ export function ProfilePreview() {
         elevate
         size="$4"
         bordered
-        backgroundColor="$primary"
+        backgroundColor={primaryColor}
         maxWidth={600}
         width="100%"
         padding="$6"

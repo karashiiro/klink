@@ -53,6 +53,7 @@ export function CreateProfileButton({
                     value: data.backgroundImageUrl,
                     objectFit: data.backgroundObjectFit,
                   },
+          theme: data.theme,
           links: data.links.map((link) => ({
             icon: link.icon
               ? link.icon instanceof Blob

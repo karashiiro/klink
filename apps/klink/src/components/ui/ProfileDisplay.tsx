@@ -2,6 +2,10 @@ import { YStack, XStack } from "@tamagui/stacks";
 import { H1, Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
 import { AtProtoImage } from "./AtProtoImage";
+import {
+  getContrastTextColor,
+  getMutedTextColor,
+} from "../../utils/colorUtils";
 import type { Main } from "@klink-app/lexicon/types";
 
 interface ProfileDisplayProps {
@@ -17,6 +21,15 @@ export function ProfileDisplay({
   pdsUrl,
   did,
 }: ProfileDisplayProps) {
+  // Get theme colors with fallbacks
+  const primaryColor = profileData.theme?.primaryColor || "#364163";
+  const secondaryColor = profileData.theme?.secondaryColor || "#a58431";
+
+  // Calculate contrast colors
+  const textColor = getContrastTextColor(primaryColor);
+  const mutedTextColor = getMutedTextColor(primaryColor);
+  const buttonTextColor = getContrastTextColor(secondaryColor);
+
   return (
     <YStack gap="$4">
       <XStack gap="$4" alignItems="flex-start">
@@ -32,21 +45,21 @@ export function ProfileDisplay({
         <YStack gap="$2" flex={1} justifyContent="center">
           {profileData.name ? (
             <>
-              <H1 color="$textTitle" size="$9">
+              <H1 color={textColor} size="$9">
                 {profileData.name}
               </H1>
-              <Paragraph color="$textMuted" fontSize="$6">
+              <Paragraph color={mutedTextColor} fontSize="$6">
                 @{handle}
               </Paragraph>
             </>
           ) : (
-            <H1 color="$textTitle" size="$9">
+            <H1 color={textColor} size="$9">
               @{handle}
             </H1>
           )}
 
           {profileData.location && (
-            <Paragraph color="$textMuted" fontSize="$3">
+            <Paragraph color={mutedTextColor} fontSize="$3">
               📍 {profileData.location}
             </Paragraph>
           )}
@@ -54,7 +67,7 @@ export function ProfileDisplay({
       </XStack>
 
       <Paragraph
-        color="$textBody"
+        color={textColor}
         textAlign="center"
         fontSize="$5"
         lineHeight="$6"
@@ -68,7 +81,7 @@ export function ProfileDisplay({
             <Button
               key={index}
               size="$5"
-              backgroundColor="$accent"
+              backgroundColor={secondaryColor}
               hoverStyle={{ opacity: 0.8 }}
               pressStyle={{ opacity: 0.6 }}
               position="relative"
@@ -100,7 +113,7 @@ export function ProfileDisplay({
                 </>
               }
             >
-              <Paragraph color="white" fontWeight="bold">
+              <Paragraph color={buttonTextColor} fontWeight="bold">
                 {link.label}
               </Paragraph>
             </Button>

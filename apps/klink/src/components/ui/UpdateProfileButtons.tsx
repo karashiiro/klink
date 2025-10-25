@@ -77,6 +77,7 @@ export function UpdateProfileButtons({
                           type: "color",
                           value: data.backgroundColor,
                         },
+            theme: data.theme,
             links: data.links.map((link, index) => ({
               icon: link.icon
                 ? link.icon instanceof Blob
@@ -119,6 +120,10 @@ export function UpdateProfileButtons({
               backgroundColor: "#1a1a1a",
               backgroundType: "color",
               backgroundObjectFit: "cover",
+              theme: {
+                primaryColor: "#364163",
+                secondaryColor: "#a58431",
+              },
               links: [],
             });
             onSuccess();
