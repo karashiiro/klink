@@ -34,8 +34,8 @@
           },
           "background": {
             "type": "union",
-            "description": "Background as color, URL, or blob",
-            "refs": ["#colorBackground", "#urlBackground", "#blobBackground"]
+            "description": "Background as color, URL, blob, or shader",
+            "refs": ["#colorBackground", "#urlBackground", "#blobBackground", "#shaderBackground"]
           },
           "theme": {
             "type": "ref",
@@ -146,6 +146,23 @@
           "description": "CSS object-fit property for background image",
           "enum": ["cover", "contain", "fill", "scale-down", "none"],
           "default": "cover"
+        }
+      }
+    },
+    "shaderBackground": {
+      "type": "object",
+      "description": "Background with GLSL fragment shader",
+      "required": ["type", "value"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "shader"
+        },
+        "value": {
+          "type": "blob",
+          "description": "Blob reference to GLSL fragment shader code (text/plain)",
+          "accept": ["text/plain"],
+          "maxSize": 50000
         }
       }
     },

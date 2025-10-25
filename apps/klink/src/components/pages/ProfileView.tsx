@@ -4,6 +4,7 @@ import { H1, Paragraph } from "@tamagui/text";
 import { Card } from "@tamagui/card";
 import type { ProfileRecord } from "../../hooks/useReadProfile";
 import { ProfileDisplay } from "../ui/ProfileDisplay";
+import { BackgroundRenderer } from "../ui/BackgroundRenderer";
 import { getBackgroundStyle } from "../../utils/backgroundUtils";
 
 export function ProfileView() {
@@ -56,6 +57,11 @@ export function ProfileView() {
       minHeight="100vh"
       width="100%"
     >
+      <BackgroundRenderer
+        background={value.background}
+        pdsUrl={pdsUrl}
+        did={did}
+      />
       <Card
         elevate
         size="$4"

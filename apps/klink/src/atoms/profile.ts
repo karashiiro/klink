@@ -14,7 +14,8 @@ export const profileAtom = atom({
   backgroundImageUrl: "",
   backgroundImageBlob: null as Blob | null,
   backgroundColor: "#1a1a1a",
-  backgroundType: "color" as "color" | "url" | "blob",
+  backgroundShaderCode: "",
+  backgroundType: "color" as "color" | "url" | "blob" | "shader",
   backgroundObjectFit: "cover" as
     | "cover"
     | "contain"
@@ -72,6 +73,9 @@ export const backgroundTypeAtom = atom(
 );
 export const backgroundObjectFitAtom = atom(
   (get) => get(profileAtom).backgroundObjectFit,
+);
+export const backgroundShaderCodeAtom = atom(
+  (get) => get(profileAtom).backgroundShaderCode,
 );
 
 export const linksAtom = atom(

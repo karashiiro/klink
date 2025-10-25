@@ -56,27 +56,37 @@ export function UpdateProfileButtons({
                     type: "color",
                     value: data.backgroundColor,
                   }
-                : data.backgroundType === "blob" && data.backgroundImageBlob
+                : data.backgroundType === "shader" && data.backgroundShaderCode
                   ? {
-                      type: "blob",
-                      value: data.backgroundImageBlob,
-                      objectFit: data.backgroundObjectFit,
+                      type: "shader",
+                      value: data.backgroundShaderCode,
                     }
-                  : data.backgroundType === "blob" &&
-                      !data.backgroundImageBlob &&
-                      profile?.value.background.type === "blob"
+                  : data.backgroundType === "shader" &&
+                      !data.backgroundShaderCode &&
+                      profile?.value.background.type === "shader"
                     ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       (profile.value.background as any)
-                    : data.backgroundType === "url"
+                    : data.backgroundType === "blob" && data.backgroundImageBlob
                       ? {
-                          type: "url",
-                          value: data.backgroundImageUrl,
+                          type: "blob",
+                          value: data.backgroundImageBlob,
                           objectFit: data.backgroundObjectFit,
                         }
-                      : {
-                          type: "color",
-                          value: data.backgroundColor,
-                        },
+                      : data.backgroundType === "blob" &&
+                          !data.backgroundImageBlob &&
+                          profile?.value.background.type === "blob"
+                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          (profile.value.background as any)
+                        : data.backgroundType === "url"
+                          ? {
+                              type: "url",
+                              value: data.backgroundImageUrl,
+                              objectFit: data.backgroundObjectFit,
+                            }
+                          : {
+                              type: "color",
+                              value: data.backgroundColor,
+                            },
             theme: data.theme,
             links: data.links.map((link, index) => ({
               icon: link.icon
@@ -121,6 +131,7 @@ export function UpdateProfileButtons({
               backgroundImageUrl: "",
               backgroundImageBlob: null,
               backgroundColor: "#1a1a1a",
+              backgroundShaderCode: "",
               backgroundType: "color",
               backgroundObjectFit: "cover",
               theme: {

@@ -9,6 +9,11 @@ export function getBackgroundStyle(
     return { backgroundColor: background.value };
   }
 
+  if (background.type === "shader") {
+    // Shader backgrounds are rendered via ShaderCanvas component
+    return { position: "relative" };
+  }
+
   let imageUrl: string;
   if (background.type === "url") {
     imageUrl = background.value;

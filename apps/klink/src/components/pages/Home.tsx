@@ -35,44 +35,65 @@ export function Home() {
 
   // Load profile data into form when it exists
   useEffect(() => {
-    if (profile) {
-      setFormData({
-        name: profile.value.name || "",
-        location: profile.value.location || "",
-        bio: profile.value.bio || "",
-        profileImageUrl:
-          profile.value.profileImage?.type === "url"
-            ? profile.value.profileImage.value
-            : "",
-        profileImageBlob: null,
-        backgroundImageUrl:
-          profile.value.background.type === "url"
-            ? profile.value.background.value
-            : "",
-        backgroundImageBlob: null,
-        backgroundColor:
-          profile.value.background.type === "color"
-            ? profile.value.background.value
-            : "#1a1a1a",
-        backgroundType: profile.value.background.type,
-        backgroundObjectFit:
-          profile.value.background.type !== "color"
-            ? profile.value.background.objectFit || "cover"
-            : "cover",
-        theme: {
-          primaryColor: profile.value.theme?.primaryColor || "#364163",
-          secondaryColor: profile.value.theme?.secondaryColor || "#a58431",
-          fontFamily: profile.value.theme?.fontFamily || "",
-          stylesheet: profile.value.theme?.stylesheet || "",
-        },
-        links: (profile.value.links || []).map((link) => ({
-          icon: link.icon,
-          label: link.label,
-          href: link.href,
-        })),
-      });
+    if (profile && session) {
+      const loadShaderCode = async () => {
+        let shaderCode = "";
+        if (profile.value.background.type === "shader") {
+          // Fetch shader blob content
+          const cleanPdsUrl = session.endpoint.url.endsWith("/")
+            ? session.endpoint.url.slice(0, -1)
+            : session.endpoint.url;
+          const blobUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${session.did}&cid=${(profile.value.background.value as any).ref.$link}`;
+
+          try {
+            const response = await fetch(blobUrl);
+            shaderCode = await response.text();
+          } catch (err) {
+            console.error("Failed to fetch shader code:", err);
+          }
+        }
+
+        setFormData({
+          name: profile.value.name || "",
+          location: profile.value.location || "",
+          bio: profile.value.bio || "",
+          profileImageUrl:
+            profile.value.profileImage?.type === "url"
+              ? profile.value.profileImage.value
+              : "",
+          profileImageBlob: null,
+          backgroundImageUrl:
+            profile.value.background.type === "url"
+              ? profile.value.background.value
+              : "",
+          backgroundImageBlob: null,
+          backgroundColor:
+            profile.value.background.type === "color"
+              ? profile.value.background.value
+              : "#1a1a1a",
+          backgroundShaderCode: shaderCode,
+          backgroundType: profile.value.background.type,
+          backgroundObjectFit:
+            profile.value.background.type !== "color"
+              ? profile.value.background.objectFit || "cover"
+              : "cover",
+          theme: {
+            primaryColor: profile.value.theme?.primaryColor || "#364163",
+            secondaryColor: profile.value.theme?.secondaryColor || "#a58431",
+            fontFamily: profile.value.theme?.fontFamily || "",
+            stylesheet: profile.value.theme?.stylesheet || "",
+          },
+          links: (profile.value.links || []).map((link) => ({
+            icon: link.icon,
+            label: link.label,
+            href: link.href,
+          })),
+        });
+      };
+
+      loadShaderCode();
     }
-  }, [profile, setFormData]);
+  }, [profile, session, setFormData]);
 
   if (authState.state === "authenticated" && session && !profileLoading) {
     return (

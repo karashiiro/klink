@@ -13,7 +13,8 @@ export interface UpdateProfileForm {
         type: "url" | "blob";
         value: string | Blob;
         objectFit?: "cover" | "contain" | "fill" | "scale-down" | "none";
-      };
+      }
+    | { type: "shader"; value: string | Blob };
   theme: {
     primaryColor: string;
     secondaryColor: string;
@@ -80,15 +81,51 @@ export function useUpdateProfile() {
         // Process all images/blobs
         const profileImage = await processImage(form.profileImage);
 
-        const background =
-          form.background.type === "color"
-            ? { type: "color" as const, value: form.background.value as string }
-            : (await processImage(
-                form.background as {
-                  type: "url" | "blob";
-                  value: string | Blob;
-                },
-              ))!;
+        let background: Main["background"];
+        if (form.background.type === "color") {
+          background = {
+            type: "color" as const,
+            value: form.background.value as string,
+          };
+        } else if (form.background.type === "shader") {
+          // Check if this is already a blob reference
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if ((form.background.value as any)?.ref?.$link) {
+            // Already a blob reference, return as-is
+            background = {
+              type: "shader" as const,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              value: form.background.value as any,
+            };
+          } else {
+            // Upload new shader code as text blob
+            const shaderBlob = new Blob([form.background.value as string], {
+              type: "text/plain",
+            });
+            const blobResponse = await client.post(
+              "com.atproto.repo.uploadBlob",
+              {
+                input: shaderBlob,
+              },
+            );
+            if (!blobResponse.ok) {
+              throw new Error(
+                `Failed to upload shader: ${blobResponse.status}`,
+              );
+            }
+            background = {
+              type: "shader" as const,
+              value: blobResponse.data.blob,
+            };
+          }
+        } else {
+          background = (await processImage(
+            form.background as {
+              type: "url" | "blob";
+              value: string | Blob;
+            },
+          ))!;
+        }
 
         const links = await Promise.all(
           form.links.map(async (link) => ({

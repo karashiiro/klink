@@ -85,12 +85,13 @@ const _mainSchema = /*#__PURE__*/ v.record(
   /*#__PURE__*/ v.object({
     $type: /*#__PURE__*/ v.literal("moe.karashiiro.klink.profile"),
     /**
-     * Background as color, URL, or blob
+     * Background as color, URL, blob, or shader
      */
     get background() {
       return /*#__PURE__*/ v.variant([
         blobBackgroundSchema,
         colorBackgroundSchema,
+        shaderBackgroundSchema,
         urlBackgroundSchema,
       ]);
     },
@@ -145,6 +146,18 @@ const _mainSchema = /*#__PURE__*/ v.record(
     },
   }),
 );
+const _shaderBackgroundSchema = /*#__PURE__*/ v.object({
+  $type: /*#__PURE__*/ v.optional(
+    /*#__PURE__*/ v.literal("moe.karashiiro.klink.profile#shaderBackground"),
+  ),
+  type: /*#__PURE__*/ v.literal("shader"),
+  /**
+   * Blob reference to GLSL fragment shader code (text/plain)
+   * @accept text/plain
+   * @maxSize 50000
+   */
+  value: /*#__PURE__*/ v.blob(),
+});
 const _themeSchema = /*#__PURE__*/ v.object({
   $type: /*#__PURE__*/ v.optional(
     /*#__PURE__*/ v.literal("moe.karashiiro.klink.profile#theme"),
@@ -236,6 +249,7 @@ type blobImage$schematype = typeof _blobImageSchema;
 type colorBackground$schematype = typeof _colorBackgroundSchema;
 type link$schematype = typeof _linkSchema;
 type main$schematype = typeof _mainSchema;
+type shaderBackground$schematype = typeof _shaderBackgroundSchema;
 type theme$schematype = typeof _themeSchema;
 type urlBackground$schematype = typeof _urlBackgroundSchema;
 type urlImage$schematype = typeof _urlImageSchema;
@@ -245,6 +259,7 @@ export interface blobImageSchema extends blobImage$schematype {}
 export interface colorBackgroundSchema extends colorBackground$schematype {}
 export interface linkSchema extends link$schematype {}
 export interface mainSchema extends main$schematype {}
+export interface shaderBackgroundSchema extends shaderBackground$schematype {}
 export interface themeSchema extends theme$schematype {}
 export interface urlBackgroundSchema extends urlBackground$schematype {}
 export interface urlImageSchema extends urlImage$schematype {}
@@ -256,6 +271,8 @@ export const colorBackgroundSchema =
   _colorBackgroundSchema as colorBackgroundSchema;
 export const linkSchema = _linkSchema as linkSchema;
 export const mainSchema = _mainSchema as mainSchema;
+export const shaderBackgroundSchema =
+  _shaderBackgroundSchema as shaderBackgroundSchema;
 export const themeSchema = _themeSchema as themeSchema;
 export const urlBackgroundSchema = _urlBackgroundSchema as urlBackgroundSchema;
 export const urlImageSchema = _urlImageSchema as urlImageSchema;
@@ -267,6 +284,8 @@ export interface ColorBackground
   extends v.InferInput<typeof colorBackgroundSchema> {}
 export interface Link extends v.InferInput<typeof linkSchema> {}
 export interface Main extends v.InferInput<typeof mainSchema> {}
+export interface ShaderBackground
+  extends v.InferInput<typeof shaderBackgroundSchema> {}
 export interface Theme extends v.InferInput<typeof themeSchema> {}
 export interface UrlBackground
   extends v.InferInput<typeof urlBackgroundSchema> {}

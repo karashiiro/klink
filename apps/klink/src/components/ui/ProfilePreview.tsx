@@ -11,6 +11,7 @@ import {
   backgroundImageUrlAtom,
   backgroundImageBlobAtom,
   backgroundColorAtom,
+  backgroundShaderCodeAtom,
   backgroundTypeAtom,
   backgroundObjectFitAtom,
   primaryColorAtom,
@@ -20,6 +21,7 @@ import {
   linksAtom,
 } from "../../atoms/profile";
 import { ProfileDisplay } from "./ProfileDisplay";
+import { BackgroundRenderer } from "./BackgroundRenderer";
 import { getBackgroundStyle } from "../../utils/backgroundUtils";
 import type { Main } from "@klink-app/lexicon/types";
 
@@ -33,6 +35,7 @@ export function ProfilePreview() {
   const backgroundImageUrl = useAtomValue(backgroundImageUrlAtom);
   const backgroundImageBlob = useAtomValue(backgroundImageBlobAtom);
   const backgroundColor = useAtomValue(backgroundColorAtom);
+  const backgroundShaderCode = useAtomValue(backgroundShaderCodeAtom);
   const backgroundType = useAtomValue(backgroundTypeAtom);
   const backgroundObjectFit = useAtomValue(backgroundObjectFitAtom);
   const primaryColor = useAtomValue(primaryColorAtom);
@@ -54,19 +57,24 @@ export function ProfilePreview() {
   const background: Main["background"] =
     backgroundType === "color"
       ? { type: "color", value: backgroundColor }
-      : backgroundType === "blob" && backgroundImageBlob
+      : backgroundType === "shader" && backgroundShaderCode
         ? ({
-            type: "blob",
-            value: backgroundImageBlob,
-            objectFit: backgroundObjectFit,
+            type: "shader",
+            value: new Blob([backgroundShaderCode], { type: "text/plain" }),
           } as any)
-        : backgroundType === "url"
-          ? {
-              type: "url",
-              value: backgroundImageUrl,
+        : backgroundType === "blob" && backgroundImageBlob
+          ? ({
+              type: "blob",
+              value: backgroundImageBlob,
               objectFit: backgroundObjectFit,
-            }
-          : { type: "color", value: backgroundColor };
+            } as any)
+          : backgroundType === "url"
+            ? {
+                type: "url",
+                value: backgroundImageUrl,
+                objectFit: backgroundObjectFit,
+              }
+            : { type: "color", value: backgroundColor };
 
   const profileData: Main = {
     $type: "moe.karashiiro.klink.profile",
@@ -111,6 +119,11 @@ export function ProfilePreview() {
       minHeight="100vh"
       width="100%"
     >
+      <BackgroundRenderer
+        background={background}
+        pdsUrl={session.endpoint.url}
+        did={session.did}
+      />
       <Card
         elevate
         size="$4"

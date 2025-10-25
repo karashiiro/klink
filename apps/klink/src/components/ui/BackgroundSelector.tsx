@@ -3,17 +3,18 @@ import { YStack, XStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
 import { Input } from "@tamagui/input";
+import { ShaderBackgroundSelector } from "./ShaderBackgroundSelector";
 import type { BlurEvent, TextInputChangeEvent } from "react-native";
 
 interface BackgroundSelectorProps {
-  backgroundType: "color" | "url" | "blob";
+  backgroundType: "color" | "url" | "blob" | "shader";
   backgroundColor: string;
   backgroundImageUrl: string;
   backgroundImageBlob: Blob | null;
   backgroundObjectFit: "cover" | "contain" | "fill" | "scale-down" | "none";
   hasExistingBlob?: boolean;
   colorInputRef: RefObject<HTMLInputElement | null>;
-  onTypeChange: (type: "color" | "url" | "blob") => void;
+  onTypeChange: (type: "color" | "url" | "blob" | "shader") => void;
   onColorChange: (e: BlurEvent) => void;
   onUrlChange: (e: FormEvent<HTMLInputElement> | TextInputChangeEvent) => void;
   onFileChange: (e: FormEvent<HTMLInputElement> | TextInputChangeEvent) => void;
@@ -68,6 +69,16 @@ export function BackgroundSelector({
         >
           Upload
         </Button>
+        <Button
+          size="$3"
+          flex={1}
+          backgroundColor={
+            backgroundType === "shader" ? "$accent" : "$secondary"
+          }
+          onPress={() => onTypeChange("shader")}
+        >
+          Shader
+        </Button>
       </XStack>
       {backgroundType === "color" ? (
         <Input
@@ -109,6 +120,8 @@ export function BackgroundSelector({
             )}
           </XStack>
         </YStack>
+      ) : backgroundType === "shader" ? (
+        <ShaderBackgroundSelector />
       ) : (
         <YStack gap="$2">
           <Input

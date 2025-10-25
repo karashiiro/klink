@@ -13,7 +13,8 @@ export interface CreateProfileForm {
         type: "url" | "blob";
         value: string | Blob;
         objectFit?: "cover" | "contain" | "fill" | "scale-down" | "none";
-      };
+      }
+    | { type: "shader"; value: string };
   theme: {
     primaryColor: string;
     secondaryColor: string;
@@ -73,15 +74,40 @@ export function useCreateProfile() {
         // Process all images/blobs
         const profileImage = await processImage(form.profileImage);
 
-        const background =
-          form.background.type === "color"
-            ? { type: "color" as const, value: form.background.value as string }
-            : (await processImage(
-                form.background as {
-                  type: "url" | "blob";
-                  value: string | Blob;
-                },
-              ))!;
+        let background: Main["background"];
+        if (form.background.type === "color") {
+          background = {
+            type: "color" as const,
+            value: form.background.value as string,
+          };
+        } else if (form.background.type === "shader") {
+          // Upload shader code as text blob
+          const shaderBlob = new Blob([form.background.value], {
+            type: "text/plain",
+          });
+          const blobResponse = await client.post(
+            "com.atproto.repo.uploadBlob",
+            {
+              input: shaderBlob,
+            },
+          );
+          if (!blobResponse.ok) {
+            throw new Error(
+              `Failed to upload shader: ${blobResponse.status}`,
+            );
+          }
+          background = {
+            type: "shader" as const,
+            value: blobResponse.data.blob,
+          };
+        } else {
+          background = (await processImage(
+            form.background as {
+              type: "url" | "blob";
+              value: string | Blob;
+            },
+          ))!;
+        }
 
         const links = await Promise.all(
           form.links.map(async (link) => ({
