@@ -5,6 +5,9 @@ import type { Main } from "@klink-app/lexicon/types";
 // Atom for controlling editor panels visibility (both left and right)
 export const editorPanelsOpenAtom = atom(true);
 
+// Atom for tracking which panel is active on mobile (left = profile, right = links)
+export const mobileActivePanelAtom = atom<"left" | "right">("left");
+
 export const profileAtom = atom({
   name: "",
   location: "",

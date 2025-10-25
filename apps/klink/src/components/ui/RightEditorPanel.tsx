@@ -1,8 +1,10 @@
 import { YStack } from "@tamagui/stacks";
 import { Card } from "@tamagui/card";
-import { H3 } from "@tamagui/text";
 import { useAtomValue } from "jotai";
-import { editorPanelsOpenAtom } from "../../atoms/profile";
+import {
+  editorPanelsOpenAtom,
+  mobileActivePanelAtom,
+} from "../../atoms/profile";
 import { ProfileLinkEditor } from "./ProfileLinkEditor";
 import { CreateProfileButton } from "./CreateProfileButton";
 import { UpdateProfileButtons } from "./UpdateProfileButtons";
@@ -33,11 +35,15 @@ export function RightEditorPanel({
   onSuccess,
 }: RightEditorPanelProps) {
   const isOpen = useAtomValue(editorPanelsOpenAtom);
+  const mobileActivePanel = useAtomValue(mobileActivePanelAtom);
 
   return (
     <Card
       position="absolute"
-      right={isOpen ? 0 : -350}
+      right={isOpen && mobileActivePanel === "right" ? 0 : -350}
+      $md={{
+        right: isOpen ? 0 : -350,
+      }}
       top={0}
       bottom={0}
       width={350}
@@ -50,12 +56,6 @@ export function RightEditorPanel({
         transition: "right 0.3s ease",
       }}
       zIndex={10}
-      $gtMd={{
-        position: "absolute",
-      }}
-      $sm={{
-        position: "absolute",
-      }}
     >
       <YStack
         gap="$4"
@@ -69,9 +69,7 @@ export function RightEditorPanel({
         // Hide webkit scrollbar
         className="hide-scrollbar"
       >
-        <H3 color="white" textAlign="center">
-          Links
-        </H3>
+        <div style={{ marginBottom: 20 }} />
         <ProfileLinkEditor profile={profile} />
 
         {!profile && (

@@ -31,7 +31,7 @@ export function ImageInput({
 }: ImageInputProps) {
   // Determine initial mode based on current state
   const [mode, setMode] = useState<"url" | "upload">(
-    blob || hasExistingBlob ? "upload" : "url"
+    blob || hasExistingBlob ? "upload" : "url",
   );
 
   // Create object URL for blob preview

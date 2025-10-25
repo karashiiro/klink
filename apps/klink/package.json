@@ -34,6 +34,7 @@
     "@tamagui/select": "^1.134.0",
     "@tamagui/sheet": "^1.134.0",
     "@tamagui/stacks": "^1.134.0",
+    "@tamagui/switch": "^1.135.4",
     "@tamagui/text": "^1.134.0",
     "@tamagui/theme": "^1.134.0",
     "buffer": "^6.0.3",

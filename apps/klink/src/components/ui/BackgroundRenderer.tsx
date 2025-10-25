@@ -17,7 +17,10 @@ export function BackgroundRenderer({
 
   useEffect(() => {
     if (background.type === "shader") {
-      console.log("[BackgroundRenderer] Shader background detected", background);
+      console.log(
+        "[BackgroundRenderer] Shader background detected",
+        background,
+      );
       // Handle both Blob instances (preview) and blob references (from PDS)
       if (background.value instanceof Blob) {
         console.log("[BackgroundRenderer] Reading shader from Blob");
@@ -25,7 +28,10 @@ export function BackgroundRenderer({
         const reader = new FileReader();
         reader.onload = (e) => {
           const code = e.target?.result as string;
-          console.log("[BackgroundRenderer] Shader code loaded from Blob, length:", code?.length);
+          console.log(
+            "[BackgroundRenderer] Shader code loaded from Blob, length:",
+            code?.length,
+          );
           setShaderCode(code);
         };
         reader.readAsText(background.value);
@@ -39,7 +45,10 @@ export function BackgroundRenderer({
         fetch(blobUrl)
           .then((res) => res.text())
           .then((code) => {
-            console.log("[BackgroundRenderer] Shader code loaded from PDS, length:", code?.length);
+            console.log(
+              "[BackgroundRenderer] Shader code loaded from PDS, length:",
+              code?.length,
+            );
             setShaderCode(code);
           })
           .catch((err) => console.error("Failed to fetch shader:", err));

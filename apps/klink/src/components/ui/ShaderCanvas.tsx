@@ -9,7 +9,10 @@ export function ShaderCanvas({ shaderCode }: ShaderCanvasProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("[ShaderCanvas] Initializing with shader code length:", shaderCode?.length);
+    console.log(
+      "[ShaderCanvas] Initializing with shader code length:",
+      shaderCode?.length,
+    );
     const canvas = canvasRef.current;
     if (!canvas) {
       console.log("[ShaderCanvas] No canvas ref!");
@@ -71,7 +74,10 @@ export function ShaderCanvas({ shaderCode }: ShaderCanvasProps) {
 
     // Create program
     const vertexShader = compileShader(vertexShaderSource, gl.VERTEX_SHADER);
-    const fragmentShader = compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER);
+    const fragmentShader = compileShader(
+      fragmentShaderSource,
+      gl.FRAGMENT_SHADER,
+    );
 
     if (!vertexShader || !fragmentShader) return;
 
@@ -91,12 +97,7 @@ export function ShaderCanvas({ shaderCode }: ShaderCanvasProps) {
     gl.useProgram(program);
 
     // Setup fullscreen quad
-    const positions = new Float32Array([
-      -1, -1,
-       1, -1,
-      -1,  1,
-       1,  1,
-    ]);
+    const positions = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -113,7 +114,10 @@ export function ShaderCanvas({ shaderCode }: ShaderCanvasProps) {
     const iFrameRateLocation = gl.getUniformLocation(program, "iFrameRate");
     const iFrameLocation = gl.getUniformLocation(program, "iFrame");
     const iChannelTimeLocation = gl.getUniformLocation(program, "iChannelTime");
-    const iChannelResolutionLocation = gl.getUniformLocation(program, "iChannelResolution");
+    const iChannelResolutionLocation = gl.getUniformLocation(
+      program,
+      "iChannelResolution",
+    );
     const iMouseLocation = gl.getUniformLocation(program, "iMouse");
     const iDateLocation = gl.getUniformLocation(program, "iDate");
 
@@ -148,7 +152,16 @@ export function ShaderCanvas({ shaderCode }: ShaderCanvasProps) {
         canvas.width = displayWidth;
         canvas.height = displayHeight;
         gl.viewport(0, 0, canvas.width, canvas.height);
-        console.log("[ShaderCanvas] Canvas resized to:", canvas.width, "x", canvas.height, "clientSize:", canvas.clientWidth, "x", canvas.clientHeight);
+        console.log(
+          "[ShaderCanvas] Canvas resized to:",
+          canvas.width,
+          "x",
+          canvas.height,
+          "clientSize:",
+          canvas.clientWidth,
+          "x",
+          canvas.clientHeight,
+        );
       }
     };
 
@@ -172,7 +185,8 @@ export function ShaderCanvas({ shaderCode }: ShaderCanvasProps) {
       const year = date.getFullYear();
       const month = date.getMonth();
       const day = date.getDate();
-      const seconds = date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
+      const seconds =
+        date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
 
       // Update all uniforms
       gl.uniform3f(iResolutionLocation, canvas.width, canvas.height, 1.0);
@@ -183,7 +197,10 @@ export function ShaderCanvas({ shaderCode }: ShaderCanvasProps) {
 
       // Channel uniforms (all zeros for now since we don't support textures yet)
       gl.uniform1fv(iChannelTimeLocation, [0, 0, 0, 0]);
-      gl.uniform3fv(iChannelResolutionLocation, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      gl.uniform3fv(
+        iChannelResolutionLocation,
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      );
 
       gl.uniform4f(iMouseLocation, mouseX, mouseY, mouseClickX, mouseClickY);
       gl.uniform4f(iDateLocation, year, month, day, seconds);

@@ -15,6 +15,7 @@ import { ProfilePreview } from "../ui/ProfilePreview";
 import { LeftEditorPanel } from "../ui/LeftEditorPanel";
 import { RightEditorPanel } from "../ui/RightEditorPanel";
 import { EditorPanelToggle } from "../ui/EditorPanelToggle";
+import { MobilePanelSwitch } from "../ui/MobilePanelSwitch";
 import { profileAtom } from "../../atoms/profile";
 
 export function Home() {
@@ -119,6 +120,7 @@ export function Home() {
           onSuccess={() => refetch(session.handle)}
         />
         <EditorPanelToggle />
+        <MobilePanelSwitch />
       </YStack>
     );
   }

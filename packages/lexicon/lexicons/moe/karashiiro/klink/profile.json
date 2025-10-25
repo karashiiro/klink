@@ -35,7 +35,12 @@
           "background": {
             "type": "union",
             "description": "Background as color, URL, blob, or shader",
-            "refs": ["#colorBackground", "#urlBackground", "#blobBackground", "#shaderBackground"]
+            "refs": [
+              "#colorBackground",
+              "#urlBackground",
+              "#blobBackground",
+              "#shaderBackground"
+            ]
           },
           "theme": {
             "type": "ref",

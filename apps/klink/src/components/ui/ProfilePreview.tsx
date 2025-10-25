@@ -65,8 +65,10 @@ export function ProfilePreview() {
         ? {
             $type: "moe.karashiiro.klink.profile#shaderBackground",
             type: "shader",
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            value: new Blob([backgroundShaderCode], { type: "text/plain" }) as any,
+            value: new Blob([backgroundShaderCode], {
+              type: "text/plain",
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            }) as any,
           }
         : backgroundType === "blob" && backgroundImageBlob
           ? {

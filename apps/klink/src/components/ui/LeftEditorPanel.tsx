@@ -1,7 +1,10 @@
 import { YStack } from "@tamagui/stacks";
 import { Card } from "@tamagui/card";
 import { useAtomValue } from "jotai";
-import { editorPanelsOpenAtom } from "../../atoms/profile";
+import {
+  editorPanelsOpenAtom,
+  mobileActivePanelAtom,
+} from "../../atoms/profile";
 import { ProfileImageInput } from "./ProfileImageInput";
 import { NameInput } from "./NameInput";
 import { LocationInput } from "./LocationInput";
@@ -17,11 +20,15 @@ interface LeftEditorPanelProps {
 
 export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
   const isOpen = useAtomValue(editorPanelsOpenAtom);
+  const mobileActivePanel = useAtomValue(mobileActivePanelAtom);
 
   return (
     <Card
       position="absolute"
-      left={isOpen ? 0 : -350}
+      left={isOpen && mobileActivePanel === "left" ? 0 : -350}
+      $md={{
+        left: isOpen ? 0 : -350,
+      }}
       top={0}
       bottom={0}
       width={350}
@@ -34,12 +41,6 @@ export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
         transition: "left 0.3s ease",
       }}
       zIndex={10}
-      $gtMd={{
-        position: "absolute",
-      }}
-      $sm={{
-        position: "absolute",
-      }}
     >
       <YStack
         gap="$3"
@@ -53,6 +54,7 @@ export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
         // Hide webkit scrollbar
         className="hide-scrollbar"
       >
+        <div style={{ marginBottom: 20 }} />
         <ProfileImageInput profile={profile} />
         <NameInput />
         <LocationInput />
