@@ -24,6 +24,8 @@ export const profileAtom = atom({
   theme: {
     primaryColor: "#364163",
     secondaryColor: "#a58431",
+    fontFamily: "",
+    stylesheet: "",
   },
   links: [] as {
     icon?: string | Blob | Main["profileImage"];
@@ -120,5 +122,23 @@ export const secondaryColorAtom = atom(
     set(profileAtom, {
       ...get(profileAtom),
       theme: { ...get(profileAtom).theme, secondaryColor: newValue },
+    }),
+);
+
+export const fontFamilyAtom = atom(
+  (get) => get(profileAtom).theme.fontFamily,
+  (get, set, newValue: string) =>
+    set(profileAtom, {
+      ...get(profileAtom),
+      theme: { ...get(profileAtom).theme, fontFamily: newValue },
+    }),
+);
+
+export const stylesheetAtom = atom(
+  (get) => get(profileAtom).theme.stylesheet,
+  (get, set, newValue: string) =>
+    set(profileAtom, {
+      ...get(profileAtom),
+      theme: { ...get(profileAtom).theme, stylesheet: newValue },
     }),
 );

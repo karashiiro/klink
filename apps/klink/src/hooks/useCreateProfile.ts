@@ -17,6 +17,8 @@ export interface CreateProfileForm {
   theme: {
     primaryColor: string;
     secondaryColor: string;
+    fontFamily?: string;
+    stylesheet?: string;
   };
   links: Array<{
     icon?: { type: "url" | "blob"; value: string | Blob };

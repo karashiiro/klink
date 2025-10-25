@@ -10,9 +10,6 @@ export function EditorPanelToggle() {
       position="absolute"
       top={16}
       left="50%"
-      style={{
-        transform: "translateX(-50%)",
-      }}
       size="$3"
       backgroundColor="rgba(0, 0, 0, 0.7)"
       borderColor="rgba(255, 255, 255, 0.1)"

@@ -126,6 +126,8 @@ export function UpdateProfileButtons({
               theme: {
                 primaryColor: "#364163",
                 secondaryColor: "#a58431",
+                fontFamily: "",
+                stylesheet: "",
               },
               links: [],
             });

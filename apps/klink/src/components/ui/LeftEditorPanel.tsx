@@ -8,6 +8,7 @@ import { LocationInput } from "./LocationInput";
 import { BioInput } from "./BioInput";
 import { ProfileBackgroundSelector } from "./ProfileBackgroundSelector";
 import { ThemeColorInput } from "./ThemeColorInput";
+import { FontInput } from "./FontInput";
 import type { ReadProfileResult } from "../../hooks/useReadProfile";
 
 interface LeftEditorPanelProps {
@@ -56,6 +57,7 @@ export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
         <BioInput />
         <ProfileBackgroundSelector profile={profile} />
         <ThemeColorInput />
+        <FontInput />
       </YStack>
     </Card>
   );

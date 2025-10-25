@@ -2,6 +2,7 @@ import { YStack, XStack } from "@tamagui/stacks";
 import { H1, Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
 import { AtProtoImage } from "./AtProtoImage";
+import { CustomStylesheet } from "./CustomStylesheet";
 import {
   getContrastTextColor,
   getMutedTextColor,
@@ -24,6 +25,8 @@ export function ProfileDisplay({
   // Get theme colors with fallbacks
   const primaryColor = profileData.theme?.primaryColor || "#364163";
   const secondaryColor = profileData.theme?.secondaryColor || "#a58431";
+  const fontFamily = profileData.theme?.fontFamily;
+  const stylesheet = profileData.theme?.stylesheet;
 
   // Calculate contrast colors
   const textColor = getContrastTextColor(primaryColor);
@@ -31,7 +34,9 @@ export function ProfileDisplay({
   const buttonTextColor = getContrastTextColor(secondaryColor);
 
   return (
-    <YStack gap="$4">
+    <>
+      <CustomStylesheet stylesheet={stylesheet} id={`profile-${did || handle}`} />
+      <YStack gap="$4">
       <XStack gap="$4" alignItems="flex-start">
         <AtProtoImage
           image={profileData.profileImage}
@@ -45,21 +50,21 @@ export function ProfileDisplay({
         <YStack gap="$2" flex={1} justifyContent="center">
           {profileData.name ? (
             <>
-              <H1 color={textColor} size="$9">
+              <H1 color={textColor} size="$9" style={fontFamily ? { fontFamily } : undefined}>
                 {profileData.name}
               </H1>
-              <Paragraph color={mutedTextColor} fontSize="$6">
+              <Paragraph color={mutedTextColor} fontSize="$6" style={fontFamily ? { fontFamily } : undefined}>
                 @{handle}
               </Paragraph>
             </>
           ) : (
-            <H1 color={textColor} size="$9">
+            <H1 color={textColor} size="$9" style={fontFamily ? { fontFamily } : undefined}>
               @{handle}
             </H1>
           )}
 
           {profileData.location && (
-            <Paragraph color={mutedTextColor} fontSize="$3">
+            <Paragraph color={mutedTextColor} fontSize="$3" style={fontFamily ? { fontFamily } : undefined}>
               📍 {profileData.location}
             </Paragraph>
           )}
@@ -71,6 +76,7 @@ export function ProfileDisplay({
         textAlign="center"
         fontSize="$5"
         lineHeight="$6"
+        style={fontFamily ? { fontFamily } : undefined}
       >
         {profileData.bio}
       </Paragraph>
@@ -113,7 +119,7 @@ export function ProfileDisplay({
                 </>
               }
             >
-              <Paragraph color={buttonTextColor} fontWeight="bold">
+              <Paragraph color={buttonTextColor} fontWeight="bold" style={fontFamily ? { fontFamily } : undefined}>
                 {link.label}
               </Paragraph>
             </Button>
@@ -121,5 +127,6 @@ export function ProfileDisplay({
         </YStack>
       )}
     </YStack>
+    </>
   );
 }

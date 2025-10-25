@@ -150,6 +150,15 @@ const _themeSchema = /*#__PURE__*/ v.object({
     /*#__PURE__*/ v.literal("moe.karashiiro.klink.profile#theme"),
   ),
   /**
+   * CSS font-family value for profile text
+   * @maxLength 200
+   */
+  fontFamily: /*#__PURE__*/ v.optional(
+    /*#__PURE__*/ v.constrain(/*#__PURE__*/ v.string(), [
+      /*#__PURE__*/ v.stringLength(0, 200),
+    ]),
+  ),
+  /**
    * Primary color (card background) as hex code
    * @maxLength 20
    * @default "#364163"
@@ -170,6 +179,15 @@ const _themeSchema = /*#__PURE__*/ v.object({
       /*#__PURE__*/ v.stringLength(0, 20),
     ]),
     "#a58431",
+  ),
+  /**
+   * Custom CSS stylesheet (can include \@font-face or \@import for fonts)
+   * @maxLength 5000
+   */
+  stylesheet: /*#__PURE__*/ v.optional(
+    /*#__PURE__*/ v.constrain(/*#__PURE__*/ v.string(), [
+      /*#__PURE__*/ v.stringLength(0, 5000),
+    ]),
   ),
 });
 const _urlBackgroundSchema = /*#__PURE__*/ v.object({

@@ -62,6 +62,8 @@ export function Home() {
         theme: {
           primaryColor: profile.value.theme?.primaryColor || "#364163",
           secondaryColor: profile.value.theme?.secondaryColor || "#a58431",
+          fontFamily: profile.value.theme?.fontFamily || "",
+          stylesheet: profile.value.theme?.stylesheet || "",
         },
         links: (profile.value.links || []).map((link) => ({
           icon: link.icon,

@@ -15,6 +15,8 @@ import {
   backgroundObjectFitAtom,
   primaryColorAtom,
   secondaryColorAtom,
+  fontFamilyAtom,
+  stylesheetAtom,
   linksAtom,
 } from "../../atoms/profile";
 import { ProfileDisplay } from "./ProfileDisplay";
@@ -35,6 +37,8 @@ export function ProfilePreview() {
   const backgroundObjectFit = useAtomValue(backgroundObjectFitAtom);
   const primaryColor = useAtomValue(primaryColorAtom);
   const secondaryColor = useAtomValue(secondaryColorAtom);
+  const fontFamily = useAtomValue(fontFamilyAtom);
+  const stylesheet = useAtomValue(stylesheetAtom);
   const links = useAtomValue(linksAtom);
 
   if (!session) return null;
@@ -74,6 +78,8 @@ export function ProfilePreview() {
     theme: {
       primaryColor,
       secondaryColor,
+      fontFamily,
+      stylesheet,
     },
     links: links.map((link) => ({
       icon: link.icon
