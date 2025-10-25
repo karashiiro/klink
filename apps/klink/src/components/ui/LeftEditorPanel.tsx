@@ -43,7 +43,14 @@ export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
         <YStack
           gap="$3"
           height="100%"
-          style={{ overflowY: "scroll", overflowX: "hidden" }}
+          style={{
+            overflowY: "auto",
+            overflowX: "hidden",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+          // Hide webkit scrollbar
+          className="hide-scrollbar"
         >
           <ProfileImageInput profile={profile} />
           <NameInput />
@@ -56,18 +63,26 @@ export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
       <Button
         position="absolute"
         left={isOpen ? 350 : 0}
-        top="50%"
-        transform="translateY(-50%)"
+        top={16}
         size="$3"
-        circular
-        backgroundColor="$accent"
+        backgroundColor="rgba(0, 0, 0, 0.7)"
+        borderColor="rgba(255, 255, 255, 0.1)"
+        borderWidth={1}
+        color="white"
+        hoverStyle={{
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+        }}
+        pressStyle={{
+          backgroundColor: "rgba(0, 0, 0, 0.9)",
+        }}
         zIndex={11}
         onPress={() => setIsOpen(!isOpen)}
         style={{
+          backdropFilter: "blur(10px)",
           transition: "left 0.3s ease",
         }}
       >
-        {isOpen ? "←" : "→"}
+        {isOpen ? "Hide" : "Profile"}
       </Button>
     </>
   );
