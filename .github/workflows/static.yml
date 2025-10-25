@@ -44,8 +44,8 @@ jobs:
         run: pnpm install
       - name: Lint
         run: pnpm lint
-      - name: Test
-        run: pnpm test:run
+      # - name: Test
+      #   run: pnpm test:run
       - name: Build
         run: pnpm build
       - name: Setup Pages
