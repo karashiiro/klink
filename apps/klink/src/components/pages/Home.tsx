@@ -14,6 +14,7 @@ import { useDeleteProfile } from "../../hooks/useDeleteProfile";
 import { ProfilePreview } from "../ui/ProfilePreview";
 import { LeftEditorPanel } from "../ui/LeftEditorPanel";
 import { RightEditorPanel } from "../ui/RightEditorPanel";
+import { EditorPanelToggle } from "../ui/EditorPanelToggle";
 import { profileAtom } from "../../atoms/profile";
 
 export function Home() {
@@ -92,6 +93,7 @@ export function Home() {
           deleteLoading={deleteLoading}
           onSuccess={() => refetch(session.handle)}
         />
+        <EditorPanelToggle />
       </YStack>
     );
   }

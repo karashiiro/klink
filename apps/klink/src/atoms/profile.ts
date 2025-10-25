@@ -2,6 +2,9 @@ import { atom } from "jotai";
 import { splitAtom } from "jotai/utils";
 import type { Main } from "@klink-app/lexicon/types";
 
+// Atom for controlling editor panels visibility (both left and right)
+export const editorPanelsOpenAtom = atom(true);
+
 export const profileAtom = atom({
   name: "",
   location: "",
