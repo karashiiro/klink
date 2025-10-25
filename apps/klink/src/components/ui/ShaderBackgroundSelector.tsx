@@ -32,8 +32,9 @@ export function ShaderBackgroundSelector() {
     fragColor = vec4(col,1.0);
 }`}
         rows={15}
+        className="hide-scrollbar"
         style={{
-          width: "100%",
+          width: "288px",
           padding: "12px",
           fontFamily: "monospace",
           fontSize: "13px",
