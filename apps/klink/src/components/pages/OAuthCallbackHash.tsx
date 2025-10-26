@@ -66,13 +66,15 @@ export function OAuthCallbackHash() {
   return (
     <YStack
       flex={1}
-      backgroundColor="$background"
+      backgroundColor="#1a1a2e"
       alignItems="center"
       justifyContent="center"
       gap="$4"
+      minHeight="100vh"
+      width="100%"
     >
       <Loader size="$2" color="$accent" />
-      <H2 color="$textTitle">Completing authentication...</H2>
+      <H2 color="white">Completing authentication...</H2>
     </YStack>
   );
 }

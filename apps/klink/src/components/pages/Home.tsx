@@ -12,11 +12,13 @@ import { useCreateProfile } from "../../hooks/useCreateProfile";
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
 import { useDeleteProfile } from "../../hooks/useDeleteProfile";
 import { ProfilePreview } from "../ui/ProfilePreview";
+import { ProfileDisplay } from "../ui/ProfileDisplay";
 import { LeftEditorPanel } from "../ui/LeftEditorPanel";
 import { RightEditorPanel } from "../ui/RightEditorPanel";
 import { EditorPanelToggle } from "../ui/EditorPanelToggle";
 import { MobilePanelSwitch } from "../ui/MobilePanelSwitch";
 import { profileAtom } from "../../atoms/profile";
+import type { Main } from "@klink-app/lexicon/types";
 
 export function Home() {
   const { authState, session } = useAuth();
@@ -125,88 +127,142 @@ export function Home() {
     );
   }
 
+  // Demo profile data for logged-out preview
+  const demoProfile: Main = {
+    $type: "moe.karashiiro.klink.profile",
+    name: "Your Name Here",
+    location: "The Internet",
+    bio: "Share all your important links in one beautiful place! Customize your profile with colors, backgrounds, shaders, and more. Login to create your own personalized link page.",
+    profileImage: {
+      $type: "moe.karashiiro.klink.profile#urlImage",
+      type: "url",
+      value: "https://api.dicebear.com/7.x/shapes/svg?seed=klink",
+    },
+    background: {
+      $type: "moe.karashiiro.klink.profile#colorBackground",
+      type: "color",
+      value: "#1a1a2e",
+    },
+    theme: {
+      primaryColor: "#364163",
+      secondaryColor: "#a58431",
+      fontFamily: "sans-serif",
+    },
+    links: [
+      {
+        label: "Website",
+        href: "https://example.com",
+      },
+      {
+        label: "GitHub",
+        href: "https://github.com",
+      },
+      {
+        label: "Twitter",
+        href: "https://twitter.com",
+      },
+      {
+        label: "Portfolio",
+        href: "https://example.com/portfolio",
+      },
+    ],
+  };
+
   return (
     <YStack
       flex={1}
-      backgroundColor="$background"
+      backgroundColor="#1a1a2e"
       paddingVertical="$6"
       paddingHorizontal="$4"
       alignItems="center"
       justifyContent="center"
+      minHeight="100vh"
+      width="100%"
+      position="relative"
     >
-      <Card
-        elevate
-        size="$4"
-        bordered
-        backgroundColor="$primary"
-        maxWidth={500}
-        width="100%"
-        padding="$6"
-      >
-        <YStack gap="$4" alignItems="center">
-          <H1 color="$textTitle" textAlign="center">
-            Welcome to KLink! ✨
-          </H1>
-
-          <Paragraph color="$textMuted" textAlign="center" marginBottom="$2">
-            Share all your important links in one place
+      {authState.state === "authenticating" && (
+        <YStack alignItems="center" gap="$4">
+          <Loader size="$2" color="$accent" />
+          <Paragraph color="white" fontSize="$5">
+            Authenticating...
           </Paragraph>
+        </YStack>
+      )}
 
-          {authState.state === "authenticating" && (
-            <YStack alignItems="center" gap="$2">
-              <Loader size="$2" color="$accent" />
-              <Paragraph color="$textMuted">Authenticating...</Paragraph>
-            </YStack>
-          )}
+      {authState.state === "authenticated" && session && profileLoading && (
+        <YStack gap="$4" alignItems="center">
+          <Paragraph fontSize="$7" color="white" textAlign="center">
+            Welcome back, {session.handle}!
+          </Paragraph>
+          <YStack alignItems="center" gap="$2">
+            <Loader size="$2" color="$accent" />
+            <Paragraph color="rgba(255, 255, 255, 0.7)" fontSize="$4">
+              Loading profile...
+            </Paragraph>
+          </YStack>
+        </YStack>
+      )}
 
-          {authState.state === "unauthenticated" && (
-            <Button
-              size="$5"
-              backgroundColor="$greenBase"
-              hoverStyle={{ backgroundColor: "$greenHover" }}
-              pressStyle={{ backgroundColor: "$greenPress" }}
-              color="$greenText"
-              fontWeight="bold"
-              onPress={openAuthModal}
-              width="100%"
+      {(authState.state === "unauthenticated" ||
+        authState.state === "error") && (
+        <YStack gap="$6" alignItems="center" width="100%" maxWidth={700}>
+          <YStack gap="$2" alignItems="center">
+            <H1 color="white" textAlign="center" size="$10">
+              Welcome to KLink!
+            </H1>
+            <Paragraph
+              color="rgba(255, 255, 255, 0.8)"
+              textAlign="center"
+              fontSize="$6"
             >
-              Login
-            </Button>
-          )}
+              Create your personalized link page in seconds
+            </Paragraph>
+          </YStack>
 
-          {authState.state === "authenticated" && session && profileLoading && (
-            <YStack gap="$4" width="100%" alignItems="center">
-              <Paragraph fontSize="$5" color="$textTitle" textAlign="center">
-                Welcome back, {session.handle}!
-              </Paragraph>
-              <YStack alignItems="center" gap="$2">
-                <Loader size="$1" color="$accent" />
-                <Paragraph color="$textMuted" fontSize="$2">
-                  Loading profile...
-                </Paragraph>
-              </YStack>
-            </YStack>
-          )}
+          <ProfileDisplay
+            profileData={demoProfile}
+            handle="yourhandle.bsky.social"
+          />
 
           {authState.state === "error" && (
-            <YStack gap="$3" alignItems="center">
-              <Paragraph color="$redBase" textAlign="center">
+            <Card
+              backgroundColor="rgba(255, 0, 0, 0.1)"
+              borderColor="rgba(255, 0, 0, 0.3)"
+              borderWidth={1}
+              padding="$3"
+              width="100%"
+            >
+              <Paragraph color="#ff6b6b" textAlign="center">
                 Authentication error. Please try again.
               </Paragraph>
-              <Button
-                size="$4"
-                backgroundColor="$greenBase"
-                hoverStyle={{ backgroundColor: "$greenHover" }}
-                pressStyle={{ backgroundColor: "$greenPress" }}
-                color="$greenText"
-                onPress={openAuthModal}
-              >
-                Retry Login
-              </Button>
-            </YStack>
+            </Card>
           )}
+
+          <Button
+            size="$6"
+            backgroundColor="$greenBase"
+            hoverStyle={{ backgroundColor: "$greenHover" }}
+            pressStyle={{ backgroundColor: "$greenPress" }}
+            color="$greenText"
+            fontWeight="bold"
+            onPress={openAuthModal}
+            width="100%"
+            maxWidth={600}
+          >
+            {authState.state === "error"
+              ? "Retry Login"
+              : "Get Started - Login"}
+          </Button>
+
+          <Paragraph
+            color="rgba(255, 255, 255, 0.5)"
+            textAlign="center"
+            fontSize="$3"
+          >
+            Powered by AT Protocol and Bluesky
+          </Paragraph>
         </YStack>
-      </Card>
+      )}
     </YStack>
   );
 }
