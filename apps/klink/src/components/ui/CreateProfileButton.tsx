@@ -1,21 +1,16 @@
 import { useAtomValue, useStore } from "jotai";
 import { Button } from "@tamagui/button";
 import { bioAtom, profileAtom } from "../../atoms/profile";
-import type { UseCreateProfileReturn } from "../../hooks/useCreateProfile";
+import { useCreateProfile } from "../../hooks/useCreateProfile";
 
 interface CreateProfileButtonProps {
-  createProfile: UseCreateProfileReturn["createProfile"];
-  createLoading: boolean;
   onSuccess: () => void;
 }
 
-export function CreateProfileButton({
-  createProfile,
-  createLoading,
-  onSuccess,
-}: CreateProfileButtonProps) {
+export function CreateProfileButton({ onSuccess }: CreateProfileButtonProps) {
   const bio = useAtomValue(bioAtom);
   const store = useStore();
+  const { createProfile, loading: createLoading } = useCreateProfile();
 
   return (
     <Button

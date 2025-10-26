@@ -1,24 +1,21 @@
 import { useAtomValue, useStore } from "jotai";
 import { Button } from "@tamagui/button";
 import { bioAtom, profileAtom } from "../../atoms/profile";
-import type { UseUpdateProfileReturn } from "../../hooks/useUpdateProfile";
+import { useUpdateProfile } from "../../hooks/useUpdateProfile";
 import type { ReadProfileResult } from "../../hooks/useReadProfile";
 
 interface UpdateProfileButtonsProps {
-  updateProfile: UseUpdateProfileReturn["updateProfile"];
-  updateLoading: boolean;
   profile: ReadProfileResult["profile"];
   onSuccess: () => void;
 }
 
 export function UpdateProfileButtons({
-  updateProfile,
-  updateLoading,
   profile,
   onSuccess,
 }: UpdateProfileButtonsProps) {
   const bio = useAtomValue(bioAtom);
   const store = useStore();
+  const { updateProfile, loading: updateLoading } = useUpdateProfile();
 
   return (
     <Button

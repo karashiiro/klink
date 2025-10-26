@@ -8,9 +8,6 @@ import { useAuth } from "@kpaste-app/atproto-auth";
 import { Loader } from "@tamagui/lucide-icons";
 import { useAuthModal } from "@kpaste-app/ui";
 import { useReadProfile } from "../../hooks/useReadProfile";
-import { useCreateProfile } from "../../hooks/useCreateProfile";
-import { useUpdateProfile } from "../../hooks/useUpdateProfile";
-import { useDeleteProfile } from "../../hooks/useDeleteProfile";
 import { ProfilePreview } from "../ui/ProfilePreview";
 import { ProfileDisplay } from "../ui/ProfileDisplay";
 import { LeftEditorPanel } from "../ui/LeftEditorPanel";
@@ -30,9 +27,6 @@ export function Home() {
     loading: profileLoading,
     refetch,
   } = useReadProfile(session?.handle);
-  const { createProfile, loading: createLoading } = useCreateProfile();
-  const { updateProfile, loading: updateLoading } = useUpdateProfile();
-  const { deleteProfile, loading: deleteLoading } = useDeleteProfile();
 
   const setFormData = useSetAtom(profileAtom);
 
@@ -112,14 +106,10 @@ export function Home() {
         <ProfilePreview />
         <LeftEditorPanel />
         <RightEditorPanel
-          profile={profile}
-          createProfile={createProfile}
-          createLoading={createLoading}
-          updateProfile={updateProfile}
-          updateLoading={updateLoading}
-          deleteProfile={deleteProfile}
-          deleteLoading={deleteLoading}
-          onSuccess={() => refetch(session.handle)}
+          onSuccess={async () => {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await refetch(session.handle);
+          }}
         />
         <EditorPanelToggle />
         <MobilePanelSwitch />

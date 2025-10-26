@@ -1,46 +1,27 @@
 import { YStack, XStack } from "@tamagui/stacks";
 import { Card } from "@tamagui/card";
 import { Button } from "@tamagui/button";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import {
   editorPanelsOpenAtom,
   mobileActivePanelAtom,
-  profileAtom,
 } from "../../atoms/profile";
 import { ProfileLinkEditor } from "./ProfileLinkEditor";
 import { CreateProfileButton } from "./CreateProfileButton";
 import { UpdateProfileButtons } from "./UpdateProfileButtons";
+import { DeleteProfileButton } from "./DeleteProfileButton";
 import { useAuth } from "@kpaste-app/atproto-auth";
-import type { ReadProfileResult } from "../../hooks/useReadProfile";
-import type { UseCreateProfileReturn } from "../../hooks/useCreateProfile";
-import type { UseUpdateProfileReturn } from "../../hooks/useUpdateProfile";
-import type { UseDeleteProfileReturn } from "../../hooks/useDeleteProfile";
+import { useReadProfile } from "../../hooks/useReadProfile";
 
 interface RightEditorPanelProps {
-  profile?: ReadProfileResult["profile"];
-  createProfile: UseCreateProfileReturn["createProfile"];
-  createLoading: boolean;
-  updateProfile: UseUpdateProfileReturn["updateProfile"];
-  updateLoading: boolean;
-  deleteProfile: UseDeleteProfileReturn["deleteProfile"];
-  deleteLoading: boolean;
   onSuccess: () => void;
 }
 
-export function RightEditorPanel({
-  profile,
-  createProfile,
-  createLoading,
-  updateProfile,
-  updateLoading,
-  deleteProfile,
-  deleteLoading,
-  onSuccess,
-}: RightEditorPanelProps) {
+export function RightEditorPanel({ onSuccess }: RightEditorPanelProps) {
   const isOpen = useAtomValue(editorPanelsOpenAtom);
   const mobileActivePanel = useAtomValue(mobileActivePanelAtom);
-  const { logout } = useAuth();
-  const setFormData = useSetAtom(profileAtom);
+  const { session, logout } = useAuth();
+  const { profile } = useReadProfile(session?.handle);
 
   return (
     <Card
@@ -76,23 +57,12 @@ export function RightEditorPanel({
         className="hide-scrollbar"
       >
         <div style={{ marginBottom: 36 }} />
-        <ProfileLinkEditor profile={profile} />
+        <ProfileLinkEditor />
 
-        {!profile && (
-          <CreateProfileButton
-            createProfile={createProfile}
-            createLoading={createLoading}
-            onSuccess={onSuccess}
-          />
-        )}
+        {!profile && <CreateProfileButton onSuccess={onSuccess} />}
 
         {profile && (
-          <UpdateProfileButtons
-            updateProfile={updateProfile}
-            updateLoading={updateLoading}
-            profile={profile}
-            onSuccess={onSuccess}
-          />
+          <UpdateProfileButtons profile={profile} onSuccess={onSuccess} />
         )}
 
         {/* Spacer to push buttons to bottom */}
@@ -119,45 +89,7 @@ export function RightEditorPanel({
             Logout
           </Button>
 
-          {profile && (
-            <Button
-              size="$4"
-              backgroundColor="$redBase"
-              hoverStyle={{ backgroundColor: "$redHover" }}
-              pressStyle={{ backgroundColor: "$redPress" }}
-              color="white"
-              disabled={deleteLoading}
-              onPress={async () => {
-                const success = await deleteProfile();
-                if (success) {
-                  setFormData({
-                    name: "",
-                    location: "",
-                    bio: "",
-                    profileImage: undefined,
-                    profileImageBlob: null,
-                    background: undefined,
-                    backgroundImageBlob: null,
-                    backgroundImageUrl: "",
-                    backgroundColor: "#1a1a1a",
-                    backgroundShaderCode: "",
-                    backgroundType: "color",
-                    backgroundObjectFit: "cover",
-                    theme: {
-                      primaryColor: "#364163",
-                      secondaryColor: "#a58431",
-                      fontFamily: "",
-                      stylesheet: "",
-                    },
-                    links: [],
-                  });
-                  onSuccess();
-                }
-              }}
-            >
-              {deleteLoading ? "Deleting..." : "Delete"}
-            </Button>
-          )}
+          {profile && <DeleteProfileButton onSuccess={onSuccess} />}
         </XStack>
       </YStack>
     </Card>

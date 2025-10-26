@@ -4,15 +4,12 @@ import { YStack, XStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
 import { LinkItem } from "./LinkItem";
-import type { ReadProfileResult } from "../../hooks/useReadProfile";
+import { useReadProfile } from "../../hooks/useReadProfile";
 import { useAuth } from "@kpaste-app/atproto-auth";
 
-interface ProfileLinkEditorProps {
-  profile?: ReadProfileResult["profile"];
-}
-
-export function ProfileLinkEditor({ profile }: ProfileLinkEditorProps) {
+export function ProfileLinkEditor() {
   const { session } = useAuth();
+  const { profile } = useReadProfile(session?.handle);
   const linkAtoms = useAtomValue(linksAtomsAtom);
   const links = useAtomValue(linksAtom);
   const setLinks = useSetAtom(linksAtom);
