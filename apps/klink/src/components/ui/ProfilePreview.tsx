@@ -21,7 +21,6 @@ import { ProfileDisplay } from "./ProfileDisplay";
 import { BackgroundRenderer } from "./BackgroundRenderer";
 import { getBackgroundStyle } from "../../utils/backgroundUtils";
 import { useImageSource } from "../../hooks/useImageSource";
-import { useBlobUrl } from "../../hooks/useBlobUrl";
 import type { Main } from "@klink-app/lexicon/types";
 import type { ProfileDataWithBlobs } from "./ProfileDisplay";
 
@@ -42,18 +41,17 @@ export function ProfilePreview() {
   const stylesheet = useAtomValue(stylesheetAtom);
   const links = useAtomValue(linksAtom);
 
-  // IMPORTANT: Call all hooks BEFORE any conditional returns (React rules of hooks)
-  // Use hook to resolve profile image URL (handles browser Blob with automatic cleanup)
   const profileImageUrl = useImageSource(
     profileImageBlob ?? profileImageValue,
     session?.endpoint.url,
     session?.did,
   );
+  const backgroundBlobUrl = useImageSource(
+    backgroundImageBlob ?? backgroundValue,
+    session?.endpoint.url,
+    session?.did,
+  );
 
-  // Handle background browser Blob separately (different type from images)
-  const backgroundBlobUrl = useBlobUrl(backgroundImageBlob);
-
-  // Now we can safely return early
   if (!session) return null;
 
   const profileImage: Main["profileImage"] = profileImageUrl

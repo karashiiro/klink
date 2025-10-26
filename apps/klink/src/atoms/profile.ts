@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { splitAtom } from "jotai/utils";
+import { focusAtom } from "jotai-optics";
 import type { Main } from "@klink-app/lexicon/types";
 
 // Atom for controlling editor panels visibility (both left and right)
@@ -77,71 +78,22 @@ export const backgroundShaderCodeAtom = atom(
   (get) => get(profileAtom).backgroundShaderCode,
 );
 
-export const linksAtom = atom(
-  (get) => get(profileAtom).links,
-  (
-    get,
-    set,
-    newValue:
-      | {
-          icon?: Blob | Main["links"][0]["icon"];
-          label: string;
-          href: string;
-        }[]
-      | ((
-          prev: {
-            icon?: Blob | Main["links"][0]["icon"];
-            label: string;
-            href: string;
-          }[],
-        ) => {
-          icon?: Blob | Main["links"][0]["icon"];
-          label: string;
-          href: string;
-        }[]),
-  ) => {
-    const updatedValue =
-      typeof newValue === "function"
-        ? newValue(get(profileAtom).links)
-        : newValue;
-    set(profileAtom, { ...get(profileAtom), links: updatedValue });
-  },
-);
+export const linksAtom = focusAtom(profileAtom, (optic) => optic.prop("links"));
 
 export const linksAtomsAtom = splitAtom(linksAtom);
 
-export const primaryColorAtom = atom(
-  (get) => get(profileAtom).theme.primaryColor,
-  (get, set, newValue: string) =>
-    set(profileAtom, {
-      ...get(profileAtom),
-      theme: { ...get(profileAtom).theme, primaryColor: newValue },
-    }),
+export const primaryColorAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("theme").prop("primaryColor"),
 );
 
-export const secondaryColorAtom = atom(
-  (get) => get(profileAtom).theme.secondaryColor,
-  (get, set, newValue: string) =>
-    set(profileAtom, {
-      ...get(profileAtom),
-      theme: { ...get(profileAtom).theme, secondaryColor: newValue },
-    }),
+export const secondaryColorAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("theme").prop("secondaryColor"),
 );
 
-export const fontFamilyAtom = atom(
-  (get) => get(profileAtom).theme.fontFamily,
-  (get, set, newValue: string) =>
-    set(profileAtom, {
-      ...get(profileAtom),
-      theme: { ...get(profileAtom).theme, fontFamily: newValue },
-    }),
+export const fontFamilyAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("theme").prop("fontFamily"),
 );
 
-export const stylesheetAtom = atom(
-  (get) => get(profileAtom).theme.stylesheet,
-  (get, set, newValue: string) =>
-    set(profileAtom, {
-      ...get(profileAtom),
-      theme: { ...get(profileAtom).theme, stylesheet: newValue },
-    }),
+export const stylesheetAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("theme").prop("stylesheet"),
 );

@@ -16,6 +16,7 @@ export function useImageSource(
   image:
     | Blob
     | Main["profileImage"]
+    | Main["background"]
     | Main["links"][0]["icon"]
     | string
     | null
