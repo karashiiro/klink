@@ -21,7 +21,7 @@
     "@klink-app/lexicon": "workspace:*",
     "@kpaste-app/atproto-auth": "^0.1.0",
     "@kpaste-app/atproto-utils": "^0.1.0",
-    "@kpaste-app/ui": "^0.1.1",
+    "@kpaste-app/ui": "^0.1.4",
     "@tamagui/button": "^1.134.0",
     "@tamagui/card": "^1.134.0",
     "@tamagui/config": "^1.134.0",

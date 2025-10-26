@@ -39,8 +39,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0(@atcute/client@4.0.5)
       '@kpaste-app/ui':
-        specifier: ^0.1.1
-        version: 0.1.1(54c645d8693ebf8efbb81946d56a84f1)
+        specifier: ^0.1.4
+        version: 0.1.4(54c645d8693ebf8efbb81946d56a84f1)
       '@tamagui/button':
         specifier: ^1.134.0
         version: 1.135.4(react-dom@19.2.0(react@19.2.0))(react-native@0.82.1(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)
@@ -827,8 +827,8 @@ packages:
     peerDependencies:
       '@atcute/client': ^4.0.0
 
-  '@kpaste-app/ui@0.1.1':
-    resolution: {integrity: sha512-NtxW68JGWgtGQcdXZgTNuiFqJ34KUoSenR2Dwm0W9zjMzOm7U+GBSujzeDveWluRa7t5Q+GQDQu30l/JK+HZAA==}
+  '@kpaste-app/ui@0.1.4':
+    resolution: {integrity: sha512-+Q4Yc8Zlebk7dYNHfMNrVrNVMitVuJ670Gn5GvxHnWbpYTgp+kBWWoW0ByRYe1WhpkpbVKYk060uFAQEDgH17A==}
     peerDependencies:
       '@kpaste-app/atproto-auth': ^0.1.0
       '@tamagui/button': ^1.134.0
@@ -4221,7 +4221,7 @@ snapshots:
     dependencies:
       '@atcute/client': 4.0.5
 
-  '@kpaste-app/ui@0.1.1(54c645d8693ebf8efbb81946d56a84f1)':
+  '@kpaste-app/ui@0.1.4(54c645d8693ebf8efbb81946d56a84f1)':
     dependencies:
       '@kpaste-app/atproto-auth': 0.1.0(@atcute/client@4.0.5)(@atcute/oauth-browser-client@1.0.27)(react@19.2.0)
       '@tamagui/button': 1.135.4(react-dom@19.2.0(react@19.2.0))(react-native@0.82.1(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)
