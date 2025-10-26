@@ -1,22 +1,7 @@
 import { useDebugValue, useMemo } from "react";
 import type { Main } from "@klink-app/lexicon/types";
 import { useBlobUrl } from "./useBlobUrl";
-import type { Blob as AtProtoBlob, LegacyBlob } from "@atcute/lexicons";
-
-/**
- * Extracts the CID from a Blob reference
- */
-function getAtProtoBlobCid(blob: AtProtoBlob | LegacyBlob): string {
-  return "ref" in blob ? blob.ref.$link : blob.cid;
-}
-
-/**
- * Constructs a URL to fetch a blob from a PDS
- */
-function buildAtProtoBlobUrl(pdsUrl: string, did: string, cid: string): string {
-  const cleanPdsUrl = pdsUrl.endsWith("/") ? pdsUrl.slice(0, -1) : pdsUrl;
-  return `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${cid}`;
-}
+import { getAtProtoBlobCid, buildAtProtoBlobUrl } from "../utils/blobUtils";
 
 /**
  * Unified hook to resolve an image source from multiple possible formats:
