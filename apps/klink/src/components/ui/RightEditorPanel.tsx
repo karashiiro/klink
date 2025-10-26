@@ -138,6 +138,7 @@ export function RightEditorPanel({
                     profileImageBlob: null,
                     background: undefined,
                     backgroundImageBlob: null,
+                    backgroundImageUrl: "",
                     backgroundColor: "#1a1a1a",
                     backgroundShaderCode: "",
                     backgroundType: "color",
