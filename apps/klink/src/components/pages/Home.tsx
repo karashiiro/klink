@@ -255,7 +255,15 @@ export function Home() {
             textAlign="center"
             fontSize="$3"
           >
-            Powered by AT Protocol and Bluesky
+            View on{" "}
+            <a
+              href="https://github.com/karashiiro/klink"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "rgba(255, 255, 255, 0.5)" }}
+            >
+              GitHub
+            </a>
           </Paragraph>
         </YStack>
       )}
