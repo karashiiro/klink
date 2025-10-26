@@ -17,6 +17,7 @@ export const profileAtom = atom({
   profileImageBlob: null as Blob | null,
   background: undefined as Main["background"] | undefined,
   backgroundImageBlob: null as Blob | null,
+  backgroundImageUrl: "",
   backgroundColor: "#1a1a1a",
   backgroundShaderCode: "",
   backgroundType: "color" as "color" | "url" | "blob" | "shader",
@@ -62,20 +63,29 @@ export const profileImageBlobAtom = atom(
   (get) => get(profileAtom).profileImageBlob,
 );
 export const backgroundAtom = atom((get) => get(profileAtom).background);
-export const backgroundImageBlobAtom = atom(
-  (get) => get(profileAtom).backgroundImageBlob,
+
+export const backgroundImageBlobAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("backgroundImageBlob"),
 );
-export const backgroundColorAtom = atom(
-  (get) => get(profileAtom).backgroundColor,
+
+export const backgroundImageUrlAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("backgroundImageUrl"),
 );
-export const backgroundTypeAtom = atom(
-  (get) => get(profileAtom).backgroundType,
+
+export const backgroundColorAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("backgroundColor"),
 );
-export const backgroundObjectFitAtom = atom(
-  (get) => get(profileAtom).backgroundObjectFit,
+
+export const backgroundTypeAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("backgroundType"),
 );
-export const backgroundShaderCodeAtom = atom(
-  (get) => get(profileAtom).backgroundShaderCode,
+
+export const backgroundObjectFitAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("backgroundObjectFit"),
+);
+
+export const backgroundShaderCodeAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("backgroundShaderCode"),
 );
 
 export const linksAtom = focusAtom(profileAtom, (optic) => optic.prop("links"));

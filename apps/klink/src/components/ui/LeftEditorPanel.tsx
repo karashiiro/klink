@@ -12,13 +12,8 @@ import { BioInput } from "./BioInput";
 import { ProfileBackgroundSelector } from "./ProfileBackgroundSelector";
 import { ThemeColorInput } from "./ThemeColorInput";
 import { FontInput } from "./FontInput";
-import type { ReadProfileResult } from "../../hooks/useReadProfile";
 
-interface LeftEditorPanelProps {
-  profile?: ReadProfileResult["profile"];
-}
-
-export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
+export function LeftEditorPanel() {
   const isOpen = useAtomValue(editorPanelsOpenAtom);
   const mobileActivePanel = useAtomValue(mobileActivePanelAtom);
 
@@ -60,7 +55,7 @@ export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
         <NameInput />
         <LocationInput />
         <BioInput />
-        <ProfileBackgroundSelector profile={profile} />
+        <ProfileBackgroundSelector />
         <ThemeColorInput />
         <FontInput />
       </YStack>

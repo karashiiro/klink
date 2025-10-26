@@ -1,49 +1,40 @@
-import { useEffect, useRef, type FormEvent } from "react";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useRef, type FormEvent } from "react";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
-  profileAtom,
   backgroundImageBlobAtom,
+  backgroundImageUrlAtom,
   backgroundColorAtom,
   backgroundTypeAtom,
   backgroundObjectFitAtom,
 } from "../../atoms/profile";
-import { BackgroundSelector } from "./BackgroundSelector";
+import { YStack, XStack } from "@tamagui/stacks";
+import { Paragraph } from "@tamagui/text";
+import { Button } from "@tamagui/button";
+import { Input } from "@tamagui/input";
+import { ShaderBackgroundSelector } from "./ShaderBackgroundSelector";
 import type { TextInputChangeEvent, BlurEvent } from "react-native";
-import type { ReadProfileResult } from "../../hooks/useReadProfile";
 
-interface ProfileBackgroundSelectorProps {
-  profile?: ReadProfileResult["profile"];
-}
-
-export function ProfileBackgroundSelector({
-  profile,
-}: ProfileBackgroundSelectorProps) {
+export function ProfileBackgroundSelector() {
   const backgroundImageBlob = useAtomValue(backgroundImageBlobAtom);
+  const backgroundImageUrl = useAtomValue(backgroundImageUrlAtom);
   const backgroundColor = useAtomValue(backgroundColorAtom);
-  const backgroundType = useAtomValue(backgroundTypeAtom);
-  const backgroundObjectFit = useAtomValue(backgroundObjectFitAtom);
-  const setFormData = useSetAtom(profileAtom);
+  const [backgroundType, setBackgroundType] = useAtom(backgroundTypeAtom);
+  const [backgroundObjectFit, setBackgroundObjectFit] = useAtom(
+    backgroundObjectFitAtom,
+  );
+  const setBackgroundColor = useSetAtom(backgroundColorAtom);
+  const setBackgroundImageUrl = useSetAtom(backgroundImageUrlAtom);
+  const setBackgroundImageBlob = useSetAtom(backgroundImageBlobAtom);
   const colorInputRef = useRef<HTMLInputElement>(null);
-
-  // Sync color input value when profile loads
-  useEffect(() => {
-    if (profile?.value.background.type === "color" && colorInputRef.current) {
-      colorInputRef.current.value = profile.value.background.value;
-    }
-  }, [profile]);
-
-  // URL input is handled by BackgroundSelector directly via atoms
-  const handleBackgroundImageChange = () => {
-    // This would need to create a background object, but for now we just handle blobs
-    setFormData((prev) => ({
-      ...prev,
-      backgroundImageBlob: null,
-    }));
-  };
 
   const handleColorChange = (e: BlurEvent) => {
     const newColor = (e.target as unknown as HTMLInputElement).value;
-    setFormData((prev) => ({ ...prev, backgroundColor: newColor }));
+    setBackgroundColor(newColor);
+  };
+
+  const handleUrlChange = (e: BlurEvent) => {
+    const newUrl = (e.target as unknown as HTMLInputElement).value;
+    setBackgroundImageUrl(newUrl);
   };
 
   const handleBackgroundImageFile = (
@@ -51,44 +42,146 @@ export function ProfileBackgroundSelector({
   ) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (file) {
-      setFormData((prev) => ({
-        ...prev,
-        backgroundImageBlob: file,
-        backgroundType: "blob",
-      }));
+      setBackgroundImageBlob(file);
+      setBackgroundType("blob");
     }
   };
 
   const clearBackgroundImage = () => {
-    setFormData((prev) => ({
-      ...prev,
-      backgroundImageBlob: null,
-      backgroundType: "color",
-    }));
+    setBackgroundImageBlob(null);
+    setBackgroundType("color");
   };
 
   return (
-    <BackgroundSelector
-      backgroundType={backgroundType}
-      backgroundColor={backgroundColor}
-      backgroundImageUrl=""
-      backgroundImageBlob={backgroundImageBlob}
-      backgroundObjectFit={backgroundObjectFit}
-      hasExistingBlob={profile?.value.background.type === "blob"}
-      colorInputRef={colorInputRef}
-      onTypeChange={(type) =>
-        setFormData((prev) => ({ ...prev, backgroundType: type }))
-      }
-      onColorChange={handleColorChange}
-      onUrlChange={handleBackgroundImageChange}
-      onFileChange={handleBackgroundImageFile}
-      onObjectFitChange={(fit) =>
-        setFormData((prev) => ({
-          ...prev,
-          backgroundObjectFit: fit,
-        }))
-      }
-      onClearBlob={profile ? clearBackgroundImage : undefined}
-    />
+    <YStack gap="$2">
+      <Paragraph color="$textBody">Background:</Paragraph>
+      <XStack gap="$2">
+        <Button
+          size="$3"
+          flex={1}
+          backgroundColor={
+            backgroundType === "color" ? "$accent" : "$secondary"
+          }
+          onPress={() => setBackgroundType("color")}
+        >
+          Color
+        </Button>
+        <Button
+          size="$3"
+          flex={1}
+          backgroundColor={backgroundType === "url" ? "$accent" : "$secondary"}
+          onPress={() => setBackgroundType("url")}
+        >
+          Image URL
+        </Button>
+        <Button
+          size="$3"
+          flex={1}
+          backgroundColor={backgroundType === "blob" ? "$accent" : "$secondary"}
+          onPress={() => setBackgroundType("blob")}
+        >
+          Upload
+        </Button>
+        <Button
+          size="$3"
+          flex={1}
+          backgroundColor={
+            backgroundType === "shader" ? "$accent" : "$secondary"
+          }
+          onPress={() => setBackgroundType("shader")}
+        >
+          Shader
+        </Button>
+      </XStack>
+      {backgroundType === "color" ? (
+        <Input
+          ref={colorInputRef}
+          type="color"
+          defaultValue={backgroundColor}
+          onBlur={handleColorChange}
+          width="100%"
+          size="$4"
+        />
+      ) : backgroundType === "url" ? (
+        <YStack gap="$2">
+          <Input
+            placeholder="Background Image URL"
+            defaultValue={backgroundImageUrl}
+            onBlur={handleUrlChange}
+            backgroundColor="$secondary"
+            color="$textBody"
+            borderColor="$border"
+            size="$4"
+          />
+          <Paragraph color="$textMuted" fontSize="$2">
+            Image fit:
+          </Paragraph>
+          <XStack gap="$2" flexWrap="wrap">
+            {(["cover", "contain", "fill", "scale-down", "none"] as const).map(
+              (fit) => (
+                <Button
+                  key={fit}
+                  size="$2"
+                  backgroundColor={
+                    backgroundObjectFit === fit ? "$accent" : "$secondary"
+                  }
+                  onPress={() => setBackgroundObjectFit(fit)}
+                >
+                  {fit}
+                </Button>
+              ),
+            )}
+          </XStack>
+        </YStack>
+      ) : backgroundType === "shader" ? (
+        <ShaderBackgroundSelector />
+      ) : (
+        <YStack gap="$2">
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={handleBackgroundImageFile}
+            backgroundColor="$secondary"
+            color="$textBody"
+            borderColor="$border"
+            size="$4"
+          />
+          {backgroundImageBlob && (
+            <XStack alignItems="center" gap="$2">
+              <Paragraph color="$accent" fontSize="$2" flex={1}>
+                File selected: {(backgroundImageBlob as File).name || "image"}
+              </Paragraph>
+              <Button
+                size="$2"
+                backgroundColor="$redBase"
+                hoverStyle={{ backgroundColor: "$redHover" }}
+                onPress={clearBackgroundImage}
+              >
+                Clear
+              </Button>
+            </XStack>
+          )}
+          <Paragraph color="$textMuted" fontSize="$2">
+            Image fit:
+          </Paragraph>
+          <XStack gap="$2" flexWrap="wrap">
+            {(["cover", "contain", "fill", "scale-down", "none"] as const).map(
+              (fit) => (
+                <Button
+                  key={fit}
+                  size="$2"
+                  backgroundColor={
+                    backgroundObjectFit === fit ? "$accent" : "$secondary"
+                  }
+                  onPress={() => setBackgroundObjectFit(fit)}
+                >
+                  {fit}
+                </Button>
+              ),
+            )}
+          </XStack>
+        </YStack>
+      )}
+    </YStack>
   );
 }

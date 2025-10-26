@@ -67,6 +67,10 @@ export function Home() {
           profileImageBlob: null,
           background: profile.value.background,
           backgroundImageBlob: null,
+          backgroundImageUrl:
+            profile.value.background.type === "url"
+              ? profile.value.background.value
+              : "",
           backgroundColor:
             profile.value.background.type === "color"
               ? profile.value.background.value
@@ -106,7 +110,7 @@ export function Home() {
         overflow="hidden"
       >
         <ProfilePreview />
-        <LeftEditorPanel profile={profile} />
+        <LeftEditorPanel />
         <RightEditorPanel
           profile={profile}
           createProfile={createProfile}
