@@ -114,7 +114,11 @@ export function LinkItem({
 
       <ImageInput
         label="Icon (optional)"
-        urlValue={typeof link.icon === "string" ? link.icon : ""}
+        urlValue={
+          !(link.icon instanceof Blob) && link.icon?.type === "url"
+            ? link.icon.value
+            : ""
+        }
         blob={link.icon instanceof Blob ? link.icon : null}
         hasExistingBlob={hasExistingBlobIcon}
         existingBlobUrl={existingBlobUrl ?? undefined}

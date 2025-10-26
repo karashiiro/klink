@@ -56,7 +56,7 @@ export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
         className="hide-scrollbar"
       >
         <div style={{ marginBottom: 36 }} />
-        <ProfileImageInput profile={profile} />
+        <ProfileImageInput />
         <NameInput />
         <LocationInput />
         <BioInput />

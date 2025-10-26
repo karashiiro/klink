@@ -1,24 +1,24 @@
 import { type FormEvent } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { profileAtom, profileImageBlobAtom } from "../../atoms/profile";
+import {
+  profileAtom,
+  profileImageAtom,
+  profileImageBlobAtom,
+} from "../../atoms/profile";
 import { ImageInput } from "./ImageInput";
 import type { TextInputChangeEvent } from "react-native";
-import type { ReadProfileResult } from "../../hooks/useReadProfile";
 import { useAuth } from "@kpaste-app/atproto-auth";
 import { useImageSource } from "../../hooks/useImageSource";
 
-interface ProfileImageInputProps {
-  profile?: ReadProfileResult["profile"];
-}
-
-export function ProfileImageInput({ profile }: ProfileImageInputProps) {
+export function ProfileImageInput() {
   const { session } = useAuth();
+  const profileImage = useAtomValue(profileImageAtom);
   const profileImageBlob = useAtomValue(profileImageBlobAtom);
   const setFormData = useSetAtom(profileAtom);
 
   // Use the unified hook to resolve the existing image URL
-  const existingBlobUrl = useImageSource(
-    profile?.value.profileImage,
+  const existingUrl = useImageSource(
+    profileImage,
     session?.endpoint.url,
     session?.did,
   );
@@ -64,15 +64,13 @@ export function ProfileImageInput({ profile }: ProfileImageInputProps) {
   return (
     <ImageInput
       label="Profile Image (optional)"
-      urlValue=""
+      urlValue={profileImage?.type === "url" ? profileImage.value : ""}
       blob={profileImageBlob}
-      hasExistingBlob={
-        profile?.value.profileImage?.type === "blob" && !profileImageBlob
-      }
-      existingBlobUrl={existingBlobUrl ?? undefined}
+      hasExistingBlob={profileImage?.type === "blob" && !profileImageBlob}
+      existingBlobUrl={existingUrl ?? undefined}
       onUrlChange={handleProfileImageChange}
       onFileChange={handleProfileImageFile}
-      onClear={profile ? clearProfileImage : undefined}
+      onClear={profileImage ? clearProfileImage : undefined}
     />
   );
 }
