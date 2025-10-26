@@ -23,8 +23,10 @@ export function getBackgroundStyle(
       imageUrl = URL.createObjectURL(background.value);
     } else {
       const cleanPdsUrl = pdsUrl.endsWith("/") ? pdsUrl.slice(0, -1) : pdsUrl;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      imageUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${(background.value as any).ref.$link}`;
+
+      const blob = background.value;
+      const blobCid = "ref" in blob ? blob.ref.$link : blob.cid;
+      imageUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${blobCid}`;
     }
   }
 

@@ -42,11 +42,10 @@ export function UpdateProfileButtons({
           const result = await updateProfile({
             profileImage: data.profileImageBlob
               ? { type: "blob", value: data.profileImageBlob }
-              : data.profileImageUrl
-                ? { type: "url", value: data.profileImageUrl }
+              : data.profileImage?.type === "url"
+                ? { type: "url", value: data.profileImage.value as string }
                 : profile?.value.profileImage?.type === "blob"
-                  ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (profile.value.profileImage as any)
+                  ? profile.value.profileImage
                   : undefined,
             name: data.name || undefined,
             location: data.location || undefined,
@@ -65,8 +64,7 @@ export function UpdateProfileButtons({
                   : data.backgroundType === "shader" &&
                       !data.backgroundShaderCode &&
                       profile?.value.background.type === "shader"
-                    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (profile.value.background as any)
+                    ? profile.value.background
                     : data.backgroundType === "blob" && data.backgroundImageBlob
                       ? {
                           type: "blob",
@@ -76,12 +74,12 @@ export function UpdateProfileButtons({
                       : data.backgroundType === "blob" &&
                           !data.backgroundImageBlob &&
                           profile?.value.background.type === "blob"
-                        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          (profile.value.background as any)
-                        : data.backgroundType === "url"
+                        ? profile.value.background
+                        : data.backgroundType === "url" &&
+                            data.background?.type === "url"
                           ? {
                               type: "url",
-                              value: data.backgroundImageUrl,
+                              value: data.background.value as string,
                               objectFit: data.backgroundObjectFit,
                             }
                           : {
@@ -96,11 +94,10 @@ export function UpdateProfileButtons({
                   : typeof link.icon === "string"
                     ? { type: "url", value: link.icon }
                     : // It's already a Main["profileImage"] object, pass it through
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (link.icon as any)
+
+                      link.icon
                 : profile?.value.links?.[index]?.icon?.type === "blob"
-                  ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (profile.value.links[index].icon as any)
+                  ? profile.value.links[index].icon
                   : undefined,
               label: link.label,
               href: link.href,
@@ -128,9 +125,9 @@ export function UpdateProfileButtons({
               name: "",
               location: "",
               bio: "",
-              profileImageUrl: "",
+              profileImage: undefined,
               profileImageBlob: null,
-              backgroundImageUrl: "",
+              background: undefined,
               backgroundImageBlob: null,
               backgroundColor: "#1a1a1a",
               backgroundShaderCode: "",

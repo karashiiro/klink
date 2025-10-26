@@ -12,9 +12,9 @@ export const profileAtom = atom({
   name: "",
   location: "",
   bio: "",
-  profileImageUrl: "",
+  profileImage: undefined as Main["profileImage"],
   profileImageBlob: null as Blob | null,
-  backgroundImageUrl: "",
+  background: undefined as Main["background"] | undefined,
   backgroundImageBlob: null as Blob | null,
   backgroundColor: "#1a1a1a",
   backgroundShaderCode: "",
@@ -32,7 +32,7 @@ export const profileAtom = atom({
     stylesheet: "",
   },
   links: [] as {
-    icon?: string | Blob | Main["profileImage"];
+    icon?: Blob | Main["links"][0]["icon"];
     label: string;
     href: string;
   }[],
@@ -56,15 +56,11 @@ export const bioAtom = atom(
     set(profileAtom, { ...get(profileAtom), bio: newValue }),
 );
 
-export const profileImageUrlAtom = atom(
-  (get) => get(profileAtom).profileImageUrl,
-);
+export const profileImageAtom = atom((get) => get(profileAtom).profileImage);
 export const profileImageBlobAtom = atom(
   (get) => get(profileAtom).profileImageBlob,
 );
-export const backgroundImageUrlAtom = atom(
-  (get) => get(profileAtom).backgroundImageUrl,
-);
+export const backgroundAtom = atom((get) => get(profileAtom).background);
 export const backgroundImageBlobAtom = atom(
   (get) => get(profileAtom).backgroundImageBlob,
 );
@@ -88,18 +84,18 @@ export const linksAtom = atom(
     set,
     newValue:
       | {
-          icon?: string | Blob | Main["profileImage"];
+          icon?: Blob | Main["links"][0]["icon"];
           label: string;
           href: string;
         }[]
       | ((
           prev: {
-            icon?: string | Blob | Main["profileImage"];
+            icon?: Blob | Main["links"][0]["icon"];
             label: string;
             href: string;
           }[],
         ) => {
-          icon?: string | Blob | Main["profileImage"];
+          icon?: Blob | Main["links"][0]["icon"];
           label: string;
           href: string;
         }[]),

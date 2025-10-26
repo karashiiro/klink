@@ -7,9 +7,11 @@ import { Input } from "@tamagui/input";
 import type { TextInputChangeEvent } from "react-native";
 import type { Main } from "@klink-app/lexicon/types";
 import { ImageInput } from "./ImageInput";
+import { useImageSource } from "../../hooks/useImageSource";
 
+// Link type matching the atom definition
 interface Link {
-  icon?: string | Blob | Main["profileImage"];
+  icon?: Blob | Main["links"][0]["icon"];
   label: string;
   href: string;
 }
@@ -17,7 +19,9 @@ interface Link {
 interface LinkItemProps {
   linkAtom: PrimitiveAtom<Link>;
   hasExistingBlobIcon?: boolean;
-  existingBlobUrl?: string;
+  existingIcon?: Main["links"][0]["icon"]; // Raw icon data from profile
+  pdsUrl?: string;
+  did?: string;
   onRemove: () => void;
   onClearIcon?: () => void;
 }
@@ -25,11 +29,14 @@ interface LinkItemProps {
 export function LinkItem({
   linkAtom,
   hasExistingBlobIcon = false,
-  existingBlobUrl,
+  existingIcon,
+  pdsUrl,
+  did,
   onRemove,
   onClearIcon,
 }: LinkItemProps) {
   const [link, setLink] = useAtom(linkAtom);
+  const existingBlobUrl = useImageSource(existingIcon, pdsUrl, did);
 
   const handleLabelChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
@@ -52,9 +59,16 @@ export function LinkItem({
   const handleIconUrlChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
   ) => {
+    const urlValue = (e.target as HTMLInputElement).value;
     setLink((prev) => ({
       ...prev,
-      icon: (e.target as HTMLInputElement).value,
+      icon: urlValue
+        ? {
+            type: "url" as const,
+            value: urlValue as `${string}:${string}`,
+            $type: "moe.karashiiro.klink.profile#urlImage" as const,
+          }
+        : undefined,
     }));
   };
 
@@ -103,7 +117,7 @@ export function LinkItem({
         urlValue={typeof link.icon === "string" ? link.icon : ""}
         blob={link.icon instanceof Blob ? link.icon : null}
         hasExistingBlob={hasExistingBlobIcon}
-        existingBlobUrl={existingBlobUrl}
+        existingBlobUrl={existingBlobUrl ?? undefined}
         onUrlChange={handleIconUrlChange}
         onFileChange={handleIconFileChange}
         onClear={onClearIcon}

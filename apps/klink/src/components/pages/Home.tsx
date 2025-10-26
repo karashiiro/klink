@@ -46,8 +46,10 @@ export function Home() {
           const cleanPdsUrl = session.endpoint.url.endsWith("/")
             ? session.endpoint.url.slice(0, -1)
             : session.endpoint.url;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const blobUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${session.did}&cid=${(profile.value.background.value as any).ref.$link}`;
+
+          const blob = profile.value.background.value;
+          const blobCid = "ref" in blob ? blob.ref.$link : blob.cid;
+          const blobUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${session.did}&cid=${blobCid}`;
 
           try {
             const response = await fetch(blobUrl);
@@ -61,15 +63,9 @@ export function Home() {
           name: profile.value.name || "",
           location: profile.value.location || "",
           bio: profile.value.bio || "",
-          profileImageUrl:
-            profile.value.profileImage?.type === "url"
-              ? profile.value.profileImage.value
-              : "",
+          profileImage: profile.value.profileImage,
           profileImageBlob: null,
-          backgroundImageUrl:
-            profile.value.background.type === "url"
-              ? profile.value.background.value
-              : "",
+          background: profile.value.background,
           backgroundImageBlob: null,
           backgroundColor:
             profile.value.background.type === "color"

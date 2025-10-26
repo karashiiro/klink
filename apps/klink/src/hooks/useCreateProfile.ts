@@ -1,9 +1,12 @@
 import { useCallback, useState } from "react";
 import { useAuth } from "@kpaste-app/atproto-auth";
 import type { Main } from "@klink-app/lexicon/types";
+import type { Blob as AtProtoBlob } from "@atcute/lexicons";
 
 export interface CreateProfileForm {
-  profileImage?: { type: "url" | "blob"; value: string | Blob };
+  profileImage?:
+    | { type: "url" | "blob"; value: string | Blob | AtProtoBlob }
+    | Main["profileImage"];
   name?: string;
   location?: string;
   bio: string;
@@ -11,10 +14,11 @@ export interface CreateProfileForm {
     | { type: "color"; value: string }
     | {
         type: "url" | "blob";
-        value: string | Blob;
+        value: string | Blob | AtProtoBlob;
         objectFit?: "cover" | "contain" | "fill" | "scale-down" | "none";
       }
-    | { type: "shader"; value: string };
+    | { type: "shader"; value: string | Blob | AtProtoBlob }
+    | Main["background"];
   theme: {
     primaryColor: string;
     secondaryColor: string;
@@ -22,7 +26,9 @@ export interface CreateProfileForm {
     stylesheet?: string;
   };
   links: Array<{
-    icon?: { type: "url" | "blob"; value: string | Blob };
+    icon?:
+      | { type: "url" | "blob"; value: string | Blob | AtProtoBlob }
+      | Main["links"][0]["icon"];
     label: string;
     href: string;
   }>;
@@ -48,20 +54,41 @@ export function useCreateProfile() {
       try {
         // Helper to upload blob if needed
         const processImage = async (
-          image?: { type: "url" | "blob"; value: string | Blob },
+          image?:
+            | { type: "url" | "blob"; value: string | Blob | AtProtoBlob }
+            | Main["profileImage"]
+            | Main["links"][0]["icon"],
           isBackground = false,
         ) => {
           if (!image) return undefined;
+          // If image already has $type, it's an ATProto type - return as-is
+          if (typeof image === "object" && "$type" in image) {
+            return image;
+          }
           if (image.type === "url") {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const result: any = {
-              type: "url" as const,
-              value: image.value as `${string}:${string}`,
-            };
             if (isBackground) {
-              result.$type = "moe.karashiiro.klink.profile#urlBackground";
+              return {
+                type: "url" as const,
+                value: image.value as `${string}:${string}`,
+                $type: "moe.karashiiro.klink.profile#urlBackground" as const,
+              };
+            } else {
+              return {
+                type: "url" as const,
+                value: image.value as `${string}:${string}`,
+                $type: "moe.karashiiro.klink.profile#urlImage" as const,
+              };
             }
-            return result;
+          }
+          // Check if value is an ATProto blob (has ref property)
+          const blobValue = image.value;
+          if (
+            typeof blobValue === "object" &&
+            blobValue !== null &&
+            "ref" in blobValue
+          ) {
+            // Already an ATProto blob, return as-is
+            return image;
           }
           // Upload blob
           const blobResponse = await client.post(
@@ -73,15 +100,20 @@ export function useCreateProfile() {
           if (!blobResponse.ok) {
             throw new Error(`Failed to upload image: ${blobResponse.status}`);
           }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const result: any = {
-            type: "blob" as const,
-            value: blobResponse.data.blob,
-          };
+
           if (isBackground) {
-            result.$type = "moe.karashiiro.klink.profile#blobBackground";
+            return {
+              type: "blob" as const,
+              value: blobResponse.data.blob,
+              $type: "moe.karashiiro.klink.profile#blobBackground" as const,
+            };
+          } else {
+            return {
+              type: "blob" as const,
+              value: blobResponse.data.blob,
+              $type: "moe.karashiiro.klink.profile#blobImage" as const,
+            };
           }
-          return result;
         };
 
         // Process all images/blobs
@@ -95,39 +127,59 @@ export function useCreateProfile() {
             value: form.background.value as string,
           };
         } else if (form.background.type === "shader") {
-          // Upload shader code as text blob
-          const shaderBlob = new Blob([form.background.value], {
-            type: "text/plain",
-          });
-          const blobResponse = await client.post(
-            "com.atproto.repo.uploadBlob",
-            {
-              input: shaderBlob,
-            },
-          );
-          if (!blobResponse.ok) {
-            throw new Error(`Failed to upload shader: ${blobResponse.status}`);
+          // Check if value is already an ATProto blob
+          const shaderValue = form.background.value;
+          if (
+            typeof shaderValue === "object" &&
+            shaderValue !== null &&
+            "ref" in shaderValue
+          ) {
+            // Already uploaded, use as-is
+            background = {
+              $type: "moe.karashiiro.klink.profile#shaderBackground",
+              type: "shader" as const,
+              value: shaderValue,
+            };
+          } else {
+            // Upload shader code as text blob
+            const shaderBlob = new Blob([form.background.value as string], {
+              type: "text/plain",
+            });
+            const blobResponse = await client.post(
+              "com.atproto.repo.uploadBlob",
+              {
+                input: shaderBlob,
+              },
+            );
+            if (!blobResponse.ok) {
+              throw new Error(
+                `Failed to upload shader: ${blobResponse.status}`,
+              );
+            }
+            background = {
+              $type: "moe.karashiiro.klink.profile#shaderBackground",
+              type: "shader" as const,
+              value: blobResponse.data.blob,
+            };
           }
-          background = {
-            $type: "moe.karashiiro.klink.profile#shaderBackground",
-            type: "shader" as const,
-            value: blobResponse.data.blob,
-          };
         } else {
-          const processedBackground = (await processImage(
+          const processedBackground = await processImage(
             form.background as {
               type: "url" | "blob";
               value: string | Blob;
             },
             true, // isBackground
-          ))!;
+          );
+          if (!processedBackground) {
+            throw new Error("Failed to process background");
+          }
           background = {
             ...processedBackground,
             objectFit:
               "objectFit" in form.background
                 ? form.background.objectFit
                 : "cover",
-          };
+          } as Main["background"];
         }
 
         const links = await Promise.all(

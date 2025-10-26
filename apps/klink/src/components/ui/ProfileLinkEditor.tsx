@@ -18,7 +18,7 @@ export function ProfileLinkEditor({ profile }: ProfileLinkEditorProps) {
   const setLinks = useSetAtom(linksAtom);
 
   const addLink = () => {
-    setLinks((prev) => [...prev, { icon: "", label: "", href: "" }]);
+    setLinks((prev) => [...prev, { icon: undefined, label: "", href: "" }]);
   };
 
   const removeLink = (index: number) => {
@@ -28,7 +28,7 @@ export function ProfileLinkEditor({ profile }: ProfileLinkEditorProps) {
   const clearLinkIcon = (index: number) => {
     setLinks((prev) => {
       const newLinks = [...prev];
-      newLinks[index].icon = "";
+      newLinks[index] = { ...newLinks[index], icon: undefined };
       return newLinks;
     });
   };
@@ -44,30 +44,17 @@ export function ProfileLinkEditor({ profile }: ProfileLinkEditorProps) {
       {linkAtoms.map((linkAtom, index) => {
         const linkValue = links[index];
 
-        // Build existing blob URL if available
-        let existingBlobUrl: string | undefined;
-        if (
-          profile?.value.links?.[index]?.icon?.type === "blob" &&
-          session?.endpoint.url &&
-          session?.did
-        ) {
-          const cleanPdsUrl = session.endpoint.url.endsWith("/")
-            ? session.endpoint.url.slice(0, -1)
-            : session.endpoint.url;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          existingBlobUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${session.did}&cid=${(profile.value.links[index].icon.value as any).ref.$link}`;
-        }
-
         return (
           <LinkItem
             key={`${linkAtom}`}
             linkAtom={linkAtom}
             hasExistingBlobIcon={
               profile?.value.links?.[index]?.icon?.type === "blob" &&
-              !(linkValue?.icon instanceof Blob) &&
-              typeof linkValue?.icon !== "string"
+              !(linkValue?.icon instanceof Blob)
             }
-            existingBlobUrl={existingBlobUrl}
+            existingIcon={profile?.value.links?.[index]?.icon}
+            pdsUrl={session?.endpoint.url}
+            did={session?.did}
             onRemove={() => removeLink(index)}
             onClearIcon={profile ? () => clearLinkIcon(index) : undefined}
           />

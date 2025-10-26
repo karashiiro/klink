@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { ShaderCanvas } from "./ShaderCanvas";
 import type { Main } from "@klink-app/lexicon/types";
+import {
+  getAtProtoBlobCid,
+  buildAtProtoBlobUrl,
+} from "../../hooks/useAtProtoBlobUrl";
 
 interface BackgroundRendererProps {
   background: Main["background"];
@@ -36,22 +40,27 @@ export function BackgroundRenderer({
         };
         reader.readAsText(background.value);
       } else if (pdsUrl && did) {
-        // Fetch from PDS
-        const cleanPdsUrl = pdsUrl.endsWith("/") ? pdsUrl.slice(0, -1) : pdsUrl;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const blobUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${(background.value as any).ref.$link}`;
+        // Fetch from PDS using the helper
+        const cid = getAtProtoBlobCid(background.value);
 
-        console.log("[BackgroundRenderer] Fetching shader from PDS:", blobUrl);
-        fetch(blobUrl)
-          .then((res) => res.text())
-          .then((code) => {
-            console.log(
-              "[BackgroundRenderer] Shader code loaded from PDS, length:",
-              code?.length,
-            );
-            setShaderCode(code);
-          })
-          .catch((err) => console.error("Failed to fetch shader:", err));
+        if (cid) {
+          const blobUrl = buildAtProtoBlobUrl(pdsUrl, did, cid);
+
+          console.log(
+            "[BackgroundRenderer] Fetching shader from PDS:",
+            blobUrl,
+          );
+          fetch(blobUrl)
+            .then((res) => res.text())
+            .then((code) => {
+              console.log(
+                "[BackgroundRenderer] Shader code loaded from PDS, length:",
+                code?.length,
+              );
+              setShaderCode(code);
+            })
+            .catch((err) => console.error("Failed to fetch shader:", err));
+        }
       }
     } else {
       setShaderCode(null);

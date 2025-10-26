@@ -5,13 +5,11 @@ import {
   nameAtom,
   locationAtom,
   bioAtom,
-  profileImageUrlAtom,
+  profileImageAtom,
   profileImageBlobAtom,
-  backgroundImageUrlAtom,
+  backgroundAtom,
   backgroundImageBlobAtom,
   backgroundColorAtom,
-  backgroundShaderCodeAtom,
-  backgroundTypeAtom,
   backgroundObjectFitAtom,
   primaryColorAtom,
   secondaryColorAtom,
@@ -22,20 +20,21 @@ import {
 import { ProfileDisplay } from "./ProfileDisplay";
 import { BackgroundRenderer } from "./BackgroundRenderer";
 import { getBackgroundStyle } from "../../utils/backgroundUtils";
+import { useImageSource } from "../../hooks/useImageSource";
+import { useBlobUrl } from "../../hooks/useBlobUrl";
 import type { Main } from "@klink-app/lexicon/types";
+import type { ProfileDataWithBlobs } from "./ProfileDisplay";
 
 export function ProfilePreview() {
   const { session } = useAuth();
   const name = useAtomValue(nameAtom);
   const location = useAtomValue(locationAtom);
   const bio = useAtomValue(bioAtom);
-  const profileImageUrl = useAtomValue(profileImageUrlAtom);
+  const profileImageValue = useAtomValue(profileImageAtom);
   const profileImageBlob = useAtomValue(profileImageBlobAtom);
-  const backgroundImageUrl = useAtomValue(backgroundImageUrlAtom);
+  const backgroundValue = useAtomValue(backgroundAtom);
   const backgroundImageBlob = useAtomValue(backgroundImageBlobAtom);
   const backgroundColor = useAtomValue(backgroundColorAtom);
-  const backgroundShaderCode = useAtomValue(backgroundShaderCodeAtom);
-  const backgroundType = useAtomValue(backgroundTypeAtom);
   const backgroundObjectFit = useAtomValue(backgroundObjectFitAtom);
   const primaryColor = useAtomValue(primaryColorAtom);
   const secondaryColor = useAtomValue(secondaryColorAtom);
@@ -43,55 +42,42 @@ export function ProfilePreview() {
   const stylesheet = useAtomValue(stylesheetAtom);
   const links = useAtomValue(linksAtom);
 
+  // IMPORTANT: Call all hooks BEFORE any conditional returns (React rules of hooks)
+  // Use hook to resolve profile image URL (handles browser Blob with automatic cleanup)
+  const profileImageUrl = useImageSource(
+    profileImageBlob ?? profileImageValue,
+    session?.endpoint.url,
+    session?.did,
+  );
+
+  // Handle background browser Blob separately (different type from images)
+  const backgroundBlobUrl = useBlobUrl(backgroundImageBlob);
+
+  // Now we can safely return early
   if (!session) return null;
 
-  // For preview purposes, we cast Blob instances to the expected types
-  // In reality, these would be uploaded and replaced with blob references
-  const profileImage: Main["profileImage"] = profileImageBlob
-    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (profileImageBlob as any)
-    : profileImageUrl
-      ? { type: "url", value: profileImageUrl }
-      : undefined;
+  const profileImage: Main["profileImage"] = profileImageUrl
+    ? {
+        type: "url",
+        value: profileImageUrl as `${string}:${string}`,
+        $type: "moe.karashiiro.klink.profile#urlImage" as const,
+      }
+    : undefined;
 
-  const background: Main["background"] =
-    backgroundType === "color"
-      ? {
-          $type: "moe.karashiiro.klink.profile#colorBackground",
-          type: "color",
-          value: backgroundColor,
-        }
-      : backgroundType === "shader" && backgroundShaderCode
-        ? {
-            $type: "moe.karashiiro.klink.profile#shaderBackground",
-            type: "shader",
-            value: new Blob([backgroundShaderCode], {
-              type: "text/plain",
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            }) as any,
-          }
-        : backgroundType === "blob" && backgroundImageBlob
-          ? {
-              $type: "moe.karashiiro.klink.profile#blobBackground",
-              type: "blob",
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              value: backgroundImageBlob as any,
-              objectFit: backgroundObjectFit,
-            }
-          : backgroundType === "url"
-            ? {
-                $type: "moe.karashiiro.klink.profile#urlBackground",
-                type: "url",
-                value: backgroundImageUrl as `${string}:${string}`,
-                objectFit: backgroundObjectFit,
-              }
-            : {
-                $type: "moe.karashiiro.klink.profile#colorBackground",
-                type: "color",
-                value: backgroundColor,
-              };
+  const background: Main["background"] = backgroundBlobUrl
+    ? {
+        type: "url",
+        value: backgroundBlobUrl as `${string}:${string}`,
+        $type: "moe.karashiiro.klink.profile#urlBackground" as const,
+        objectFit: backgroundObjectFit,
+      }
+    : (backgroundValue ?? {
+        type: "color",
+        value: backgroundColor,
+        $type: "moe.karashiiro.klink.profile#colorBackground" as const,
+      });
 
-  const profileData: Main = {
+  const profileData: ProfileDataWithBlobs = {
     $type: "moe.karashiiro.klink.profile",
     name: name || undefined,
     location: location || undefined,
@@ -105,17 +91,10 @@ export function ProfilePreview() {
       stylesheet,
     },
     links: links.map((link) => ({
-      icon: link.icon
-        ? link.icon instanceof Blob
-          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (link.icon as any)
-          : typeof link.icon === "string"
-            ? { type: "url", value: link.icon }
-            : link.icon
-        : undefined,
+      icon: link.icon,
       label: link.label,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      href: link.href as any, // href validation happens during submission
+      href: (link.href || "https://example.com") as `${string}:${string}`,
+      $type: "moe.karashiiro.klink.profile#link" as const,
     })),
   };
 

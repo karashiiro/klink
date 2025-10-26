@@ -2,7 +2,6 @@ import { useEffect, useRef, type FormEvent } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
   profileAtom,
-  backgroundImageUrlAtom,
   backgroundImageBlobAtom,
   backgroundColorAtom,
   backgroundTypeAtom,
@@ -19,7 +18,6 @@ interface ProfileBackgroundSelectorProps {
 export function ProfileBackgroundSelector({
   profile,
 }: ProfileBackgroundSelectorProps) {
-  const backgroundImageUrl = useAtomValue(backgroundImageUrlAtom);
   const backgroundImageBlob = useAtomValue(backgroundImageBlobAtom);
   const backgroundColor = useAtomValue(backgroundColorAtom);
   const backgroundType = useAtomValue(backgroundTypeAtom);
@@ -34,12 +32,11 @@ export function ProfileBackgroundSelector({
     }
   }, [profile]);
 
-  const handleBackgroundImageChange = (
-    e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
-  ) => {
+  // URL input is handled by BackgroundSelector directly via atoms
+  const handleBackgroundImageChange = () => {
+    // This would need to create a background object, but for now we just handle blobs
     setFormData((prev) => ({
       ...prev,
-      backgroundImageUrl: (e.target as HTMLInputElement).value,
       backgroundImageBlob: null,
     }));
   };
@@ -57,7 +54,6 @@ export function ProfileBackgroundSelector({
       setFormData((prev) => ({
         ...prev,
         backgroundImageBlob: file,
-        backgroundImageUrl: "",
         backgroundType: "blob",
       }));
     }
@@ -67,7 +63,6 @@ export function ProfileBackgroundSelector({
     setFormData((prev) => ({
       ...prev,
       backgroundImageBlob: null,
-      backgroundImageUrl: "",
       backgroundType: "color",
     }));
   };
@@ -76,7 +71,7 @@ export function ProfileBackgroundSelector({
     <BackgroundSelector
       backgroundType={backgroundType}
       backgroundColor={backgroundColor}
-      backgroundImageUrl={backgroundImageUrl}
+      backgroundImageUrl=""
       backgroundImageBlob={backgroundImageBlob}
       backgroundObjectFit={backgroundObjectFit}
       hasExistingBlob={profile?.value.background.type === "blob"}

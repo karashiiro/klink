@@ -66,7 +66,7 @@ export function FontInput() {
           placeholder="@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');"
           rows={6}
           style={{
-            width: "100%",
+            width: "288px",
             minHeight: 120,
             padding: "12px",
             fontFamily: "monospace",

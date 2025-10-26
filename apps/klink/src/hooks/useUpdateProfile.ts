@@ -1,9 +1,12 @@
 import { useCallback, useState } from "react";
 import { useAuth } from "@kpaste-app/atproto-auth";
 import type { Main } from "@klink-app/lexicon/types";
+import type { Blob as AtProtoBlob } from "@atcute/lexicons";
 
 export interface UpdateProfileForm {
-  profileImage?: { type: "url" | "blob"; value: string | Blob };
+  profileImage?:
+    | { type: "url" | "blob"; value: string | Blob | AtProtoBlob }
+    | Main["profileImage"];
   name?: string;
   location?: string;
   bio: string;
@@ -11,10 +14,11 @@ export interface UpdateProfileForm {
     | { type: "color"; value: string }
     | {
         type: "url" | "blob";
-        value: string | Blob;
+        value: string | Blob | AtProtoBlob;
         objectFit?: "cover" | "contain" | "fill" | "scale-down" | "none";
       }
-    | { type: "shader"; value: string | Blob };
+    | { type: "shader"; value: string | Blob | AtProtoBlob }
+    | Main["background"];
   theme: {
     primaryColor: string;
     secondaryColor: string;
@@ -22,7 +26,9 @@ export interface UpdateProfileForm {
     stylesheet?: string;
   };
   links: Array<{
-    icon?: { type: "url" | "blob"; value: string | Blob };
+    icon?:
+      | { type: "url" | "blob"; value: string | Blob | AtProtoBlob }
+      | Main["links"][0]["icon"];
     label: string;
     href: string;
   }>;
@@ -48,27 +54,41 @@ export function useUpdateProfile() {
       try {
         // Helper to upload blob if needed
         const processImage = async (
-          image?: { type: "url" | "blob"; value: string | Blob },
+          image?:
+            | { type: "url" | "blob"; value: string | Blob | AtProtoBlob }
+            | Main["profileImage"]
+            | Main["links"][0]["icon"],
           isBackground = false,
         ) => {
           if (!image) return undefined;
-          if (image.type === "url") {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const result: any = {
-              type: "url" as const,
-              value: image.value as `${string}:${string}`,
-            };
-            if (isBackground) {
-              result.$type = "moe.karashiiro.klink.profile#urlBackground";
-            }
-            return result;
+          // If image already has $type, it's an ATProto type - return as-is
+          if (typeof image === "object" && "$type" in image) {
+            return image;
           }
-          // Check if this is already an ATProto blob reference (has ref.$link)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          if ((image.value as any)?.ref?.$link) {
-            // Already a blob reference, return as-is
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            return image as any;
+          if (image.type === "url") {
+            if (isBackground) {
+              return {
+                type: "url" as const,
+                value: image.value as `${string}:${string}`,
+                $type: "moe.karashiiro.klink.profile#urlBackground" as const,
+              };
+            } else {
+              return {
+                type: "url" as const,
+                value: image.value as `${string}:${string}`,
+                $type: "moe.karashiiro.klink.profile#urlImage" as const,
+              };
+            }
+          }
+          // Check if value is an ATProto blob (has ref property)
+          const blobValue = image.value;
+          if (
+            typeof blobValue === "object" &&
+            blobValue !== null &&
+            "ref" in blobValue
+          ) {
+            // Already an ATProto blob, return as-is
+            return image;
           }
           // Upload new blob
           const blobResponse = await client.post(
@@ -80,15 +100,20 @@ export function useUpdateProfile() {
           if (!blobResponse.ok) {
             throw new Error(`Failed to upload image: ${blobResponse.status}`);
           }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const result: any = {
-            type: "blob" as const,
-            value: blobResponse.data.blob,
-          };
+
           if (isBackground) {
-            result.$type = "moe.karashiiro.klink.profile#blobBackground";
+            return {
+              type: "blob" as const,
+              value: blobResponse.data.blob,
+              $type: "moe.karashiiro.klink.profile#blobBackground" as const,
+            };
+          } else {
+            return {
+              type: "blob" as const,
+              value: blobResponse.data.blob,
+              $type: "moe.karashiiro.klink.profile#blobImage" as const,
+            };
           }
-          return result;
         };
 
         // Process all images/blobs
@@ -103,14 +128,17 @@ export function useUpdateProfile() {
           };
         } else if (form.background.type === "shader") {
           // Check if this is already a blob reference
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          if ((form.background.value as any)?.ref?.$link) {
-            // Already a blob reference, return as-is
+          const shaderValue = form.background.value;
+          const hasRef =
+            typeof shaderValue === "object" &&
+            shaderValue !== null &&
+            "ref" in shaderValue;
+          if (hasRef) {
+            // Already a blob reference, cast to proper type
             background = {
               $type: "moe.karashiiro.klink.profile#shaderBackground",
               type: "shader" as const,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              value: form.background.value as any,
+              value: shaderValue,
             };
           } else {
             // Upload new shader code as text blob
@@ -135,20 +163,23 @@ export function useUpdateProfile() {
             };
           }
         } else {
-          const processedBackground = (await processImage(
+          const processedBackground = await processImage(
             form.background as {
               type: "url" | "blob";
               value: string | Blob;
             },
             true, // isBackground
-          ))!;
+          );
+          if (!processedBackground) {
+            throw new Error("Failed to process background");
+          }
           background = {
             ...processedBackground,
             objectFit:
               "objectFit" in form.background
                 ? form.background.objectFit
                 : "cover",
-          };
+          } as Main["background"];
         }
 
         const links = await Promise.all(

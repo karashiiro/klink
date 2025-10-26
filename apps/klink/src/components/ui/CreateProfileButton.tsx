@@ -30,8 +30,8 @@ export function CreateProfileButton({
         const result = await createProfile({
           profileImage: data.profileImageBlob
             ? { type: "blob", value: data.profileImageBlob }
-            : data.profileImageUrl
-              ? { type: "url", value: data.profileImageUrl }
+            : data.profileImage?.type === "url"
+              ? { type: "url", value: data.profileImage.value as string }
               : undefined,
           name: data.name || undefined,
           location: data.location || undefined,
@@ -42,17 +42,22 @@ export function CreateProfileButton({
                   type: "color" as const,
                   value: data.backgroundColor,
                 }
-              : data.backgroundType === "blob"
+              : data.backgroundType === "blob" && data.backgroundImageBlob
                 ? {
                     type: "blob" as const,
-                    value: data.backgroundImageBlob!,
+                    value: data.backgroundImageBlob,
                     objectFit: data.backgroundObjectFit,
                   }
-                : {
-                    type: "url" as const,
-                    value: data.backgroundImageUrl,
-                    objectFit: data.backgroundObjectFit,
-                  },
+                : data.background?.type === "url"
+                  ? {
+                      type: "url" as const,
+                      value: data.background.value as string,
+                      objectFit: data.backgroundObjectFit,
+                    }
+                  : {
+                      type: "color" as const,
+                      value: data.backgroundColor,
+                    },
           theme: data.theme,
           links: data.links.map((link) => ({
             icon: link.icon

@@ -11,8 +11,21 @@ import type { Main } from "@klink-app/lexicon/types";
 import { Card } from "@tamagui/card";
 import { MapPin } from "@tamagui/lucide-icons";
 
+// Extended type that allows browser Blobs for preview mode
+// This is needed because during editing, we have browser Blob objects
+// before they're uploaded to the PDS as ATProto blobs
+export type ProfileDataWithBlobs = Omit<Main, "profileImage" | "links"> & {
+  profileImage?: Main["profileImage"] | Blob;
+  links: Array<{
+    href: `${string}:${string}`;
+    label: string;
+    $type?: "moe.karashiiro.klink.profile#link";
+    icon?: Main["links"][0]["icon"] | Blob;
+  }>;
+};
+
 interface ProfileDisplayProps {
-  profileData: Main;
+  profileData: ProfileDataWithBlobs;
   handle: string;
   pdsUrl?: string;
   did?: string;
