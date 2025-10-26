@@ -34,7 +34,8 @@ export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
       width={350}
       borderTopLeftRadius={0}
       borderBottomLeftRadius={0}
-      padding="$4"
+      paddingLeft="$4"
+      paddingRight="$4"
       backgroundColor="rgba(0, 0, 0, 0.7)"
       style={{
         backdropFilter: "blur(10px)",
@@ -54,7 +55,7 @@ export function LeftEditorPanel({ profile }: LeftEditorPanelProps) {
         // Hide webkit scrollbar
         className="hide-scrollbar"
       >
-        <div style={{ marginBottom: 20 }} />
+        <div style={{ marginBottom: 36 }} />
         <ProfileImageInput profile={profile} />
         <NameInput />
         <LocationInput />

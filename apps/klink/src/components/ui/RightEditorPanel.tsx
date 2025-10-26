@@ -49,7 +49,8 @@ export function RightEditorPanel({
       width={350}
       borderTopRightRadius={0}
       borderBottomRightRadius={0}
-      padding="$4"
+      paddingLeft="$4"
+      paddingRight="$4"
       backgroundColor="rgba(0, 0, 0, 0.7)"
       style={{
         backdropFilter: "blur(10px)",
@@ -69,7 +70,7 @@ export function RightEditorPanel({
         // Hide webkit scrollbar
         className="hide-scrollbar"
       >
-        <div style={{ marginBottom: 20 }} />
+        <div style={{ marginBottom: 36 }} />
         <ProfileLinkEditor profile={profile} />
 
         {!profile && (
