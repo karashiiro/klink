@@ -2,12 +2,16 @@ import { YStack, XStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { useAtomValue, useSetAtom } from "jotai";
 import { primaryColorAtom, secondaryColorAtom } from "../../atoms/profile";
+import { useRef } from "react";
+import { Input } from "@tamagui/input";
 
 export function ThemeColorInput() {
   const primaryColor = useAtomValue(primaryColorAtom);
   const setPrimaryColor = useSetAtom(primaryColorAtom);
   const secondaryColor = useAtomValue(secondaryColorAtom);
   const setSecondaryColor = useSetAtom(secondaryColorAtom);
+  const primaryColorInputRef = useRef<HTMLInputElement>(null);
+  const secondaryColorInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <YStack gap="$3">
@@ -20,18 +24,16 @@ export function ThemeColorInput() {
           Primary (Card)
         </Paragraph>
         <XStack gap="$2" alignItems="center">
-          <input
+          <Input
             id="primary-color"
+            ref={primaryColorInputRef}
             type="color"
-            value={primaryColor}
-            onChange={(e) => setPrimaryColor(e.target.value)}
-            style={{
-              width: "100%",
-              height: "48px",
-              borderRadius: "8px",
-              border: "2px solid rgba(255, 255, 255, 0.2)",
-              cursor: "pointer",
-            }}
+            defaultValue={primaryColor}
+            onBlur={(e) =>
+              setPrimaryColor((e.target as unknown as HTMLInputElement).value)
+            }
+            width="100%"
+            size="$4"
           />
         </XStack>
       </YStack>
@@ -41,18 +43,16 @@ export function ThemeColorInput() {
           Secondary (Buttons)
         </Paragraph>
         <XStack gap="$2" alignItems="center">
-          <input
+          <Input
             id="secondary-color"
+            ref={secondaryColorInputRef}
             type="color"
-            value={secondaryColor}
-            onChange={(e) => setSecondaryColor(e.target.value)}
-            style={{
-              width: "100%",
-              height: "48px",
-              borderRadius: "8px",
-              border: "2px solid rgba(255, 255, 255, 0.2)",
-              cursor: "pointer",
-            }}
+            defaultValue={secondaryColor}
+            onBlur={(e) =>
+              setSecondaryColor((e.target as unknown as HTMLInputElement).value)
+            }
+            width="100%"
+            size="$4"
           />
         </XStack>
       </YStack>
