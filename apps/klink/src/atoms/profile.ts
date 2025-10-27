@@ -116,3 +116,23 @@ export const fontFamilyAtom = focusAtom(profileAtom, (optic) =>
 export const stylesheetAtom = focusAtom(profileAtom, (optic) =>
   optic.prop("theme").prop("stylesheet"),
 );
+
+/**
+ * Derived atom that computes metadata for each link in the links array.
+ * Used by ProfileLinkEditor to determine if a link has an existing blob icon that hasn't been replaced.
+ */
+export const linkMetadataAtom = atom((get) => {
+  const currentProfile = get(currentProfileAtom);
+  const links = get(linksAtom);
+
+  return links.map((link, index) => {
+    const existingIcon = currentProfile?.value.links?.[index]?.icon;
+    const hasExistingBlobIcon =
+      existingIcon?.type === "blob" && !(link.icon instanceof Blob);
+
+    return {
+      existingIcon,
+      hasExistingBlobIcon,
+    };
+  });
+});

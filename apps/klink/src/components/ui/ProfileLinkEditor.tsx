@@ -3,6 +3,7 @@ import {
   linksAtomsAtom,
   linksAtom,
   currentProfileAtom,
+  linkMetadataAtom,
 } from "../../atoms/profile";
 import { YStack, XStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
@@ -12,7 +13,7 @@ import { LinkItem } from "./LinkItem";
 export function ProfileLinkEditor() {
   const profile = useAtomValue(currentProfileAtom);
   const linkAtoms = useAtomValue(linksAtomsAtom);
-  const links = useAtomValue(linksAtom);
+  const linkMetadata = useAtomValue(linkMetadataAtom);
   const setLinks = useSetAtom(linksAtom);
 
   const addLink = () => {
@@ -40,17 +41,14 @@ export function ProfileLinkEditor() {
         </Button>
       </XStack>
       {linkAtoms.map((linkAtom, index) => {
-        const linkValue = links[index];
+        const metadata = linkMetadata[index];
 
         return (
           <LinkItem
             key={`${linkAtom}`}
             linkAtom={linkAtom}
-            hasExistingBlobIcon={
-              profile?.value.links?.[index]?.icon?.type === "blob" &&
-              !(linkValue?.icon instanceof Blob)
-            }
-            existingIcon={profile?.value.links?.[index]?.icon}
+            hasExistingBlobIcon={metadata?.hasExistingBlobIcon ?? false}
+            existingIcon={metadata?.existingIcon}
             onRemove={() => removeLink(index)}
             onClearIcon={profile ? () => clearLinkIcon(index) : undefined}
           />
