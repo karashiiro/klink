@@ -1,15 +1,16 @@
 import { useAtomValue, useSetAtom } from "jotai";
-import { linksAtomsAtom, linksAtom } from "../../atoms/profile";
+import {
+  linksAtomsAtom,
+  linksAtom,
+  currentProfileAtom,
+} from "../../atoms/profile";
 import { YStack, XStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
 import { LinkItem } from "./LinkItem";
-import { useReadProfile } from "../../hooks/useReadProfile";
-import { useAuth } from "@kpaste-app/atproto-auth";
 
 export function ProfileLinkEditor() {
-  const { session } = useAuth();
-  const { profile } = useReadProfile(session?.handle);
+  const profile = useAtomValue(currentProfileAtom);
   const linkAtoms = useAtomValue(linksAtomsAtom);
   const links = useAtomValue(linksAtom);
   const setLinks = useSetAtom(linksAtom);

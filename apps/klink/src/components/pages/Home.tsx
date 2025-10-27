@@ -14,7 +14,11 @@ import { LeftEditorPanel } from "../ui/LeftEditorPanel";
 import { RightEditorPanel } from "../ui/RightEditorPanel";
 import { EditorPanelToggle } from "../ui/EditorPanelToggle";
 import { MobilePanelSwitch } from "../ui/MobilePanelSwitch";
-import { profileAtom } from "../../atoms/profile";
+import {
+  profileAtom,
+  currentProfileAtom,
+  profileLoadingAtom,
+} from "../../atoms/profile";
 import type { Main } from "@klink-app/lexicon/types";
 
 export function Home() {
@@ -29,6 +33,14 @@ export function Home() {
   } = useReadProfile(session?.handle);
 
   const setFormData = useSetAtom(profileAtom);
+  const setCurrentProfile = useSetAtom(currentProfileAtom);
+  const setProfileLoading = useSetAtom(profileLoadingAtom);
+
+  // Update profile atoms when profile loads
+  useEffect(() => {
+    setCurrentProfile(profile);
+    setProfileLoading(profileLoading);
+  }, [profile, profileLoading, setCurrentProfile, setProfileLoading]);
 
   // Load profile data into form when it exists
   useEffect(() => {

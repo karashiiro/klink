@@ -2,12 +2,21 @@ import { atom } from "jotai";
 import { splitAtom } from "jotai/utils";
 import { focusAtom } from "jotai-optics";
 import type { Main } from "@klink-app/lexicon/types";
+import type { ReadProfileResult } from "../hooks/useReadProfile";
 
 // Atom for controlling editor panels visibility (both left and right)
 export const editorPanelsOpenAtom = atom(true);
 
 // Atom for tracking which panel is active on mobile (left = profile, right = links)
 export const mobileActivePanelAtom = atom<"left" | "right">("left");
+
+// Atom for storing the current user's profile (from useReadProfile)
+export const currentProfileAtom = atom<ReadProfileResult["profile"] | null>(
+  null,
+);
+
+// Atom for tracking profile loading state
+export const profileLoadingAtom = atom(false);
 
 export const profileAtom = atom({
   name: "",

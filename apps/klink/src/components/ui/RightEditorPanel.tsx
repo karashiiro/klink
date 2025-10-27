@@ -5,13 +5,13 @@ import { useAtomValue } from "jotai";
 import {
   editorPanelsOpenAtom,
   mobileActivePanelAtom,
+  currentProfileAtom,
 } from "../../atoms/profile";
 import { ProfileLinkEditor } from "./ProfileLinkEditor";
 import { CreateProfileButton } from "./CreateProfileButton";
 import { UpdateProfileButtons } from "./UpdateProfileButtons";
 import { DeleteProfileButton } from "./DeleteProfileButton";
 import { useAuth } from "@kpaste-app/atproto-auth";
-import { useReadProfile } from "../../hooks/useReadProfile";
 
 interface RightEditorPanelProps {
   onSuccess: () => void;
@@ -20,8 +20,8 @@ interface RightEditorPanelProps {
 export function RightEditorPanel({ onSuccess }: RightEditorPanelProps) {
   const isOpen = useAtomValue(editorPanelsOpenAtom);
   const mobileActivePanel = useAtomValue(mobileActivePanelAtom);
-  const { session, logout } = useAuth();
-  const { profile } = useReadProfile(session?.handle);
+  const profile = useAtomValue(currentProfileAtom);
+  const { logout } = useAuth();
 
   return (
     <Card
