@@ -6,6 +6,7 @@ import type { ProfileRecord } from "../../hooks/useReadProfile";
 import { ProfileDisplay } from "../ui/ProfileDisplay";
 import { BackgroundRenderer } from "../ui/BackgroundRenderer";
 import { getBackgroundStyle } from "../../utils/backgroundUtils";
+import { SessionDataProvider } from "../../contexts/SessionDataProvider";
 
 export function ProfileView() {
   const data = useLoaderData() as
@@ -46,22 +47,24 @@ export function ProfileView() {
   const backgroundStyle = getBackgroundStyle(value.background, pdsUrl, did);
 
   return (
-    <YStack
-      flex={1}
-      style={backgroundStyle}
-      paddingVertical="$6"
-      paddingHorizontal="$4"
-      alignItems="center"
-      justifyContent="center"
-      minHeight="100vh"
-      width="100%"
-    >
-      <BackgroundRenderer
-        background={value.background}
-        pdsUrl={pdsUrl}
-        did={did}
-      />
-      <ProfileDisplay profileData={value} handle={handle} />
-    </YStack>
+    <SessionDataProvider pdsUrl={pdsUrl} did={did} handle={handle}>
+      <YStack
+        flex={1}
+        style={backgroundStyle}
+        paddingVertical="$6"
+        paddingHorizontal="$4"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="100vh"
+        width="100%"
+      >
+        <BackgroundRenderer
+          background={value.background}
+          pdsUrl={pdsUrl}
+          did={did}
+        />
+        <ProfileDisplay profileData={value} handle={handle} />
+      </YStack>
+    </SessionDataProvider>
   );
 }

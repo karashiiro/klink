@@ -1,10 +1,14 @@
 import { useContext } from "react";
-import { SessionContext } from "../contexts/SessionContext";
+import {
+  SessionContext,
+  type SessionContextValue,
+} from "../contexts/SessionContext";
 
-export function useSession() {
+export function useSession(): SessionContextValue {
   const context = useContext(SessionContext);
+  // Return empty object if not within SessionProvider (e.g., public pages)
   if (context === null) {
-    throw new Error("useSession must be used within a SessionProvider");
+    return {};
   }
   return context;
 }
