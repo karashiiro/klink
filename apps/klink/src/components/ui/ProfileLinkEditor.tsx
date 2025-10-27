@@ -50,8 +50,6 @@ export function ProfileLinkEditor() {
               !(linkValue?.icon instanceof Blob)
             }
             existingIcon={profile?.value.links?.[index]?.icon}
-            pdsUrl={session?.endpoint.url}
-            did={session?.did}
             onRemove={() => removeLink(index)}
             onClearIcon={profile ? () => clearLinkIcon(index) : undefined}
           />

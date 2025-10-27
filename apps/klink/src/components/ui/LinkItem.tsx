@@ -8,6 +8,7 @@ import type { TextInputChangeEvent } from "react-native";
 import type { Main } from "@klink-app/lexicon/types";
 import { ImageInput } from "./ImageInput";
 import { useImageSource } from "../../hooks/useImageSource";
+import { useSession } from "../../hooks/useSession";
 
 // Link type matching the atom definition
 interface Link {
@@ -20,8 +21,6 @@ interface LinkItemProps {
   linkAtom: PrimitiveAtom<Link>;
   hasExistingBlobIcon?: boolean;
   existingIcon?: Main["links"][0]["icon"]; // Raw icon data from profile
-  pdsUrl?: string;
-  did?: string;
   onRemove: () => void;
   onClearIcon?: () => void;
 }
@@ -30,12 +29,11 @@ export function LinkItem({
   linkAtom,
   hasExistingBlobIcon = false,
   existingIcon,
-  pdsUrl,
-  did,
   onRemove,
   onClearIcon,
 }: LinkItemProps) {
   const [link, setLink] = useAtom(linkAtom);
+  const { pdsUrl, did } = useSession();
   const existingBlobUrl = useImageSource(existingIcon, pdsUrl, did);
 
   const handleLabelChange = (

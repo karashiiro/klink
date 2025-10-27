@@ -113,17 +113,8 @@ export function ProfilePreview() {
       minHeight="100vh"
       width="100%"
     >
-      <BackgroundRenderer
-        background={background}
-        pdsUrl={session.endpoint.url}
-        did={session.did}
-      />
-      <ProfileDisplay
-        profileData={profileData}
-        handle={session.handle}
-        pdsUrl={session.endpoint.url}
-        did={session.did}
-      />
+      <BackgroundRenderer background={background} />
+      <ProfileDisplay profileData={profileData} handle={session.handle} />
     </YStack>
   );
 }

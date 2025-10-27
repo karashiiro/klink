@@ -61,12 +61,7 @@ export function ProfileView() {
         pdsUrl={pdsUrl}
         did={did}
       />
-      <ProfileDisplay
-        profileData={value}
-        handle={handle}
-        pdsUrl={pdsUrl}
-        did={did}
-      />
+      <ProfileDisplay profileData={value} handle={handle} />
     </YStack>
   );
 }

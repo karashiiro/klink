@@ -7,6 +7,7 @@ import { defaultConfig } from "@tamagui/config/v4";
 import { LoadingFallback, AppErrorBoundary } from "@kpaste-app/ui";
 import { resolveUser, getRecord } from "@kpaste-app/atproto-utils";
 import type { Main } from "@klink-app/lexicon/types";
+import { SessionProvider } from "./contexts/SessionProvider";
 
 function reloadOnFailure() {
   // Reload since this is usually due to a redeployment causing chunk load failures
@@ -197,7 +198,9 @@ createRoot(document.getElementById("root")!).render(
     <AppErrorBoundary>
       <TamaguiProvider config={tamaguiConfig}>
         <Theme name="dark">
-          <RouterProvider router={router} />
+          <SessionProvider>
+            <RouterProvider router={router} />
+          </SessionProvider>
         </Theme>
       </TamaguiProvider>
     </AppErrorBoundary>

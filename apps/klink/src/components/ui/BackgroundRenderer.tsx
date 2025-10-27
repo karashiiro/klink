@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ShaderCanvas } from "./ShaderCanvas";
 import type { Main } from "@klink-app/lexicon/types";
 import { getAtProtoBlobCid, buildAtProtoBlobUrl } from "../../utils/blobUtils";
+import { useSession } from "../../hooks/useSession";
 
 interface BackgroundRendererProps {
   background: Main["background"];
@@ -11,10 +12,16 @@ interface BackgroundRendererProps {
 
 export function BackgroundRenderer({
   background,
-  pdsUrl,
-  did,
+  pdsUrl: propPdsUrl,
+  did: propDid,
 }: BackgroundRendererProps) {
+  const session = useSession();
   const [shaderCode, setShaderCode] = useState<string | null>(null);
+
+  // Use prop values if provided (for ProfileView with loader data),
+  // otherwise fall back to session context (for authenticated preview)
+  const pdsUrl = propPdsUrl || session.pdsUrl;
+  const did = propDid || session.did;
 
   useEffect(() => {
     if (background.type === "shader") {

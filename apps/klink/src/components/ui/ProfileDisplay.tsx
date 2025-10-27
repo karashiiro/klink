@@ -27,16 +27,9 @@ export type ProfileDataWithBlobs = Omit<Main, "profileImage" | "links"> & {
 interface ProfileDisplayProps {
   profileData: ProfileDataWithBlobs;
   handle: string;
-  pdsUrl?: string;
-  did?: string;
 }
 
-export function ProfileDisplay({
-  profileData,
-  handle,
-  pdsUrl,
-  did,
-}: ProfileDisplayProps) {
+export function ProfileDisplay({ profileData, handle }: ProfileDisplayProps) {
   // Get theme colors with fallbacks
   const primaryColor = profileData.theme?.primaryColor || "#364163";
   const secondaryColor = profileData.theme?.secondaryColor || "#a58431";
@@ -59,16 +52,11 @@ export function ProfileDisplay({
       width="100%"
       padding="$6"
     >
-      <CustomStylesheet
-        stylesheet={stylesheet}
-        id={`profile-${did || handle}`}
-      />
+      <CustomStylesheet stylesheet={stylesheet} id={`profile-${handle}`} />
       <YStack gap="$4">
         <XStack gap="$4" alignItems="flex-start">
           <AtProtoImage
             image={profileData.profileImage}
-            pdsUrl={pdsUrl}
-            did={did}
             width={120}
             height={120}
             borderRadius={60}
@@ -154,8 +142,6 @@ export function ProfileDisplay({
                       >
                         <AtProtoImage
                           image={link.icon}
-                          pdsUrl={pdsUrl}
-                          did={did}
                           width={40}
                           height={40}
                         />

@@ -1,6 +1,7 @@
 import { Image } from "@tamagui/image";
 import type { Main } from "@klink-app/lexicon/types";
 import { useImageSource } from "../../hooks/useImageSource";
+import { useSession } from "../../hooks/useSession";
 
 interface AtProtoImageProps {
   image:
@@ -9,8 +10,6 @@ interface AtProtoImageProps {
     | Blob
     | null
     | undefined;
-  pdsUrl?: string;
-  did?: string;
   width: number;
   height: number;
   borderRadius?: number;
@@ -18,12 +17,11 @@ interface AtProtoImageProps {
 
 export function AtProtoImage({
   image,
-  pdsUrl,
-  did,
   width,
   height,
   borderRadius,
 }: AtProtoImageProps) {
+  const { pdsUrl, did } = useSession();
   const imageUrl = useImageSource(image, pdsUrl, did);
   if (!imageUrl) return null;
 
