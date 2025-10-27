@@ -2,6 +2,7 @@ import { useAtomValue, useStore } from "jotai";
 import { Button } from "@tamagui/button";
 import { bioAtom, profileAtom } from "../../atoms/profile";
 import { useCreateProfile } from "../../hooks/useCreateProfile";
+import { transformProfileForCreate } from "../../utils/profileTransformations";
 
 interface CreateProfileButtonProps {
   onSuccess: () => void;
@@ -22,52 +23,8 @@ export function CreateProfileButton({ onSuccess }: CreateProfileButtonProps) {
       disabled={createLoading || !bio.trim()}
       onPress={async () => {
         const data = store.get(profileAtom);
-        const result = await createProfile({
-          profileImage: data.profileImageBlob
-            ? { type: "blob", value: data.profileImageBlob }
-            : data.profileImage?.type === "url"
-              ? { type: "url", value: data.profileImage.value as string }
-              : undefined,
-          name: data.name || undefined,
-          location: data.location || undefined,
-          bio: data.bio,
-          background:
-            data.backgroundType === "color"
-              ? {
-                  type: "color" as const,
-                  value: data.backgroundColor,
-                }
-              : data.backgroundType === "blob" && data.backgroundImageBlob
-                ? {
-                    type: "blob" as const,
-                    value: data.backgroundImageBlob,
-                    objectFit: data.backgroundObjectFit,
-                  }
-                : data.background?.type === "url"
-                  ? {
-                      type: "url" as const,
-                      value: data.background.value as string,
-                      objectFit: data.backgroundObjectFit,
-                    }
-                  : {
-                      type: "color" as const,
-                      value: data.backgroundColor,
-                    },
-          theme: data.theme,
-          links: data.links.map((link) => ({
-            icon: link.icon
-              ? link.icon instanceof Blob
-                ? { type: "blob", value: link.icon }
-                : typeof link.icon === "string"
-                  ? { type: "url", value: link.icon }
-                  : link.icon.type === "url"
-                    ? { type: "url", value: link.icon.value as string }
-                    : undefined
-              : undefined,
-            label: link.label,
-            href: link.href,
-          })),
-        });
+        const profileData = transformProfileForCreate(data);
+        const result = await createProfile(profileData);
         if (result) {
           onSuccess();
         }

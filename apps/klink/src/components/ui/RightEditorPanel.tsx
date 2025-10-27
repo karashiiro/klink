@@ -1,6 +1,5 @@
 import { YStack, XStack } from "@tamagui/stacks";
 import { Card } from "@tamagui/card";
-import { Button } from "@tamagui/button";
 import { useAtomValue } from "jotai";
 import {
   editorPanelsOpenAtom,
@@ -11,7 +10,7 @@ import { ProfileLinkEditor } from "./ProfileLinkEditor";
 import { CreateProfileButton } from "./CreateProfileButton";
 import { UpdateProfileButtons } from "./UpdateProfileButtons";
 import { DeleteProfileButton } from "./DeleteProfileButton";
-import { useAuth } from "@kpaste-app/atproto-auth";
+import { LogoutButton } from "./LogoutButton";
 
 interface RightEditorPanelProps {
   onSuccess: () => void;
@@ -21,7 +20,6 @@ export function RightEditorPanel({ onSuccess }: RightEditorPanelProps) {
   const isOpen = useAtomValue(editorPanelsOpenAtom);
   const mobileActivePanel = useAtomValue(mobileActivePanelAtom);
   const profile = useAtomValue(currentProfileAtom);
-  const { logout } = useAuth();
 
   return (
     <Card
@@ -70,25 +68,7 @@ export function RightEditorPanel({ onSuccess }: RightEditorPanelProps) {
 
         {/* Bottom action buttons */}
         <XStack gap="$2" marginBottom="$4">
-          <Button
-            flex={1}
-            size="$4"
-            backgroundColor="$gray8"
-            color="white"
-            borderColor="$gray7"
-            hoverStyle={{
-              backgroundColor: "$gray9",
-              borderColor: "$gray8",
-            }}
-            pressStyle={{
-              backgroundColor: "$gray10",
-              borderColor: "$gray9",
-            }}
-            onPress={() => logout()}
-          >
-            Logout
-          </Button>
-
+          <LogoutButton />
           {profile && <DeleteProfileButton onSuccess={onSuccess} />}
         </XStack>
       </YStack>
