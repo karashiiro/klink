@@ -19,24 +19,80 @@ import {
   currentProfileAtom,
   profileLoadingAtom,
 } from "../../atoms/profile";
+import { RocketLaunchIcon } from "@heroicons/react/24/outline";
 
-function HomeHeader() {
+function HomeHeader({ onLoginClick }: { onLoginClick: () => void }) {
   return (
-    <XStack
+    <YStack
       width="100%"
-      justifyContent="center"
-      alignItems="center"
       paddingVertical="$4"
       paddingHorizontal="$4"
       borderBottomWidth={2}
       borderBottomColor="$primary"
       borderStyle="dashed"
       backgroundColor="$background"
+      gap="$3"
+      $md={{
+        gap: "$0",
+      }}
     >
-      <H1 color="white" textAlign="center" size="$10">
-        KLink
-      </H1>
-    </XStack>
+      <XStack
+        width="100%"
+        justifyContent="center"
+        alignItems="center"
+        position="relative"
+      >
+        <H1 color="white" textAlign="center" size="$9">
+          KLink
+        </H1>
+        <XStack
+          position="absolute"
+          right={0}
+          display="none"
+          $md={{ display: "flex" }}
+        >
+          <Button
+            size="$4"
+            backgroundColor="$greenBase"
+            hoverStyle={{ backgroundColor: "$greenHover" }}
+            pressStyle={{ backgroundColor: "$greenPress" }}
+            color="$greenText"
+            fontWeight="600"
+            icon={
+              <RocketLaunchIcon
+                width={20}
+                height={20}
+                color="var(--greenText)"
+              />
+            }
+            onPress={onLoginClick}
+          >
+            Login
+          </Button>
+        </XStack>
+      </XStack>
+      <XStack
+        width="90%"
+        margin="auto"
+        justifyContent="center"
+        display="flex"
+        $md={{ display: "none" }}
+      >
+        <Button
+          size="$4"
+          backgroundColor="$greenBase"
+          hoverStyle={{ backgroundColor: "$greenHover" }}
+          pressStyle={{ backgroundColor: "$greenPress" }}
+          color="$greenText"
+          fontWeight="bold"
+          onPress={onLoginClick}
+          width="100%"
+          maxWidth={400}
+        >
+          Login
+        </Button>
+      </XStack>
+    </YStack>
   );
 }
 
@@ -228,7 +284,7 @@ export function Home() {
       {(authState.state === "unauthenticated" ||
         authState.state === "error") && (
         <>
-          <HomeHeader />
+          <HomeHeader onLoginClick={openAuthModal} />
           <YStack
             backgroundColor="#1a1a2e"
             paddingVertical="$4"
