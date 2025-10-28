@@ -21,7 +21,7 @@ export type ProfileData = Omit<
   Main,
   "background" | "links" | "profileImage"
 > & {
-  profileImage: ProfileImage;
+  profileImage?: ProfileImage;
   background: Background;
   links: Link[];
 };
