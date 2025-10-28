@@ -158,7 +158,7 @@ export function ProfileDisplay({ profileData, handle }: ProfileDisplayProps) {
                     window.open(link.href, "_blank");
                   }
                 }}
-                icon={
+                icon={() => (
                   <>
                     {link.icon && (
                       <div
@@ -177,7 +177,7 @@ export function ProfileDisplay({ profileData, handle }: ProfileDisplayProps) {
                       </div>
                     )}
                   </>
-                }
+                )}
               >
                 <Paragraph
                   color={buttonTextColor}
