@@ -56,7 +56,12 @@ export function ProfileDisplay({ profileData, handle }: ProfileDisplayProps) {
     >
       <CustomStylesheet stylesheet={stylesheet} id={`profile-${handle}`} />
       <YStack gap="$4">
-        <XStack gap="$4" alignItems="flex-start">
+        <XStack
+          gap="$4"
+          flexDirection="column"
+          alignItems="center"
+          $md={{ flexDirection: "row", alignItems: "flex-start" }}
+        >
           <AtProtoImage
             image={profileData.profileImage}
             width={120}
@@ -64,22 +69,42 @@ export function ProfileDisplay({ profileData, handle }: ProfileDisplayProps) {
             borderRadius={60}
           />
 
-          <YStack gap="$2" flex={1} justifyContent="center">
+          <YStack
+            gap="$2"
+            flex={1}
+            justifyContent="center"
+            alignItems="center"
+            $md={{ alignItems: "flex-start" }}
+          >
             {profileData.name ? (
               <>
-                <H1 color={textColor} size="$9" style={{ fontFamily }}>
+                <H1
+                  color={textColor}
+                  size="$9"
+                  style={{ fontFamily }}
+                  textAlign="center"
+                  $md={{ textAlign: "left" }}
+                >
                   {profileData.name}
                 </H1>
                 <Paragraph
                   color={mutedTextColor}
                   fontSize="$6"
                   style={{ fontFamily }}
+                  textAlign="center"
+                  $md={{ textAlign: "left" }}
                 >
                   @{handle}
                 </Paragraph>
               </>
             ) : (
-              <H1 color={textColor} size="$9" style={{ fontFamily }}>
+              <H1
+                color={textColor}
+                size="$9"
+                style={{ fontFamily }}
+                textAlign="center"
+                $md={{ textAlign: "left" }}
+              >
                 @{handle}
               </H1>
             )}
@@ -89,6 +114,8 @@ export function ProfileDisplay({ profileData, handle }: ProfileDisplayProps) {
                 color={mutedTextColor}
                 fontSize="$3"
                 style={{ fontFamily }}
+                textAlign="center"
+                $md={{ textAlign: "left" }}
               >
                 <MapPin width={16} height={16} color={mutedTextColor} />
                 &nbsp;{profileData.location}
