@@ -47,69 +47,89 @@ export function ShaderBackgroundSelector() {
         <Paragraph color="rgba(255, 255, 255, 0.8)" fontSize="$2">
           Available ShaderToy uniforms:
         </Paragraph>
-        <Paragraph
-          color="rgba(255, 255, 255, 0.6)"
-          fontSize="$2"
-          style={{ fontFamily: "monospace" }}
-        >
-          • iResolution (vec3) - viewport resolution (width, height, aspect)
-        </Paragraph>
-        <Paragraph
-          color="rgba(255, 255, 255, 0.6)"
-          fontSize="$2"
-          style={{ fontFamily: "monospace" }}
-        >
-          • iTime (float) - shader playback time in seconds
-        </Paragraph>
-        <Paragraph
-          color="rgba(255, 255, 255, 0.6)"
-          fontSize="$2"
-          style={{ fontFamily: "monospace" }}
-        >
-          • iTimeDelta (float) - render time in seconds
-        </Paragraph>
-        <Paragraph
-          color="rgba(255, 255, 255, 0.6)"
-          fontSize="$2"
-          style={{ fontFamily: "monospace" }}
-        >
-          • iFrameRate (float) - shader frame rate
-        </Paragraph>
-        <Paragraph
-          color="rgba(255, 255, 255, 0.6)"
-          fontSize="$2"
-          style={{ fontFamily: "monospace" }}
-        >
-          • iFrame (int) - shader playback frame
-        </Paragraph>
-        <Paragraph
-          color="rgba(255, 255, 255, 0.6)"
-          fontSize="$2"
-          style={{ fontFamily: "monospace" }}
-        >
-          • iChannelTime[4] (float) - channel playback time (always 0)
-        </Paragraph>
-        <Paragraph
-          color="rgba(255, 255, 255, 0.6)"
-          fontSize="$2"
-          style={{ fontFamily: "monospace" }}
-        >
-          • iChannelResolution[4] (vec3) - channel resolution (always 0)
-        </Paragraph>
-        <Paragraph
-          color="rgba(255, 255, 255, 0.6)"
-          fontSize="$2"
-          style={{ fontFamily: "monospace" }}
-        >
-          • iMouse (vec4) - mouse coords (xy: current, zw: click)
-        </Paragraph>
-        <Paragraph
-          color="rgba(255, 255, 255, 0.6)"
-          fontSize="$2"
-          style={{ fontFamily: "monospace" }}
-        >
-          • iDate (vec4) - year, month, day, time in seconds
-        </Paragraph>
+        <ul>
+          <li>
+            <Paragraph
+              color="rgba(255, 255, 255, 0.6)"
+              fontSize="$2"
+              style={{ fontFamily: "monospace" }}
+            >
+              iResolution (vec3) - viewport resolution (width, height, aspect)
+            </Paragraph>
+          </li>
+          <li>
+            <Paragraph
+              color="rgba(255, 255, 255, 0.6)"
+              fontSize="$2"
+              style={{ fontFamily: "monospace" }}
+            >
+              iTime (float) - shader playback time in seconds
+            </Paragraph>
+          </li>
+          <li>
+            <Paragraph
+              color="rgba(255, 255, 255, 0.6)"
+              fontSize="$2"
+              style={{ fontFamily: "monospace" }}
+            >
+              iTimeDelta (float) - render time in seconds
+            </Paragraph>
+          </li>
+          <li>
+            <Paragraph
+              color="rgba(255, 255, 255, 0.6)"
+              fontSize="$2"
+              style={{ fontFamily: "monospace" }}
+            >
+              iFrameRate (float) - shader frame rate
+            </Paragraph>
+          </li>
+          <li>
+            <Paragraph
+              color="rgba(255, 255, 255, 0.6)"
+              fontSize="$2"
+              style={{ fontFamily: "monospace" }}
+            >
+              iFrame (int) - shader playback frame
+            </Paragraph>
+          </li>
+          <li>
+            <Paragraph
+              color="rgba(255, 255, 255, 0.6)"
+              fontSize="$2"
+              style={{ fontFamily: "monospace" }}
+            >
+              iChannelTime[4] (float) - channel playback time (always 0)
+            </Paragraph>
+          </li>
+          <li>
+            <Paragraph
+              color="rgba(255, 255, 255, 0.6)"
+              fontSize="$2"
+              style={{ fontFamily: "monospace" }}
+            >
+              iChannelResolution[4] (vec3) - channel resolution (always 0)
+            </Paragraph>
+          </li>
+          <li>
+            <Paragraph
+              color="rgba(255, 255, 255, 0.6)"
+              fontSize="$2"
+              style={{ fontFamily: "monospace" }}
+            >
+              iMouse (vec4) - mouse coords (xy: current, zw: click)
+            </Paragraph>
+          </li>
+          <li>
+            <Paragraph
+              color="rgba(255, 255, 255, 0.6)"
+              fontSize="$2"
+              style={{ fontFamily: "monospace" }}
+            >
+              iDate (vec4) - year, month, day, time in seconds
+            </Paragraph>
+          </li>
+        </ul>
       </YStack>
 
       <Paragraph color="rgba(255, 255, 255, 0.5)" fontSize="$2">
