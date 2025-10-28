@@ -9,6 +9,7 @@ interface BackgroundRendererProps {
   pdsUrl?: string;
   did?: string;
   fillViewport?: boolean;
+  enableCache?: boolean;
 }
 
 export function BackgroundRenderer({
@@ -16,6 +17,7 @@ export function BackgroundRenderer({
   pdsUrl: propPdsUrl,
   did: propDid,
   fillViewport = false,
+  enableCache = false,
 }: BackgroundRendererProps) {
   const session = useSession();
   const [shaderCode, setShaderCode] = useState<string | null>(null);
@@ -27,21 +29,12 @@ export function BackgroundRenderer({
 
   useEffect(() => {
     if (background.type === "shader") {
-      console.log(
-        "[BackgroundRenderer] Shader background detected",
-        background,
-      );
       // Handle both Blob instances (preview) and blob references (from PDS)
       if (background.value instanceof Blob) {
-        console.log("[BackgroundRenderer] Reading shader from Blob");
         // Read blob content
         const reader = new FileReader();
         reader.onload = (e) => {
           const code = e.target?.result as string;
-          console.log(
-            "[BackgroundRenderer] Shader code loaded from Blob, length:",
-            code?.length,
-          );
           setShaderCode(code);
         };
         reader.readAsText(background.value);
@@ -52,17 +45,9 @@ export function BackgroundRenderer({
         if (cid) {
           const blobUrl = buildAtProtoBlobUrl(pdsUrl, did, cid);
 
-          console.log(
-            "[BackgroundRenderer] Fetching shader from PDS:",
-            blobUrl,
-          );
           fetch(blobUrl)
             .then((res) => res.text())
             .then((code) => {
-              console.log(
-                "[BackgroundRenderer] Shader code loaded from PDS, length:",
-                code?.length,
-              );
               setShaderCode(code);
             })
             .catch((err) => console.error("Failed to fetch shader:", err));
@@ -74,7 +59,13 @@ export function BackgroundRenderer({
   }, [background, pdsUrl, did]);
 
   if (background.type === "shader" && shaderCode) {
-    return <ShaderCanvas shaderCode={shaderCode} fillViewport={fillViewport} />;
+    return (
+      <ShaderCanvas
+        shaderCode={shaderCode}
+        fillViewport={fillViewport}
+        enableCache={enableCache}
+      />
+    );
   }
 
   return null;

@@ -1,25 +1,53 @@
 import { useEffect, useRef, useState } from "react";
 
+// Global shader cache to avoid recompiling the same shaders
+// Key format: "contextId:shaderHash"
+interface CachedShader {
+  vertexShader: WebGLShader;
+  fragmentShader: WebGLShader;
+  program: WebGLProgram;
+  gl: WebGLRenderingContext;
+}
+
+const shaderCache = new Map<string, CachedShader>();
+let contextIdCounter = 0;
+const contextIds = new WeakMap<WebGLRenderingContext, number>();
+
+function getContextId(gl: WebGLRenderingContext): number {
+  if (!contextIds.has(gl)) {
+    contextIds.set(gl, contextIdCounter++);
+  }
+  return contextIds.get(gl)!;
+}
+
+// Simple hash function for shader code
+function hashCode(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash.toString(36);
+}
+
 interface ShaderCanvasProps {
   shaderCode: string;
   fillViewport?: boolean;
+  enableCache?: boolean;
 }
 
 export function ShaderCanvas({
   shaderCode,
   fillViewport = false,
+  enableCache = false,
 }: ShaderCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(
-      "[ShaderCanvas] Initializing with shader code length:",
-      shaderCode?.length,
-    );
     const canvas = canvasRef.current;
     if (!canvas) {
-      console.log("[ShaderCanvas] No canvas ref!");
       return;
     }
 
@@ -57,45 +85,74 @@ export function ShaderCanvas({
       }
     `;
 
-    // Compile shader
-    function compileShader(source: string, type: number): WebGLShader | null {
-      if (!gl) return null;
-      const shader = gl.createShader(type);
-      if (!shader) return null;
+    // Check cache if enabled
+    const contextId = getContextId(gl);
+    const shaderHash = hashCode(vertexShaderSource + fragmentShaderSource);
+    const cacheKey = enableCache ? `${contextId}:${shaderHash}` : null;
+    let vertexShader: WebGLShader | null = null;
+    let fragmentShader: WebGLShader | null = null;
+    let program: WebGLProgram | null = null;
+    let fromCache = false;
 
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        const info = gl.getShaderInfoLog(shader);
-        setError(`Shader compilation error: ${info}`);
-        gl.deleteShader(shader);
-        return null;
+    if (cacheKey && shaderCache.has(cacheKey)) {
+      const cached = shaderCache.get(cacheKey)!;
+      // Verify the cached program belongs to the same GL context
+      if (cached.gl === gl) {
+        vertexShader = cached.vertexShader;
+        fragmentShader = cached.fragmentShader;
+        program = cached.program;
+        fromCache = true;
       }
-
-      return shader;
     }
 
-    // Create program
-    const vertexShader = compileShader(vertexShaderSource, gl.VERTEX_SHADER);
-    const fragmentShader = compileShader(
-      fragmentShaderSource,
-      gl.FRAGMENT_SHADER,
-    );
+    if (!fromCache) {
+      // Compile shader
+      function compileShader(source: string, type: number): WebGLShader | null {
+        if (!gl) return null;
+        const shader = gl.createShader(type);
+        if (!shader) return null;
 
-    if (!vertexShader || !fragmentShader) return;
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
 
-    const program = gl.createProgram();
-    if (!program) return;
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          const info = gl.getShaderInfoLog(shader);
+          setError(`Shader compilation error: ${info}`);
+          gl.deleteShader(shader);
+          return null;
+        }
 
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
+        return shader;
+      }
 
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      const info = gl.getProgramInfoLog(program);
-      setError(`Program linking error: ${info}`);
-      return;
+      // Create program
+      vertexShader = compileShader(vertexShaderSource, gl.VERTEX_SHADER);
+      fragmentShader = compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER);
+
+      if (!vertexShader || !fragmentShader) return;
+
+      program = gl.createProgram();
+      if (!program) return;
+
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        const info = gl.getProgramInfoLog(program);
+        setError(`Program linking error: ${info}`);
+        return;
+      }
+
+      // Cache the compiled shaders if enabled
+      if (cacheKey) {
+        shaderCache.set(cacheKey, {
+          vertexShader,
+          fragmentShader,
+          program,
+          gl,
+        });
+      }
     }
 
     gl.useProgram(program);
@@ -106,6 +163,8 @@ export function ShaderCanvas({
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+    if (!program) return;
 
     const positionLocation = gl.getAttribLocation(program, "position");
     gl.enableVertexAttribArray(positionLocation);
@@ -156,16 +215,6 @@ export function ShaderCanvas({
         canvas.width = displayWidth;
         canvas.height = displayHeight;
         gl.viewport(0, 0, canvas.width, canvas.height);
-        console.log(
-          "[ShaderCanvas] Canvas resized to:",
-          canvas.width,
-          "x",
-          canvas.height,
-          "clientSize:",
-          canvas.clientWidth,
-          "x",
-          canvas.clientHeight,
-        );
       }
     };
 
@@ -218,7 +267,6 @@ export function ShaderCanvas({
 
     render();
     setError(null);
-    console.log("[ShaderCanvas] Shader compiled and rendering!");
 
     // Cleanup
     return () => {
@@ -226,11 +274,17 @@ export function ShaderCanvas({
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("resize", resize);
-      gl.deleteProgram(program);
-      gl.deleteShader(vertexShader);
-      gl.deleteShader(fragmentShader);
+
+      // Only delete shaders if they're not in the cache
+      // Check if the shader is CURRENTLY cached, not just if it was loaded from cache
+      const isCurrentlyCached = cacheKey && shaderCache.has(cacheKey);
+      if (!isCurrentlyCached && program && vertexShader && fragmentShader) {
+        gl.deleteProgram(program);
+        gl.deleteShader(vertexShader);
+        gl.deleteShader(fragmentShader);
+      }
     };
-  }, [shaderCode]);
+  }, [shaderCode, enableCache]);
 
   return (
     <>

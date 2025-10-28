@@ -66,7 +66,10 @@ export function ExampleCarousel({
         onMouseEnter={() => setIsPausedByHover(true)}
         onMouseLeave={() => setIsPausedByHover(false)}
       >
-        <BackgroundRenderer background={activeProfile.background} />
+        <BackgroundRenderer
+          background={activeProfile.background}
+          enableCache={true}
+        />
         <div
           style={{
             opacity: isTransitioning ? 0 : 1,
