@@ -27,7 +27,6 @@ export function AtProtoImage({
       width={width}
       height={height}
       borderRadius={borderRadius}
-      backgroundColor="$secondary"
     />
   );
 }
