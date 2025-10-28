@@ -5,12 +5,6 @@ import {
   nameAtom,
   locationAtom,
   bioAtom,
-  profileImageAtom,
-  profileImageBlobAtom,
-  backgroundAtom,
-  backgroundImageBlobAtom,
-  backgroundColorAtom,
-  backgroundObjectFitAtom,
   primaryColorAtom,
   secondaryColorAtom,
   fontFamilyAtom,
@@ -20,62 +14,26 @@ import {
 import { ProfileDisplay } from "../ProfileDisplay";
 import { BackgroundRenderer } from "../BackgroundRenderer";
 import { getBackgroundStyle } from "../../../utils/backgroundUtils";
-import { useImageSource } from "../../../hooks/useImageSource";
-import type { Main } from "@klink-app/lexicon/types";
-import type { ProfileDataWithBlobs } from "../ProfileDisplay";
+import type { ProfileData } from "../ProfileDisplay";
+import { useEditorBackground } from "../../../hooks/useEditorBackground";
+import { useEditorProfileImage } from "../../../hooks/useEditorProfileImage";
 
 export function ProfilePreview() {
   const { session } = useAuth();
   const name = useAtomValue(nameAtom);
   const location = useAtomValue(locationAtom);
   const bio = useAtomValue(bioAtom);
-  const profileImageValue = useAtomValue(profileImageAtom);
-  const profileImageBlob = useAtomValue(profileImageBlobAtom);
-  const backgroundValue = useAtomValue(backgroundAtom);
-  const backgroundImageBlob = useAtomValue(backgroundImageBlobAtom);
-  const backgroundColor = useAtomValue(backgroundColorAtom);
-  const backgroundObjectFit = useAtomValue(backgroundObjectFitAtom);
+  const profileImage = useEditorProfileImage();
+  const background = useEditorBackground();
   const primaryColor = useAtomValue(primaryColorAtom);
   const secondaryColor = useAtomValue(secondaryColorAtom);
   const fontFamily = useAtomValue(fontFamilyAtom);
   const stylesheet = useAtomValue(stylesheetAtom);
   const links = useAtomValue(linksAtom);
 
-  const profileImageUrl = useImageSource(
-    profileImageBlob ?? profileImageValue,
-    session?.endpoint.url,
-    session?.did,
-  );
-  const backgroundBlobUrl = useImageSource(
-    backgroundImageBlob ?? backgroundValue,
-    session?.endpoint.url,
-    session?.did,
-  );
-
   if (!session) return null;
 
-  const profileImage: Main["profileImage"] = profileImageUrl
-    ? {
-        type: "url",
-        value: profileImageUrl as `${string}:${string}`,
-        $type: "moe.karashiiro.klink.profile#urlImage" as const,
-      }
-    : undefined;
-
-  const background: Main["background"] = backgroundBlobUrl
-    ? {
-        type: "url",
-        value: backgroundBlobUrl as `${string}:${string}`,
-        $type: "moe.karashiiro.klink.profile#urlBackground" as const,
-        objectFit: backgroundObjectFit,
-      }
-    : (backgroundValue ?? {
-        type: "color",
-        value: backgroundColor,
-        $type: "moe.karashiiro.klink.profile#colorBackground" as const,
-      });
-
-  const profileData: ProfileDataWithBlobs = {
+  const profileData: ProfileData = {
     $type: "moe.karashiiro.klink.profile",
     name: name || undefined,
     location: location || undefined,
@@ -89,10 +47,17 @@ export function ProfilePreview() {
       stylesheet,
     },
     links: links.map((link) => ({
-      icon: link.icon,
+      icon:
+        link.icon instanceof Blob
+          ? {
+              type: "blob",
+              value: link.icon,
+              $type: "moe.karashiiro.klink.profile#blobImage",
+            }
+          : link.icon,
       label: link.label,
-      href: (link.href || "https://example.com") as `${string}:${string}`,
-      $type: "moe.karashiiro.klink.profile#link" as const,
+      href: link.href,
+      $type: "moe.karashiiro.klink.profile#link",
     })),
   };
 

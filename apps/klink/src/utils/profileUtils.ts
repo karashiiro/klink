@@ -1,8 +1,21 @@
 import type { Main } from "@klink-app/lexicon/types";
-import type { Blob as AtProtoBlob } from "@atcute/lexicons";
+import type { Blob as AtProtoBlob, LegacyBlob } from "@atcute/lexicons";
 import type { ReadProfileResult } from "../hooks/useReadProfile";
 import type { CreateProfileForm } from "../hooks/useCreateProfile";
 import type { UpdateProfileForm } from "../hooks/useUpdateProfile";
+
+export type ProfileImage =
+  | Main["profileImage"]
+  | {
+      $type: "moe.karashiiro.klink.profile#urlImage";
+      type: "url";
+      value: string;
+    }
+  | {
+      $type: "moe.karashiiro.klink.profile#blobImage";
+      type: "blob";
+      value: AtProtoBlob<string> | LegacyBlob<string> | Blob;
+    };
 
 /**
  * Type representing the profileAtom state structure

@@ -1,10 +1,11 @@
 import type { FormEvent } from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { YStack, XStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { Input } from "@tamagui/input";
 import { Button } from "@tamagui/button";
 import type { TextInputChangeEvent } from "react-native";
+import { useBlobUrl } from "../../../hooks/useBlobUrl";
 
 interface ImageInputProps {
   label: string;
@@ -33,19 +34,7 @@ export function ImageInput({
   const [mode, setMode] = useState<"url" | "upload">(
     blob || hasExistingBlob ? "upload" : "url",
   );
-
-  // Create object URL for blob preview
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (blob) {
-      const url = URL.createObjectURL(blob);
-      setPreviewUrl(url);
-      return () => URL.revokeObjectURL(url);
-    } else {
-      setPreviewUrl(null);
-    }
-  }, [blob]);
+  const previewUrl = useBlobUrl(blob);
 
   return (
     <YStack gap="$2">

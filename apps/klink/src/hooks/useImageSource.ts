@@ -1,7 +1,9 @@
 import { useDebugValue, useMemo } from "react";
-import type { Main } from "@klink-app/lexicon/types";
 import { useBlobUrl } from "./useBlobUrl";
 import { getAtProtoBlobCid, buildAtProtoBlobUrl } from "../utils/blobUtils";
+import type { ProfileImage } from "../utils/profileUtils";
+import type { Background } from "../utils/backgroundUtils";
+import type { LinkIcon } from "../utils/linkUtils";
 
 /**
  * Unified hook to resolve an image source from multiple possible formats:
@@ -15,9 +17,9 @@ import { getAtProtoBlobCid, buildAtProtoBlobUrl } from "../utils/blobUtils";
 export function useImageSource(
   image:
     | Blob
-    | Main["profileImage"]
-    | Main["background"]
-    | Main["links"][0]["icon"]
+    | ProfileImage
+    | Background
+    | LinkIcon
     | string
     | null
     | undefined,
@@ -27,7 +29,17 @@ export function useImageSource(
   useDebugValue(image);
 
   // Handle browser Blob
-  const blobUrl = useBlobUrl(image instanceof Blob ? image : null);
+  const blob =
+    image instanceof Blob
+      ? image
+      : image &&
+          typeof image === "object" &&
+          "type" in image &&
+          image.type === "blob" &&
+          image.value instanceof Blob
+        ? image.value
+        : null;
+  const blobUrl = useBlobUrl(blob);
 
   // Handle ATProto blob reference or URL
   const resolvedUrl = useMemo(() => {
@@ -40,7 +52,7 @@ export function useImageSource(
       return image.value;
     }
     if (image.type === "blob") {
-      if (!pdsUrl || !did) return null;
+      if (!pdsUrl || !did || image.value instanceof Blob) return null;
 
       const cid = getAtProtoBlobCid(image.value);
       if (!cid) return null;

@@ -1,10 +1,12 @@
 import { YStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { useAtom } from "jotai";
-import { profileAtom } from "../../../atoms/profile";
+import { backgroundShaderCodeAtom } from "../../../atoms/profile";
 
 export function ShaderBackgroundSelector() {
-  const [formData, setFormData] = useAtom(profileAtom);
+  const [backgroundShaderCode, setBackgroundShaderCode] = useAtom(
+    backgroundShaderCodeAtom,
+  );
 
   return (
     <YStack gap="$3">
@@ -13,13 +15,8 @@ export function ShaderBackgroundSelector() {
       </Paragraph>
 
       <textarea
-        value={formData.backgroundShaderCode}
-        onChange={(e) => {
-          setFormData({
-            ...formData,
-            backgroundShaderCode: e.target.value,
-          });
-        }}
+        value={backgroundShaderCode}
+        onChange={(e) => setBackgroundShaderCode(e.target.value)}
         placeholder={`void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
     // Normalized pixel coordinates (from 0 to 1)

@@ -1,11 +1,24 @@
+import type { Blob as AtProtoBlob, LegacyBlob } from "@atcute/lexicons";
 import type { Main } from "@klink-app/lexicon/types";
 
 export type Background =
   | Main["background"]
   | {
+      $type: "moe.karashiiro.klink.profile#urlBackground";
+      type: "url";
+      value: string;
+      objectFit: string;
+    }
+  | {
+      $type: "moe.karashiiro.klink.profile#blobBackground";
+      type: "blob";
+      value: AtProtoBlob<string> | LegacyBlob<string> | Blob;
+      objectFit: string;
+    }
+  | {
       $type: "moe.karashiiro.klink.profile#shaderBackground";
       type: "shader";
-      value: Blob;
+      value: AtProtoBlob<string> | LegacyBlob<string> | Blob;
     };
 
 export function getBackgroundStyle(

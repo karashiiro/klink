@@ -2,7 +2,7 @@ import { useAtomValue, useStore } from "jotai";
 import { Button } from "@tamagui/button";
 import { bioAtom, profileAtom } from "../../../atoms/profile";
 import { useUpdateProfile } from "../../../hooks/useUpdateProfile";
-import { transformProfileForUpdate } from "../../../utils/profileTransformations";
+import { transformProfileForUpdate } from "../../../utils/profileUtils";
 import type { ReadProfileResult } from "../../../hooks/useReadProfile";
 
 interface UpdateProfileButtonsProps {

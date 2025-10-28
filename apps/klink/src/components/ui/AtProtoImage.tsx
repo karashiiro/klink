@@ -1,15 +1,11 @@
 import { Image } from "@tamagui/image";
-import type { Main } from "@klink-app/lexicon/types";
 import { useImageSource } from "../../hooks/useImageSource";
 import { useSession } from "../../hooks/useSession";
+import type { ProfileImage } from "../../utils/profileUtils";
+import type { LinkIcon } from "../../utils/linkUtils";
 
 interface AtProtoImageProps {
-  image:
-    | Main["profileImage"]
-    | Main["links"][0]["icon"]
-    | Blob
-    | null
-    | undefined;
+  image: ProfileImage | LinkIcon | null | undefined;
   width: number;
   height: number;
   borderRadius?: number;

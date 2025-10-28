@@ -2,7 +2,7 @@ import { useAtomValue, useStore } from "jotai";
 import { Button } from "@tamagui/button";
 import { bioAtom, profileAtom } from "../../../atoms/profile";
 import { useCreateProfile } from "../../../hooks/useCreateProfile";
-import { transformProfileForCreate } from "../../../utils/profileTransformations";
+import { transformProfileForCreate } from "../../../utils/profileUtils";
 
 interface CreateProfileButtonProps {
   onSuccess: () => void;
