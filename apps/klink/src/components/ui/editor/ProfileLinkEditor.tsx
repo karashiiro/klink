@@ -4,7 +4,7 @@ import {
   linksAtom,
   currentProfileAtom,
   linkMetadataAtom,
-} from "../../atoms/profile";
+} from "../../../atoms/profile";
 import { YStack, XStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";

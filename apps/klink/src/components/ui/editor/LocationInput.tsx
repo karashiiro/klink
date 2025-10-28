@@ -1,12 +1,12 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Input } from "@tamagui/input";
-import { nameAtom } from "../../atoms/profile";
+import { locationAtom } from "../../../atoms/profile";
 import type { TextInputChangeEvent } from "react-native";
 
-export function NameInput() {
-  const atomValue = useAtomValue(nameAtom);
-  const setName = useSetAtom(nameAtom);
+export function LocationInput() {
+  const atomValue = useAtomValue(locationAtom);
+  const setLocation = useSetAtom(locationAtom);
   const [localValue, setLocalValue] = useState(atomValue);
 
   // Sync local value when atom changes (e.g., when profile loads)
@@ -20,13 +20,13 @@ export function NameInput() {
 
   const handleBlur = () => {
     if (localValue !== atomValue) {
-      setName(localValue);
+      setLocation(localValue);
     }
   };
 
   return (
     <Input
-      placeholder="Name (optional)"
+      placeholder="Location (optional)"
       value={localValue}
       onChange={handleChange}
       onBlur={handleBlur}

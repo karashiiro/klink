@@ -1,6 +1,6 @@
 import { Button } from "@tamagui/button";
 import { useAtom } from "jotai";
-import { editorPanelsOpenAtom } from "../../atoms/profile";
+import { editorPanelsOpenAtom } from "../../../atoms/profile";
 
 export function EditorPanelToggle() {
   const [isOpen, setIsOpen] = useAtom(editorPanelsOpenAtom);

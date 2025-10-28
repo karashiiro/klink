@@ -1,7 +1,7 @@
 import { YStack, XStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { useAtomValue, useSetAtom } from "jotai";
-import { primaryColorAtom, secondaryColorAtom } from "../../atoms/profile";
+import { primaryColorAtom, secondaryColorAtom } from "../../../atoms/profile";
 import { useRef } from "react";
 import { Input } from "@tamagui/input";
 

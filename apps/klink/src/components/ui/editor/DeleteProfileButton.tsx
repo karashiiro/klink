@@ -1,7 +1,7 @@
 import { useSetAtom } from "jotai";
 import { Button } from "@tamagui/button";
-import { profileAtom } from "../../atoms/profile";
-import { useDeleteProfile } from "../../hooks/useDeleteProfile";
+import { profileAtom } from "../../../atoms/profile";
+import { useDeleteProfile } from "../../../hooks/useDeleteProfile";
 
 interface DeleteProfileButtonProps {
   onSuccess: () => void;

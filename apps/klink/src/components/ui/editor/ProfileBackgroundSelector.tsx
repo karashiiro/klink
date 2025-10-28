@@ -6,7 +6,7 @@ import {
   backgroundColorAtom,
   backgroundTypeAtom,
   backgroundObjectFitAtom,
-} from "../../atoms/profile";
+} from "../../../atoms/profile";
 import { YStack, XStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";

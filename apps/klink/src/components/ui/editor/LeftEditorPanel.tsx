@@ -4,7 +4,7 @@ import { useAtomValue } from "jotai";
 import {
   editorPanelsOpenAtom,
   mobileActivePanelAtom,
-} from "../../atoms/profile";
+} from "../../../atoms/profile";
 import { ProfileImageInput } from "./ProfileImageInput";
 import { NameInput } from "./NameInput";
 import { LocationInput } from "./LocationInput";

@@ -1,7 +1,7 @@
 import { YStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { useAtom } from "jotai";
-import { profileAtom } from "../../atoms/profile";
+import { profileAtom } from "../../../atoms/profile";
 
 export function ShaderBackgroundSelector() {
   const [formData, setFormData] = useAtom(profileAtom);

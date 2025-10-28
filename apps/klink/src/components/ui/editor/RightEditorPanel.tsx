@@ -5,7 +5,7 @@ import {
   editorPanelsOpenAtom,
   mobileActivePanelAtom,
   currentProfileAtom,
-} from "../../atoms/profile";
+} from "../../../atoms/profile";
 import { ProfileLinkEditor } from "./ProfileLinkEditor";
 import { CreateProfileButton } from "./CreateProfileButton";
 import { UpdateProfileButtons } from "./UpdateProfileButtons";

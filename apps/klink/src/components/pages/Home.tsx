@@ -8,12 +8,12 @@ import { useAuth } from "@kpaste-app/atproto-auth";
 import { Loader } from "@tamagui/lucide-icons";
 import { useAuthModal } from "@kpaste-app/ui";
 import { useReadProfile } from "../../hooks/useReadProfile";
-import { ProfilePreview } from "../ui/ProfilePreview";
+import { ProfilePreview } from "../ui/editor/ProfilePreview";
 import { ProfileDisplay } from "../ui/ProfileDisplay";
-import { LeftEditorPanel } from "../ui/LeftEditorPanel";
-import { RightEditorPanel } from "../ui/RightEditorPanel";
-import { EditorPanelToggle } from "../ui/EditorPanelToggle";
-import { MobilePanelSwitch } from "../ui/MobilePanelSwitch";
+import { LeftEditorPanel } from "../ui/editor/LeftEditorPanel";
+import { RightEditorPanel } from "../ui/editor/RightEditorPanel";
+import { EditorPanelToggle } from "../ui/editor/EditorPanelToggle";
+import { MobilePanelSwitch } from "../ui/editor/MobilePanelSwitch";
 import {
   profileAtom,
   currentProfileAtom,

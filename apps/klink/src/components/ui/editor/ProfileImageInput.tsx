@@ -4,11 +4,11 @@ import {
   profileAtom,
   profileImageAtom,
   profileImageBlobAtom,
-} from "../../atoms/profile";
+} from "../../../atoms/profile";
 import { ImageInput } from "./ImageInput";
 import type { TextInputChangeEvent } from "react-native";
 import { useAuth } from "@kpaste-app/atproto-auth";
-import { useImageSource } from "../../hooks/useImageSource";
+import { useImageSource } from "../../../hooks/useImageSource";
 
 export function ProfileImageInput() {
   const { session } = useAuth();

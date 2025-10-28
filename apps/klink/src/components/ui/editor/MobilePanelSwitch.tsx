@@ -5,7 +5,7 @@ import { useAtom, useAtomValue } from "jotai";
 import {
   editorPanelsOpenAtom,
   mobileActivePanelAtom,
-} from "../../atoms/profile";
+} from "../../../atoms/profile";
 
 export function MobilePanelSwitch() {
   const isOpen = useAtomValue(editorPanelsOpenAtom);

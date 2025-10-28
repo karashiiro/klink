@@ -7,8 +7,8 @@ import { Input } from "@tamagui/input";
 import type { TextInputChangeEvent } from "react-native";
 import type { Main } from "@klink-app/lexicon/types";
 import { ImageInput } from "./ImageInput";
-import { useImageSource } from "../../hooks/useImageSource";
-import { useSession } from "../../hooks/useSession";
+import { useImageSource } from "../../../hooks/useImageSource";
+import { useSession } from "../../../hooks/useSession";
 
 // Link type matching the atom definition
 interface Link {

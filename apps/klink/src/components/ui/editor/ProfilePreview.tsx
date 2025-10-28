@@ -16,13 +16,13 @@ import {
   fontFamilyAtom,
   stylesheetAtom,
   linksAtom,
-} from "../../atoms/profile";
-import { ProfileDisplay } from "./ProfileDisplay";
-import { BackgroundRenderer } from "./BackgroundRenderer";
-import { getBackgroundStyle } from "../../utils/backgroundUtils";
-import { useImageSource } from "../../hooks/useImageSource";
+} from "../../../atoms/profile";
+import { ProfileDisplay } from "../ProfileDisplay";
+import { BackgroundRenderer } from "../BackgroundRenderer";
+import { getBackgroundStyle } from "../../../utils/backgroundUtils";
+import { useImageSource } from "../../../hooks/useImageSource";
 import type { Main } from "@klink-app/lexicon/types";
-import type { ProfileDataWithBlobs } from "./ProfileDisplay";
+import type { ProfileDataWithBlobs } from "../ProfileDisplay";
 
 export function ProfilePreview() {
   const { session } = useAuth();

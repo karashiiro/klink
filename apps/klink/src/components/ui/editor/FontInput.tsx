@@ -2,7 +2,7 @@ import { YStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { Input } from "@tamagui/input";
 import { useAtomValue, useSetAtom } from "jotai";
-import { fontFamilyAtom, stylesheetAtom } from "../../atoms/profile";
+import { fontFamilyAtom, stylesheetAtom } from "../../../atoms/profile";
 import { useState, useEffect, type FormEvent } from "react";
 import type { TextInputChangeEvent } from "react-native";
 
