@@ -8,12 +8,14 @@ interface BackgroundRendererProps {
   background: Background;
   pdsUrl?: string;
   did?: string;
+  fillViewport?: boolean;
 }
 
 export function BackgroundRenderer({
   background,
   pdsUrl: propPdsUrl,
   did: propDid,
+  fillViewport = false,
 }: BackgroundRendererProps) {
   const session = useSession();
   const [shaderCode, setShaderCode] = useState<string | null>(null);
@@ -72,7 +74,7 @@ export function BackgroundRenderer({
   }, [background, pdsUrl, did]);
 
   if (background.type === "shader" && shaderCode) {
-    return <ShaderCanvas shaderCode={shaderCode} />;
+    return <ShaderCanvas shaderCode={shaderCode} fillViewport={fillViewport} />;
   }
 
   return null;

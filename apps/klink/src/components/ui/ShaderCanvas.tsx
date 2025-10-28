@@ -2,9 +2,13 @@ import { useEffect, useRef, useState } from "react";
 
 interface ShaderCanvasProps {
   shaderCode: string;
+  fillViewport?: boolean;
 }
 
-export function ShaderCanvas({ shaderCode }: ShaderCanvasProps) {
+export function ShaderCanvas({
+  shaderCode,
+  fillViewport = false,
+}: ShaderCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -233,11 +237,11 @@ export function ShaderCanvas({ shaderCode }: ShaderCanvasProps) {
       <canvas
         ref={canvasRef}
         style={{
-          position: "fixed",
+          position: fillViewport ? "fixed" : "absolute",
           top: 0,
           left: 0,
-          width: "100vw",
-          height: "100vh",
+          width: fillViewport ? "100vw" : "100%",
+          height: fillViewport ? "100vh" : "100%",
           zIndex: 0,
           pointerEvents: "none",
         }}

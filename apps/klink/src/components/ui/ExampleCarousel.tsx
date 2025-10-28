@@ -53,7 +53,7 @@ export function ExampleCarousel({
       <YStack
         position="relative"
         width="100%"
-        height={600}
+        height={700}
         borderRadius="$4"
         overflow="hidden"
         style={{

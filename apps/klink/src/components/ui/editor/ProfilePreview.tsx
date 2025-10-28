@@ -81,7 +81,7 @@ export function ProfilePreview() {
       minHeight="100vh"
       width="100%"
     >
-      <BackgroundRenderer background={background} />
+      <BackgroundRenderer background={background} fillViewport={true} />
       <div
         style={{
           display: "flex",
