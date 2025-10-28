@@ -60,6 +60,8 @@ export function ExampleCarousel({
         padding="$4"
         alignItems="center"
         justifyContent="center"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
       >
         <BackgroundRenderer background={activeProfile.background} />
         <div
