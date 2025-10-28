@@ -71,6 +71,9 @@ importers:
       '@tamagui/select':
         specifier: ^1.134.0
         version: 1.135.4(react-dom@19.2.0(react@19.2.0))(react-native@0.82.1(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)
+      '@tamagui/separator':
+        specifier: ^1.135.4
+        version: 1.135.4(react-dom@19.2.0(react@19.2.0))(react-native@0.82.1(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)
       '@tamagui/sheet':
         specifier: ^1.134.0
         version: 1.135.4(react-dom@19.2.0(react@19.2.0))(react-native@0.82.1(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)

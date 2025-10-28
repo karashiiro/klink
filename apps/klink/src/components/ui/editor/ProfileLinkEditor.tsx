@@ -8,6 +8,7 @@ import {
 import { YStack, XStack } from "@tamagui/stacks";
 import { Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
+import { Separator } from "@tamagui/separator";
 import { LinkItem } from "./LinkItem";
 
 export function ProfileLinkEditor() {
@@ -44,14 +45,17 @@ export function ProfileLinkEditor() {
         const metadata = linkMetadata[index];
 
         return (
-          <LinkItem
-            key={`${linkAtom}`}
-            linkAtom={linkAtom}
-            hasExistingBlobIcon={metadata?.hasExistingBlobIcon ?? false}
-            existingIcon={metadata?.existingIcon}
-            onRemove={() => removeLink(index)}
-            onClearIcon={profile ? () => clearLinkIcon(index) : undefined}
-          />
+          <>
+            <Separator marginVertical={10} borderColor="rgba(0, 0, 0, 0.4)" />
+            <LinkItem
+              key={`${linkAtom}`}
+              linkAtom={linkAtom}
+              hasExistingBlobIcon={metadata?.hasExistingBlobIcon ?? false}
+              existingIcon={metadata?.existingIcon}
+              onRemove={() => removeLink(index)}
+              onClearIcon={profile ? () => clearLinkIcon(index) : undefined}
+            />
+          </>
         );
       })}
     </YStack>

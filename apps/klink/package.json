@@ -32,6 +32,7 @@
     "@tamagui/lucide-icons": "^1.134.0",
     "@tamagui/scroll-view": "^1.134.0",
     "@tamagui/select": "^1.134.0",
+    "@tamagui/separator": "^1.135.4",
     "@tamagui/sheet": "^1.134.0",
     "@tamagui/stacks": "^1.134.0",
     "@tamagui/switch": "^1.135.4",
