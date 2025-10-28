@@ -1,7 +1,15 @@
 import type { Main } from "@klink-app/lexicon/types";
 
+export type Background =
+  | Main["background"]
+  | {
+      $type: "moe.karashiiro.klink.profile#shaderBackground";
+      type: "shader";
+      value: Blob;
+    };
+
 export function getBackgroundStyle(
-  background: Main["background"],
+  background: Background,
   pdsUrl: string,
   did: string,
 ): React.CSSProperties {

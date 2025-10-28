@@ -10,22 +10,21 @@ import {
 import type { Main } from "@klink-app/lexicon/types";
 import { Card } from "@tamagui/card";
 import { MapPin } from "@tamagui/lucide-icons";
+import type { Background } from "../../utils/backgroundUtils";
 
 // Extended type that allows browser Blobs for preview mode
 // This is needed because during editing, we have browser Blob objects
 // before they're uploaded to the PDS as ATProto blobs
-export type ProfileDataWithBlobs = Omit<Main, "profileImage" | "links"> & {
-  profileImage?: Main["profileImage"] | Blob;
-  links: Array<{
-    href: `${string}:${string}`;
-    label: string;
-    $type?: "moe.karashiiro.klink.profile#link";
+export type ProfileData = Omit<Main, "background" | "links"> & {
+  background: Background;
+  links: (Omit<Main["links"][0], "href" | "icon"> & {
+    href: string;
     icon?: Main["links"][0]["icon"] | Blob;
-  }>;
+  })[];
 };
 
 interface ProfileDisplayProps {
-  profileData: ProfileDataWithBlobs;
+  profileData: ProfileData;
   handle: string;
 }
 
@@ -125,7 +124,7 @@ export function ProfileDisplay({ profileData, handle }: ProfileDisplayProps) {
                 }}
                 position="relative"
                 onPress={() => {
-                  if (typeof window !== "undefined") {
+                  if (link.href && typeof window !== "undefined") {
                     window.open(link.href, "_blank");
                   }
                 }}

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { YStack } from "@tamagui/stacks";
+import { XStack, YStack } from "@tamagui/stacks";
 import { H1, Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
 import { Card } from "@tamagui/card";
@@ -9,17 +9,64 @@ import { Loader } from "@tamagui/lucide-icons";
 import { useAuthModal } from "@kpaste-app/ui";
 import { useReadProfile } from "../../hooks/useReadProfile";
 import { ProfilePreview } from "../ui/editor/ProfilePreview";
-import { ProfileDisplay } from "../ui/ProfileDisplay";
 import { LeftEditorPanel } from "../ui/editor/LeftEditorPanel";
 import { RightEditorPanel } from "../ui/editor/RightEditorPanel";
 import { EditorPanelToggle } from "../ui/editor/EditorPanelToggle";
 import { MobilePanelSwitch } from "../ui/editor/MobilePanelSwitch";
+import { ExampleCarousel } from "../ui/ExampleCarousel";
 import {
   profileAtom,
   currentProfileAtom,
   profileLoadingAtom,
 } from "../../atoms/profile";
-import type { Main } from "@klink-app/lexicon/types";
+
+function HomeHeader() {
+  return (
+    <XStack
+      width="100%"
+      justifyContent="center"
+      alignItems="center"
+      paddingVertical="$4"
+      paddingHorizontal="$4"
+      borderBottomWidth={2}
+      borderBottomColor="$primary"
+      borderStyle="dashed"
+      backgroundColor="$background"
+    >
+      <H1 color="white" textAlign="center" size="$10">
+        KLink
+      </H1>
+    </XStack>
+  );
+}
+
+function HomeFooter() {
+  return (
+    <XStack
+      width="100%"
+      justifyContent="center"
+      alignItems="center"
+      paddingVertical="$3"
+      paddingHorizontal="$4"
+      borderTopWidth={2}
+      borderTopColor="$primary"
+      borderStyle="dashed"
+      backgroundColor="$background"
+    >
+      <Paragraph fontSize="$2" color="rgba(255, 255, 255, 0.5)">
+        View on{" "}
+        <a
+          href="https://github.com/karashiiro/klink"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "rgba(255, 255, 255, 0.5)" }}
+        >
+          GitHub
+        </a>
+      </Paragraph>
+    </XStack>
+  );
+}
 
 export function Home() {
   const { authState, session } = useAuth();
@@ -129,149 +176,101 @@ export function Home() {
     );
   }
 
-  // Demo profile data for logged-out preview
-  const demoProfile: Main = {
-    $type: "moe.karashiiro.klink.profile",
-    name: "Your Name Here",
-    location: "The Internet",
-    bio: "Share all your important links in one beautiful place! Customize your profile with colors, backgrounds, shaders, and more. Login to create your own personalized link page.",
-    profileImage: {
-      $type: "moe.karashiiro.klink.profile#urlImage",
-      type: "url",
-      value: "https://api.dicebear.com/7.x/shapes/svg?seed=klink",
-    },
-    background: {
-      $type: "moe.karashiiro.klink.profile#colorBackground",
-      type: "color",
-      value: "#1a1a2e",
-    },
-    theme: {
-      primaryColor: "#364163",
-      secondaryColor: "#a58431",
-      fontFamily: "sans-serif",
-    },
-    links: [
-      {
-        label: "Website",
-        href: "https://example.com",
-      },
-      {
-        label: "GitHub",
-        href: "https://github.com",
-      },
-      {
-        label: "Twitter",
-        href: "https://twitter.com",
-      },
-      {
-        label: "Portfolio",
-        href: "https://example.com/portfolio",
-      },
-    ],
-  };
-
   return (
-    <YStack
-      flex={1}
-      backgroundColor="#1a1a2e"
-      paddingVertical="$6"
-      paddingHorizontal="$4"
-      alignItems="center"
-      justifyContent="center"
-      minHeight="100vh"
-      width="100%"
-      position="relative"
-    >
+    <YStack>
       {authState.state === "authenticating" && (
-        <YStack alignItems="center" gap="$4">
-          <Loader size="$2" color="$accent" />
-          <Paragraph color="white" fontSize="$5">
-            Authenticating...
-          </Paragraph>
+        <YStack
+          flex={1}
+          backgroundColor="#1a1a2e"
+          paddingVertical="$6"
+          paddingHorizontal="$4"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh"
+          width="100%"
+          position="relative"
+        >
+          <YStack alignItems="center" gap="$4">
+            <Loader size="$2" color="$accent" />
+            <Paragraph color="white" fontSize="$5">
+              Authenticating...
+            </Paragraph>
+          </YStack>
         </YStack>
       )}
 
       {authState.state === "authenticated" && session && profileLoading && (
-        <YStack gap="$4" alignItems="center">
-          <Paragraph fontSize="$7" color="white" textAlign="center">
-            Welcome back, {session.handle}!
-          </Paragraph>
-          <YStack alignItems="center" gap="$2">
-            <Loader size="$2" color="$accent" />
-            <Paragraph color="rgba(255, 255, 255, 0.7)" fontSize="$4">
-              Loading profile...
+        <YStack
+          flex={1}
+          backgroundColor="#1a1a2e"
+          paddingVertical="$6"
+          paddingHorizontal="$4"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh"
+          width="100%"
+          position="relative"
+        >
+          <YStack gap="$4" alignItems="center">
+            <Paragraph fontSize="$7" color="white" textAlign="center">
+              Welcome back, {session.handle}!
             </Paragraph>
+            <YStack alignItems="center" gap="$2">
+              <Loader size="$2" color="$accent" />
+              <Paragraph color="rgba(255, 255, 255, 0.7)" fontSize="$4">
+                Loading profile...
+              </Paragraph>
+            </YStack>
           </YStack>
         </YStack>
       )}
 
       {(authState.state === "unauthenticated" ||
         authState.state === "error") && (
-        <YStack gap="$6" alignItems="center" width="100%" maxWidth={700}>
-          <YStack gap="$2" alignItems="center">
-            <H1 color="white" textAlign="center" size="$10">
-              Welcome to KLink!
-            </H1>
-            <Paragraph
-              color="rgba(255, 255, 255, 0.8)"
-              textAlign="center"
-              fontSize="$6"
-            >
-              Create your personalized link page in seconds
-            </Paragraph>
-          </YStack>
-
-          <ProfileDisplay
-            profileData={demoProfile}
-            handle="yourhandle.bsky.social"
-          />
-
-          {authState.state === "error" && (
-            <Card
-              backgroundColor="rgba(255, 0, 0, 0.1)"
-              borderColor="rgba(255, 0, 0, 0.3)"
-              borderWidth={1}
-              padding="$3"
-              width="100%"
-            >
-              <Paragraph color="#ff6b6b" textAlign="center">
-                Authentication error. Please try again.
-              </Paragraph>
-            </Card>
-          )}
-
-          <Button
-            size="$6"
-            backgroundColor="$greenBase"
-            hoverStyle={{ backgroundColor: "$greenHover" }}
-            pressStyle={{ backgroundColor: "$greenPress" }}
-            color="$greenText"
-            fontWeight="bold"
-            onPress={openAuthModal}
+        <>
+          <HomeHeader />
+          <YStack
+            backgroundColor="#1a1a2e"
+            paddingVertical="$4"
+            paddingHorizontal="$4"
+            alignItems="center"
             width="100%"
-            maxWidth={600}
+            position="relative"
           >
-            {authState.state === "error"
-              ? "Retry Login"
-              : "Get Started - Login"}
-          </Button>
+            <YStack gap="$6" alignItems="center" width="100%" maxWidth={700}>
+              <ExampleCarousel autoRotateInterval={5000} />
 
-          <Paragraph
-            color="rgba(255, 255, 255, 0.5)"
-            textAlign="center"
-            fontSize="$3"
-          >
-            View on{" "}
-            <a
-              href="https://github.com/karashiiro/klink"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "rgba(255, 255, 255, 0.5)" }}
-            >
-              GitHub
-            </a>
-          </Paragraph>
-        </YStack>
+              {authState.state === "error" && (
+                <Card
+                  backgroundColor="rgba(255, 0, 0, 0.1)"
+                  borderColor="rgba(255, 0, 0, 0.3)"
+                  borderWidth={1}
+                  padding="$3"
+                  width="100%"
+                >
+                  <Paragraph color="#ff6b6b" textAlign="center">
+                    Authentication error. Please try again.
+                  </Paragraph>
+                </Card>
+              )}
+
+              <Button
+                size="$6"
+                backgroundColor="$greenBase"
+                hoverStyle={{ backgroundColor: "$greenHover" }}
+                pressStyle={{ backgroundColor: "$greenPress" }}
+                color="$greenText"
+                fontWeight="bold"
+                onPress={openAuthModal}
+                width="100%"
+                maxWidth={600}
+              >
+                {authState.state === "error" ? "Retry Login" : "Get Started"}
+              </Button>
+            </YStack>
+          </YStack>
+          <HomeFooter />
+        </>
       )}
     </YStack>
   );

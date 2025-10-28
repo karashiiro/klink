@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { ShaderCanvas } from "./ShaderCanvas";
-import type { Main } from "@klink-app/lexicon/types";
 import { getAtProtoBlobCid, buildAtProtoBlobUrl } from "../../utils/blobUtils";
 import { useSession } from "../../hooks/useSession";
+import type { Background } from "../../utils/backgroundUtils";
 
 interface BackgroundRendererProps {
-  background: Main["background"];
+  background: Background;
   pdsUrl?: string;
   did?: string;
 }
