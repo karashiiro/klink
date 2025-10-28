@@ -12,8 +12,11 @@ export function ExampleCarousel({
   autoRotateInterval = 5000,
 }: ExampleCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isPausedByHover, setIsPausedByHover] = useState(false);
+  const [isPausedByClick, setIsPausedByClick] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const isPaused = isPausedByHover || isPausedByClick;
 
   // Auto-rotation with transition handling
   useEffect(() => {
@@ -37,9 +40,9 @@ export function ExampleCarousel({
       setActiveIndex(index);
       setIsTransitioning(false);
     }, 300);
-    setIsPaused(true);
+    setIsPausedByClick(true);
     // Resume auto-rotation after 10 seconds of manual control
-    setTimeout(() => setIsPaused(false), 10000);
+    setTimeout(() => setIsPausedByClick(false), 10000);
   };
 
   const activeProfile = demoProfiles[activeIndex];
@@ -60,8 +63,8 @@ export function ExampleCarousel({
         padding="$4"
         alignItems="center"
         justifyContent="center"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
+        onMouseEnter={() => setIsPausedByHover(true)}
+        onMouseLeave={() => setIsPausedByHover(false)}
       >
         <BackgroundRenderer background={activeProfile.background} />
         <div
