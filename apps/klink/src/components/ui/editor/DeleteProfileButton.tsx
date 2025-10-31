@@ -42,6 +42,7 @@ export function DeleteProfileButton({ onSuccess }: DeleteProfileButtonProps) {
               stylesheet: "",
             },
             links: [],
+            logoMode: "none",
           });
           onSuccess();
         }
