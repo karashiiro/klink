@@ -122,9 +122,63 @@ function HomeFooter() {
   );
 }
 
+function HomeLoggedOut() {
+  const { authState } = useAuth();
+  const { openAuthModal } = useAuthModal();
+
+  return (
+    <>
+      <HomeHeader onLoginClick={openAuthModal} />
+      <YStack
+        backgroundColor="#1a1a2e"
+        paddingVertical="$4"
+        paddingHorizontal="$4"
+        alignItems="center"
+        width="100%"
+        position="relative"
+      >
+        <YStack gap="$6" alignItems="center" width="100%" maxWidth={700}>
+          <Paragraph fontSize={24} fontWeight={600}>
+            Make a profile and share links easily!
+          </Paragraph>
+          <ExampleCarousel autoRotateInterval={5000} />
+
+          {authState.state === "error" && (
+            <Card
+              backgroundColor="rgba(255, 0, 0, 0.1)"
+              borderColor="rgba(255, 0, 0, 0.3)"
+              borderWidth={1}
+              padding="$3"
+              width="100%"
+            >
+              <Paragraph color="#ff6b6b" textAlign="center">
+                Authentication error. Please try again.
+              </Paragraph>
+            </Card>
+          )}
+
+          <Button
+            size="$6"
+            backgroundColor="$greenBase"
+            hoverStyle={{ backgroundColor: "$greenHover" }}
+            pressStyle={{ backgroundColor: "$greenPress" }}
+            color="$greenText"
+            fontWeight="bold"
+            onPress={openAuthModal}
+            width="100%"
+            maxWidth={600}
+          >
+            {authState.state === "error" ? "Retry Login" : "Get Started"}
+          </Button>
+        </YStack>
+      </YStack>
+      <HomeFooter />
+    </>
+  );
+}
+
 export function Home() {
   const { authState, session } = useAuth();
-  const { openAuthModal } = useAuthModal();
 
   // Read user's profile
   const {
@@ -281,55 +335,7 @@ export function Home() {
       )}
 
       {(authState.state === "unauthenticated" ||
-        authState.state === "error") && (
-        <>
-          <HomeHeader onLoginClick={openAuthModal} />
-          <YStack
-            backgroundColor="#1a1a2e"
-            paddingVertical="$4"
-            paddingHorizontal="$4"
-            alignItems="center"
-            width="100%"
-            position="relative"
-          >
-            <YStack gap="$6" alignItems="center" width="100%" maxWidth={700}>
-              <Paragraph fontSize={24} fontWeight={600}>
-                Make a profile and share links easily!
-              </Paragraph>
-              <ExampleCarousel autoRotateInterval={5000} />
-
-              {authState.state === "error" && (
-                <Card
-                  backgroundColor="rgba(255, 0, 0, 0.1)"
-                  borderColor="rgba(255, 0, 0, 0.3)"
-                  borderWidth={1}
-                  padding="$3"
-                  width="100%"
-                >
-                  <Paragraph color="#ff6b6b" textAlign="center">
-                    Authentication error. Please try again.
-                  </Paragraph>
-                </Card>
-              )}
-
-              <Button
-                size="$6"
-                backgroundColor="$greenBase"
-                hoverStyle={{ backgroundColor: "$greenHover" }}
-                pressStyle={{ backgroundColor: "$greenPress" }}
-                color="$greenText"
-                fontWeight="bold"
-                onPress={openAuthModal}
-                width="100%"
-                maxWidth={600}
-              >
-                {authState.state === "error" ? "Retry Login" : "Get Started"}
-              </Button>
-            </YStack>
-          </YStack>
-          <HomeFooter />
-        </>
-      )}
+        authState.state === "error") && <HomeLoggedOut />}
     </YStack>
   );
 }
