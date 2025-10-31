@@ -470,6 +470,7 @@ const demoProfiles: ProfileData[] = [
         href: "",
       },
     ],
+    logoMode: "none",
   },
   {
     $type: "moe.karashiiro.klink.profile",
@@ -505,6 +506,7 @@ const demoProfiles: ProfileData[] = [
         href: "",
       },
     ],
+    logoMode: "none",
   },
   {
     $type: "moe.karashiiro.klink.profile",
@@ -546,5 +548,6 @@ const demoProfiles: ProfileData[] = [
         href: "",
       },
     ],
+    logoMode: "none",
   },
 ];

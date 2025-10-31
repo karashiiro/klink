@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { XStack, YStack } from "@tamagui/stacks";
-import { H1, Paragraph } from "@tamagui/text";
+import { Paragraph } from "@tamagui/text";
 import { Button } from "@tamagui/button";
 import { Card } from "@tamagui/card";
 import { useAuth } from "@kpaste-app/atproto-auth";
@@ -20,18 +20,18 @@ import {
   profileLoadingAtom,
 } from "../../atoms/profile";
 import { RocketLaunchIcon } from "@heroicons/react/24/outline";
+import { LogoLink } from "../ui/LogoLink";
 
 function HomeHeader({ onLoginClick }: { onLoginClick: () => void }) {
   return (
     <YStack
       width="100%"
-      paddingVertical="$4"
+      paddingVertical="$2"
       paddingHorizontal="$4"
       borderBottomWidth={2}
       borderBottomColor="$primary"
       borderStyle="dashed"
       backgroundColor="$background"
-      gap="$3"
       $md={{
         gap: "$0",
       }}
@@ -42,9 +42,7 @@ function HomeHeader({ onLoginClick }: { onLoginClick: () => void }) {
         alignItems="center"
         position="relative"
       >
-        <H1 color="white" textAlign="center" size="$9">
-          KLink
-        </H1>
+        <LogoLink />
         <XStack
           position="absolute"
           right={0}

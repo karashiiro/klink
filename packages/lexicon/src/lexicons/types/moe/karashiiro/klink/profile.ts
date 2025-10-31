@@ -122,6 +122,14 @@ const _mainSchema = /*#__PURE__*/ v.record(
       ]),
     ),
     /**
+     * Logo display mode
+     * @default "none"
+     */
+    logoMode: /*#__PURE__*/ v.optional(
+      /*#__PURE__*/ v.literalEnum(["none", "show"]),
+      "none",
+    ),
+    /**
      * Display name
      * @maxLength 100
      */

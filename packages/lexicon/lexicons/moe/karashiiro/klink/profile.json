@@ -54,6 +54,12 @@
               "type": "ref",
               "ref": "#link"
             }
+          },
+          "logoMode": {
+            "type": "string",
+            "description": "Logo display mode",
+            "enum": ["show", "none"],
+            "default": "none"
           }
         }
       }
