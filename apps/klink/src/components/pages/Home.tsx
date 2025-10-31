@@ -294,6 +294,9 @@ export function Home() {
             position="relative"
           >
             <YStack gap="$6" alignItems="center" width="100%" maxWidth={700}>
+              <Paragraph fontSize={24} fontWeight={600}>
+                Make a profile and share links easily!
+              </Paragraph>
               <ExampleCarousel autoRotateInterval={5000} />
 
               {authState.state === "error" && (
