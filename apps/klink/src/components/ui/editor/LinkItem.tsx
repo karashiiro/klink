@@ -90,9 +90,6 @@ export function LinkItem({
           placeholder="Label"
           value={link.label}
           onChange={handleLabelChange}
-          backgroundColor="$secondary"
-          color="$textBody"
-          borderColor="$border"
           size="$3"
         />
         <Input
@@ -100,9 +97,6 @@ export function LinkItem({
           placeholder="URL"
           value={link.href}
           onChange={handleHrefChange}
-          backgroundColor="$secondary"
-          color="$textBody"
-          borderColor="$border"
           size="$3"
         />
         <Button size="$3" backgroundColor="$redBase" onPress={onRemove}>

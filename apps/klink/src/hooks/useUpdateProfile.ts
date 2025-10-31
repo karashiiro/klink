@@ -32,6 +32,7 @@ export interface UpdateProfileForm {
     label: string;
     href: string;
   }>;
+  logoMode: "show" | "none";
 }
 
 export function useUpdateProfile() {
@@ -199,6 +200,7 @@ export function useUpdateProfile() {
           background,
           theme: form.theme,
           links,
+          logoMode: form.logoMode,
         } as Omit<Main, "$type">;
 
         // Use putRecord to update the existing profile (always at "self")

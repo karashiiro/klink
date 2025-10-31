@@ -139,7 +139,7 @@ export function ThemeColorInput() {
             flex={1}
             size="$2"
           >
-            <Slider.Track backgroundColor="$gray8">
+            <Slider.Track>
               <Slider.TrackActive backgroundColor="$blue10" />
             </Slider.Track>
             <Slider.Thumb backgroundColor="white" circular index={0} />
@@ -185,7 +185,7 @@ export function ThemeColorInput() {
             flex={1}
             size="$2"
           >
-            <Slider.Track backgroundColor="$gray8">
+            <Slider.Track>
               <Slider.TrackActive backgroundColor="$blue10" />
             </Slider.Track>
             <Slider.Thumb backgroundColor="white" circular index={0} />

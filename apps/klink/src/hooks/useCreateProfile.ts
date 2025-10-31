@@ -32,6 +32,7 @@ export interface CreateProfileForm {
     label: string;
     href: string;
   }>;
+  logoMode: "show" | "none";
 }
 
 export function useCreateProfile() {
@@ -199,6 +200,7 @@ export function useCreateProfile() {
           background,
           theme: form.theme,
           links,
+          logoMode: form.logoMode,
         } as Omit<Main, "$type">;
 
         const createResponse = await client.post(

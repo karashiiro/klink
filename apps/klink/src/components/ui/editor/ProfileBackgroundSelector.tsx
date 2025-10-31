@@ -54,14 +54,12 @@ export function ProfileBackgroundSelector() {
 
   return (
     <YStack gap="$2">
-      <Paragraph color="$textBody">Background:</Paragraph>
+      <Paragraph>Background:</Paragraph>
       <XStack gap="$2">
         <Button
           size="$3"
           flex={1}
-          backgroundColor={
-            backgroundType === "color" ? "$accent" : "$secondary"
-          }
+          backgroundColor={backgroundType === "color" ? "$accent" : "unset"}
           onPress={() => setBackgroundType("color")}
         >
           Color
@@ -69,7 +67,7 @@ export function ProfileBackgroundSelector() {
         <Button
           size="$3"
           flex={1}
-          backgroundColor={backgroundType === "url" ? "$accent" : "$secondary"}
+          backgroundColor={backgroundType === "url" ? "$accent" : "unset"}
           onPress={() => setBackgroundType("url")}
         >
           Image URL
@@ -77,7 +75,7 @@ export function ProfileBackgroundSelector() {
         <Button
           size="$3"
           flex={1}
-          backgroundColor={backgroundType === "blob" ? "$accent" : "$secondary"}
+          backgroundColor={backgroundType === "blob" ? "$accent" : "unset"}
           onPress={() => setBackgroundType("blob")}
         >
           Upload
@@ -85,9 +83,7 @@ export function ProfileBackgroundSelector() {
         <Button
           size="$3"
           flex={1}
-          backgroundColor={
-            backgroundType === "shader" ? "$accent" : "$secondary"
-          }
+          backgroundColor={backgroundType === "shader" ? "$accent" : "unset"}
           onPress={() => setBackgroundType("shader")}
         >
           Shader
@@ -108,9 +104,6 @@ export function ProfileBackgroundSelector() {
             placeholder="Background Image URL"
             defaultValue={backgroundImageUrl}
             onBlur={handleUrlChange}
-            backgroundColor="$secondary"
-            color="$textBody"
-            borderColor="$border"
             size="$4"
           />
           <Paragraph color="$textMuted" fontSize="$2">
@@ -123,7 +116,7 @@ export function ProfileBackgroundSelector() {
                   key={fit}
                   size="$2"
                   backgroundColor={
-                    backgroundObjectFit === fit ? "$accent" : "$secondary"
+                    backgroundObjectFit === fit ? "$accent" : "unset"
                   }
                   onPress={() => setBackgroundObjectFit(fit)}
                 >
@@ -141,9 +134,6 @@ export function ProfileBackgroundSelector() {
             type="file"
             accept="image/*"
             onChange={handleBackgroundImageFile}
-            backgroundColor="$secondary"
-            color="$textBody"
-            borderColor="$border"
             size="$4"
           />
           {backgroundImageBlob && (
@@ -171,7 +161,7 @@ export function ProfileBackgroundSelector() {
                   key={fit}
                   size="$2"
                   backgroundColor={
-                    backgroundObjectFit === fit ? "$accent" : "$secondary"
+                    backgroundObjectFit === fit ? "$accent" : "unset"
                   }
                   onPress={() => setBackgroundObjectFit(fit)}
                 >

@@ -44,6 +44,7 @@ export interface ProfileAtomData {
     label: string;
     href: string;
   }[];
+  logoMode: "show" | "none";
 }
 
 /**
@@ -270,6 +271,7 @@ export function transformProfileForCreate(
       label: link.label,
       href: link.href,
     })),
+    logoMode: data.logoMode,
   };
 }
 
@@ -301,5 +303,6 @@ export function transformProfileForUpdate(
       label: link.label,
       href: link.href,
     })),
+    logoMode: data.logoMode,
   };
 }

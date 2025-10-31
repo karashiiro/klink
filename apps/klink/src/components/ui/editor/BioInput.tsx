@@ -1,38 +1,22 @@
-import { useState, useEffect, type FormEvent } from "react";
-import { useAtomValue, useSetAtom } from "jotai";
+import { type FormEvent } from "react";
 import { Input } from "@tamagui/input";
 import { bioAtom } from "../../../atoms/profile";
 import type { TextInputChangeEvent } from "react-native";
+import { useProfileTextField } from "../../../hooks/useProfileTextField";
 
 export function BioInput() {
-  const atomValue = useAtomValue(bioAtom);
-  const setBio = useSetAtom(bioAtom);
-  const [localValue, setLocalValue] = useState(atomValue);
-
-  // Sync local value when atom changes (e.g., when profile loads)
-  useEffect(() => {
-    setLocalValue(atomValue);
-  }, [atomValue]);
+  const { value, setValue, commitValue } = useProfileTextField(bioAtom);
 
   const handleChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
-  ) => setLocalValue((e.target as HTMLInputElement).value);
-
-  const handleBlur = () => {
-    if (localValue !== atomValue) {
-      setBio(localValue);
-    }
-  };
+  ) => setValue((e.target as HTMLInputElement).value);
 
   return (
     <Input
       placeholder="Bio (required)"
-      value={localValue}
+      value={value}
       onChange={handleChange}
-      onBlur={handleBlur}
-      backgroundColor="$secondary"
-      color="$textBody"
-      borderColor="$border"
+      onBlur={commitValue}
       size="$4"
     />
   );

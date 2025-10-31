@@ -47,6 +47,7 @@ export const profileAtom = atom({
     label: string;
     href: string;
   }[],
+  logoMode: "none" as "show" | "none",
 });
 
 export const nameAtom = atom(
@@ -136,3 +137,7 @@ export const linkMetadataAtom = atom((get) => {
     };
   });
 });
+
+export const logoModeAtom = focusAtom(profileAtom, (optic) =>
+  optic.prop("logoMode"),
+);

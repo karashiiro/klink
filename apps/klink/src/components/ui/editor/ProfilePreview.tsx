@@ -10,6 +10,7 @@ import {
   fontFamilyAtom,
   stylesheetAtom,
   linksAtom,
+  logoModeAtom,
 } from "../../../atoms/profile";
 import { ProfileDisplay } from "../ProfileDisplay";
 import { BackgroundRenderer } from "../BackgroundRenderer";
@@ -30,6 +31,7 @@ export function ProfilePreview() {
   const fontFamily = useAtomValue(fontFamilyAtom);
   const stylesheet = useAtomValue(stylesheetAtom);
   const links = useAtomValue(linksAtom);
+  const logoMode = useAtomValue(logoModeAtom);
 
   if (!session) return null;
 
@@ -59,6 +61,7 @@ export function ProfilePreview() {
       href: link.href,
       $type: "moe.karashiiro.klink.profile#link",
     })),
+    logoMode,
   };
 
   const backgroundStyle = getBackgroundStyle(

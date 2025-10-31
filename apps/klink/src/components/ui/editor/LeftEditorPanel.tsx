@@ -13,6 +13,7 @@ import { ProfileBackgroundSelector } from "./ProfileBackgroundSelector";
 import { ThemeColorInput } from "./ThemeColorInput";
 import { FontInput } from "./FontInput";
 import { Separator } from "@tamagui/separator";
+import { LogoModeInput } from "./LogoModeInput";
 
 export function LeftEditorPanel() {
   const isOpen = useAtomValue(editorPanelsOpenAtom);
@@ -56,6 +57,8 @@ export function LeftEditorPanel() {
         <NameInput />
         <LocationInput />
         <BioInput />
+        <Separator />
+        <LogoModeInput />
         <Separator />
         <ProfileBackgroundSelector />
         <Separator />

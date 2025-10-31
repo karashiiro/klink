@@ -38,14 +38,14 @@ export function ImageInput({
 
   return (
     <YStack gap="$2">
-      <Paragraph color="$textBody">{label}:</Paragraph>
+      <Paragraph>{label}:</Paragraph>
 
       {/* Mode selection buttons */}
       <XStack gap="$2">
         <Button
           size="$3"
           flex={1}
-          backgroundColor={mode === "url" ? "$accent" : "$secondary"}
+          backgroundColor={mode === "url" ? "$accent" : "unset"}
           onPress={() => setMode("url")}
         >
           URL
@@ -53,7 +53,7 @@ export function ImageInput({
         <Button
           size="$3"
           flex={1}
-          backgroundColor={mode === "upload" ? "$accent" : "$secondary"}
+          backgroundColor={mode === "upload" ? "$accent" : "unset"}
           onPress={() => setMode("upload")}
         >
           Upload
@@ -66,9 +66,6 @@ export function ImageInput({
           placeholder={placeholder}
           value={urlValue}
           onChange={onUrlChange}
-          backgroundColor="$secondary"
-          color="$textBody"
-          borderColor="$border"
           size="$4"
         />
       ) : (
@@ -79,9 +76,6 @@ export function ImageInput({
               type="file"
               accept="image/*"
               onChange={onFileChange}
-              backgroundColor="$secondary"
-              color="$textBody"
-              borderColor="$border"
               size="$4"
             />
           )}

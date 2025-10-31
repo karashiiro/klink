@@ -1,38 +1,22 @@
-import { useState, useEffect, type FormEvent } from "react";
-import { useAtomValue, useSetAtom } from "jotai";
+import { type FormEvent } from "react";
 import { Input } from "@tamagui/input";
 import { nameAtom } from "../../../atoms/profile";
 import type { TextInputChangeEvent } from "react-native";
+import { useProfileTextField } from "../../../hooks/useProfileTextField";
 
 export function NameInput() {
-  const atomValue = useAtomValue(nameAtom);
-  const setName = useSetAtom(nameAtom);
-  const [localValue, setLocalValue] = useState(atomValue);
-
-  // Sync local value when atom changes (e.g., when profile loads)
-  useEffect(() => {
-    setLocalValue(atomValue);
-  }, [atomValue]);
+  const { value, setValue, commitValue } = useProfileTextField(nameAtom);
 
   const handleChange = (
     e: FormEvent<HTMLInputElement> | TextInputChangeEvent,
-  ) => setLocalValue((e.target as HTMLInputElement).value);
-
-  const handleBlur = () => {
-    if (localValue !== atomValue) {
-      setName(localValue);
-    }
-  };
+  ) => setValue((e.target as HTMLInputElement).value);
 
   return (
     <Input
       placeholder="Name (optional)"
-      value={localValue}
+      value={value}
       onChange={handleChange}
-      onBlur={handleBlur}
-      backgroundColor="$secondary"
-      color="$textBody"
-      borderColor="$border"
+      onBlur={commitValue}
       size="$4"
     />
   );

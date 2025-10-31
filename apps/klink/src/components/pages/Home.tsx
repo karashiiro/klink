@@ -200,6 +200,7 @@ export function Home() {
             label: link.label,
             href: link.href,
           })),
+          logoMode: profile.value.logoMode || "none",
         });
       };
 

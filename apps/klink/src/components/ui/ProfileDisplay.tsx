@@ -194,7 +194,7 @@ export function ProfileDisplay({ profileData, handle }: ProfileDisplayProps) {
           )}
         </YStack>
       </Card>
-      {profileData.logoMode !== "none" && <LogoLink />}
+      {profileData.logoMode === "show" && <LogoLink />}
     </YStack>
   );
 }
