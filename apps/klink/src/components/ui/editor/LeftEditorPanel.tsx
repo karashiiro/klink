@@ -12,6 +12,7 @@ import { BioInput } from "./BioInput";
 import { ProfileBackgroundSelector } from "./ProfileBackgroundSelector";
 import { ThemeColorInput } from "./ThemeColorInput";
 import { FontInput } from "./FontInput";
+import { Separator } from "@tamagui/separator";
 
 export function LeftEditorPanel() {
   const isOpen = useAtomValue(editorPanelsOpenAtom);
@@ -55,8 +56,11 @@ export function LeftEditorPanel() {
         <NameInput />
         <LocationInput />
         <BioInput />
+        <Separator />
         <ProfileBackgroundSelector />
+        <Separator />
         <ThemeColorInput />
+        <Separator />
         <FontInput />
       </YStack>
     </Card>
