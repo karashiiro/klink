@@ -260,18 +260,14 @@ export function transformProfileForCreate(
   data: ProfileAtomData,
 ): CreateProfileForm {
   return {
+    ...data,
     profileImage: transformProfileImage(data),
-    name: data.name || undefined,
-    location: data.location || undefined,
-    bio: data.bio,
     background: transformBackgroundForCreate(data),
-    theme: data.theme,
     links: data.links.map((link) => ({
       icon: transformLinkIcon(link.icon),
       label: link.label,
       href: link.href,
     })),
-    logoMode: data.logoMode,
   };
 }
 
@@ -289,12 +285,9 @@ export function transformProfileForUpdate(
   }
 
   return {
+    ...data,
     profileImage: transformProfileImage(data, existingProfile),
-    name: data.name || undefined,
-    location: data.location || undefined,
-    bio: data.bio,
     background: transformBackgroundForUpdate(data, existingProfile),
-    theme: data.theme,
     links: data.links.map((link, index) => ({
       icon: transformLinkIconForUpdate(
         link.icon,
@@ -303,6 +296,5 @@ export function transformProfileForUpdate(
       label: link.label,
       href: link.href,
     })),
-    logoMode: data.logoMode,
   };
 }
