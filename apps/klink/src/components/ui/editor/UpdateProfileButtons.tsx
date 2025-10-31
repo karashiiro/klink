@@ -28,6 +28,7 @@ export function UpdateProfileButtons({
       <Button
         flex={1}
         size="$4"
+        fontWeight={600}
         backgroundColor="$greenBase"
         hoverStyle={{ backgroundColor: "$greenHover" }}
         pressStyle={{ backgroundColor: "$greenPress" }}
@@ -47,6 +48,7 @@ export function UpdateProfileButtons({
       <Button
         flex={1}
         size="$4"
+        fontWeight={600}
         backgroundColor="$blueBase"
         hoverStyle={{ backgroundColor: "$blueHover" }}
         pressStyle={{ backgroundColor: "$bluePress" }}
