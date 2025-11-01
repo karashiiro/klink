@@ -26,6 +26,9 @@ function HomeHeader({ onLoginClick }: { onLoginClick: () => void }) {
   return (
     <YStack
       width="100%"
+      minHeight="5vh"
+      justifyContent="center"
+      alignItems="center"
       paddingVertical="$2"
       paddingHorizontal="$4"
       borderBottomWidth={2}
@@ -98,6 +101,7 @@ function HomeFooter() {
   return (
     <XStack
       width="100%"
+      minHeight="5vh"
       justifyContent="center"
       alignItems="center"
       paddingVertical="$3"
@@ -135,6 +139,7 @@ function HomeLoggedOut() {
         paddingHorizontal="$4"
         alignItems="center"
         width="100%"
+        minHeight="90vh"
         position="relative"
       >
         <YStack gap="$6" alignItems="center" width="100%" maxWidth={700}>
