@@ -1,0 +1,4 @@
+export const TIMING = {
+  CAROUSEL_AUTO_ROTATE_MS: 5000,
+  PROFILE_RELOAD_DELAY_MS: 1000,
+} as const;

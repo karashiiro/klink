@@ -1,6 +1,7 @@
 import { useCallback, useState, useEffect } from "react";
 import { resolveUser, getRecord } from "@kpaste-app/atproto-utils";
 import type { Main } from "@klink-app/lexicon/types";
+import { KLINK_COLLECTION, KLINK_RECORD_KEY } from "../constants";
 
 export interface ProfileRecord {
   uri: string;
@@ -31,9 +32,9 @@ export function useReadProfile(handle?: string): ReadProfileResult {
       // Get the profile record (always at "self")
       const record = await getRecord(
         pdsUrl,
-        "moe.karashiiro.klink.profile",
+        KLINK_COLLECTION,
         did,
-        "self",
+        KLINK_RECORD_KEY,
       );
 
       const profileData: ProfileRecord = {

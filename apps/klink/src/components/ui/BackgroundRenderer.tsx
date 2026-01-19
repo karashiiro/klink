@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ShaderCanvas } from "./ShaderCanvas";
+import { ShaderCanvas } from "./shaderCanvas";
 import { getAtProtoBlobCid, buildAtProtoBlobUrl } from "../../utils/blobUtils";
 import { useSession } from "../../hooks/useSession";
 import type { Background } from "../../utils/backgroundUtils";

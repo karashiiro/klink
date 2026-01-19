@@ -1,5 +1,6 @@
 import type { Blob as AtProtoBlob, LegacyBlob } from "@atcute/lexicons";
 import type { Main } from "@klink-app/lexicon/types";
+import { getAtProtoBlobCid, buildAtProtoBlobUrl } from "./blobUtils";
 
 export type Background =
   | Main["background"]
@@ -43,11 +44,8 @@ export function getBackgroundStyle(
     if (background.value instanceof Blob) {
       imageUrl = URL.createObjectURL(background.value);
     } else {
-      const cleanPdsUrl = pdsUrl.endsWith("/") ? pdsUrl.slice(0, -1) : pdsUrl;
-
-      const blob = background.value;
-      const blobCid = "ref" in blob ? blob.ref.$link : blob.cid;
-      imageUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${blobCid}`;
+      const cid = getAtProtoBlobCid(background.value);
+      imageUrl = buildAtProtoBlobUrl(pdsUrl, did, cid);
     }
   }
 

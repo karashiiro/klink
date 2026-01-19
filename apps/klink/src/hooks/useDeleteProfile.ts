@@ -1,5 +1,10 @@
 import { useCallback, useState } from "react";
 import { useAuth } from "@kpaste-app/atproto-auth";
+import {
+  KLINK_COLLECTION,
+  KLINK_RECORD_KEY,
+  ATPROTO_ENDPOINTS,
+} from "../constants";
 
 export function useDeleteProfile() {
   const { getClient, isAuthenticated, session } = useAuth();
@@ -26,11 +31,11 @@ export function useDeleteProfile() {
     setError(null);
 
     try {
-      const response = await client.post("com.atproto.repo.deleteRecord", {
+      const response = await client.post(ATPROTO_ENDPOINTS.DELETE_RECORD, {
         input: {
           repo: session.did,
-          collection: "moe.karashiiro.klink.profile",
-          rkey: "self", // literal:self means always use "self"
+          collection: KLINK_COLLECTION,
+          rkey: KLINK_RECORD_KEY,
         },
       });
 

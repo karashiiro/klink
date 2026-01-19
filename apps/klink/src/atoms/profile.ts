@@ -3,6 +3,7 @@ import { splitAtom } from "jotai/utils";
 import { focusAtom } from "jotai-optics";
 import type { Main } from "@klink-app/lexicon/types";
 import type { ReadProfileResult } from "../hooks/useReadProfile";
+import { DEFAULT_COLORS } from "../constants";
 
 // Atom for controlling editor panels visibility (both left and right)
 export const editorPanelsOpenAtom = atom(true);
@@ -27,7 +28,7 @@ export const profileAtom = atom({
   background: undefined as Main["background"] | undefined,
   backgroundImageBlob: null as Blob | null,
   backgroundImageUrl: "",
-  backgroundColor: "#1a1a1a",
+  backgroundColor: DEFAULT_COLORS.BACKGROUND,
   backgroundShaderCode: "",
   backgroundType: "color" as "color" | "url" | "blob" | "shader",
   backgroundObjectFit: "cover" as
@@ -37,8 +38,8 @@ export const profileAtom = atom({
     | "scale-down"
     | "none",
   theme: {
-    primaryColor: "#364163",
-    secondaryColor: "#a58431",
+    primaryColor: DEFAULT_COLORS.PRIMARY,
+    secondaryColor: DEFAULT_COLORS.SECONDARY,
     fontFamily: "",
     stylesheet: "",
   },

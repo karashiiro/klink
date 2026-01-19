@@ -21,6 +21,11 @@ import {
 } from "../../atoms/profile";
 import { RocketLaunchIcon } from "@heroicons/react/24/outline";
 import { LogoLink } from "../ui/LogoLink";
+import { DEFAULT_COLORS, TIMING } from "../../constants";
+import {
+  getAtProtoBlobCid,
+  buildAtProtoBlobUrl,
+} from "../../utils/blobUtils";
 
 function HomeHeader({ onLoginClick }: { onLoginClick: () => void }) {
   return (
@@ -146,7 +151,7 @@ function HomeLoggedOut() {
           <Paragraph fontSize={24} fontWeight={600}>
             Make a profile and share links easily!
           </Paragraph>
-          <ExampleCarousel autoRotateInterval={5000} />
+          <ExampleCarousel autoRotateInterval={TIMING.CAROUSEL_AUTO_ROTATE_MS} />
 
           {authState.state === "error" && (
             <Card
@@ -209,13 +214,12 @@ export function Home() {
         let shaderCode = "";
         if (profile.value.background.type === "shader") {
           // Fetch shader blob content
-          const cleanPdsUrl = session.endpoint.url.endsWith("/")
-            ? session.endpoint.url.slice(0, -1)
-            : session.endpoint.url;
-
-          const blob = profile.value.background.value;
-          const blobCid = "ref" in blob ? blob.ref.$link : blob.cid;
-          const blobUrl = `${cleanPdsUrl}/xrpc/com.atproto.sync.getBlob?did=${session.did}&cid=${blobCid}`;
+          const cid = getAtProtoBlobCid(profile.value.background.value);
+          const blobUrl = buildAtProtoBlobUrl(
+            session.endpoint.url,
+            session.did,
+            cid,
+          );
 
           try {
             const response = await fetch(blobUrl);
@@ -240,7 +244,7 @@ export function Home() {
           backgroundColor:
             profile.value.background.type === "color"
               ? profile.value.background.value
-              : "#1a1a1a",
+              : DEFAULT_COLORS.BACKGROUND,
           backgroundShaderCode: shaderCode,
           backgroundType: profile.value.background.type,
           backgroundObjectFit:
@@ -249,8 +253,10 @@ export function Home() {
               ? profile.value.background.objectFit || "cover"
               : "cover",
           theme: {
-            primaryColor: profile.value.theme?.primaryColor || "#364163",
-            secondaryColor: profile.value.theme?.secondaryColor || "#a58431",
+            primaryColor:
+              profile.value.theme?.primaryColor || DEFAULT_COLORS.PRIMARY,
+            secondaryColor:
+              profile.value.theme?.secondaryColor || DEFAULT_COLORS.SECONDARY,
             fontFamily: profile.value.theme?.fontFamily || "",
             stylesheet: profile.value.theme?.stylesheet || "",
           },
@@ -280,7 +286,9 @@ export function Home() {
         <LeftEditorPanel />
         <RightEditorPanel
           onSuccess={async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) =>
+              setTimeout(resolve, TIMING.PROFILE_RELOAD_DELAY_MS),
+            );
             await refetch(session.handle);
           }}
         />

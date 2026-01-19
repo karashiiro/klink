@@ -8,6 +8,7 @@ import { LoadingFallback, AppErrorBoundary } from "@kpaste-app/ui";
 import { resolveUser, getRecord } from "@kpaste-app/atproto-utils";
 import type { Main } from "@klink-app/lexicon/types";
 import { SessionProvider } from "./contexts/SessionProvider";
+import { KLINK_COLLECTION, KLINK_RECORD_KEY } from "./constants";
 
 function reloadOnFailure() {
   // Reload since this is usually due to a redeployment causing chunk load failures
@@ -61,9 +62,9 @@ async function profileLoader({ params }: LoaderFunctionArgs) {
     // Get the profile record (always at "self")
     const record = await getRecord(
       pdsUrl,
-      "moe.karashiiro.klink.profile",
+      KLINK_COLLECTION,
       did,
-      "self",
+      KLINK_RECORD_KEY,
     );
 
     return {
