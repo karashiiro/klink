@@ -22,10 +22,7 @@ import {
 import { RocketLaunchIcon } from "@heroicons/react/24/outline";
 import { LogoLink } from "../ui/LogoLink";
 import { DEFAULT_COLORS, TIMING } from "../../constants";
-import {
-  getAtProtoBlobCid,
-  buildAtProtoBlobUrl,
-} from "../../utils/blobUtils";
+import { getAtProtoBlobCid, buildAtProtoBlobUrl } from "../../utils/blobUtils";
 
 function HomeHeader({ onLoginClick }: { onLoginClick: () => void }) {
   return (
@@ -151,7 +148,9 @@ function HomeLoggedOut() {
           <Paragraph fontSize={24} fontWeight={600}>
             Make a profile and share links easily!
           </Paragraph>
-          <ExampleCarousel autoRotateInterval={TIMING.CAROUSEL_AUTO_ROTATE_MS} />
+          <ExampleCarousel
+            autoRotateInterval={TIMING.CAROUSEL_AUTO_ROTATE_MS}
+          />
 
           {authState.state === "error" && (
             <Card

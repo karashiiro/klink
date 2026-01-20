@@ -118,7 +118,11 @@ export function useShaderProgram(
 
     if (!fromCache) {
       // Compile vertex shader
-      const vertexResult = compileShader(gl, VERTEX_SHADER_SOURCE, gl.VERTEX_SHADER);
+      const vertexResult = compileShader(
+        gl,
+        VERTEX_SHADER_SOURCE,
+        gl.VERTEX_SHADER,
+      );
       if (vertexResult.error || !vertexResult.shader) {
         setResult({
           program: null,
@@ -133,7 +137,11 @@ export function useShaderProgram(
       vertexShader = vertexResult.shader;
 
       // Compile fragment shader
-      const fragmentResult = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
+      const fragmentResult = compileShader(
+        gl,
+        fragmentShaderSource,
+        gl.FRAGMENT_SHADER,
+      );
       if (fragmentResult.error || !fragmentResult.shader) {
         gl.deleteShader(vertexShader);
         setResult({

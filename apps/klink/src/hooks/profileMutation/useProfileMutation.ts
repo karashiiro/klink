@@ -82,7 +82,13 @@ export function useProfileMutation(config: MutationConfig) {
         setLoading(false);
       }
     },
-    [getClient, isAuthenticated, session?.did, config.endpoint, config.errorPrefix],
+    [
+      getClient,
+      isAuthenticated,
+      session?.did,
+      config.endpoint,
+      config.errorPrefix,
+    ],
   );
 
   return { mutateProfile, loading, error };
