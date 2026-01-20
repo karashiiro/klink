@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . && tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -52,6 +52,8 @@
   "devDependencies": {
     "@eslint/js": "^9.38.0",
     "@kpaste-app/tsconfig": "workspace:*",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^19.0.6",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react-swc": "^4.0.1",

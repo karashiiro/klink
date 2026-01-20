@@ -12,7 +12,8 @@
     "test": "pnpm --recursive test",
     "test:run": "pnpm --recursive test:run",
     "test:coverage": "pnpm --recursive test:coverage",
-    "publish-lexicon": "pnpm --filter klink publish-lexicon"
+    "publish-lexicon": "pnpm --filter klink publish-lexicon",
+    "check": "pnpm lint && pnpm test"
   },
   "devDependencies": {
     "prettier": "3.6.2"
