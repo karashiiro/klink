@@ -174,7 +174,7 @@ describe("LinkItem", () => {
         label: "Test",
         href: "https://test.com",
         icon: {
-          $type: "moe.karashiror.klink.profile#urlImage" as const,
+          $type: "moe.karashiiro.klink.profile#urlImage" as const,
           type: "url" as const,
           value: "https://existing-icon.com" as `${string}:${string}`,
         },

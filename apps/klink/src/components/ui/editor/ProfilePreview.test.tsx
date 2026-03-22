@@ -29,7 +29,7 @@ vi.mock("@kpaste-app/atproto-auth", () => ({
 // Mock useEditorBackground
 vi.mock("../../../hooks/useEditorBackground", () => ({
   useEditorBackground: vi.fn(() => ({
-    $type: "moe.karashiror.klink.profile#colorBackground",
+    $type: "moe.karashiiro.klink.profile#colorBackground",
     type: "color",
     value: "#000000",
   })),

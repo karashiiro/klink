@@ -34,7 +34,7 @@ describe("BackgroundRenderer", () => {
   describe("color background", () => {
     it("does not render ShaderCanvas for color backgrounds", () => {
       const background: Background = {
-        $type: "moe.karashiror.klink.profile#colorBackground",
+        $type: "moe.karashiiro.klink.profile#colorBackground",
         type: "color",
         value: "#ff0000",
       };
@@ -48,7 +48,7 @@ describe("BackgroundRenderer", () => {
   describe("URL background", () => {
     it("does not render ShaderCanvas for URL backgrounds", () => {
       const background: Background = {
-        $type: "moe.karashiror.klink.profile#urlBackground",
+        $type: "moe.karashiiro.klink.profile#urlBackground",
         type: "url",
         value: "https://example.com/bg.jpg" as `${string}:${string}`,
       };
@@ -69,7 +69,7 @@ describe("BackgroundRenderer", () => {
       });
 
       const background: Background = {
-        $type: "moe.karashiror.klink.profile#shaderBackground",
+        $type: "moe.karashiiro.klink.profile#shaderBackground",
         type: "shader",
         value: {
           $type: "blob",
@@ -105,7 +105,7 @@ describe("BackgroundRenderer", () => {
       });
 
       const background: Background = {
-        $type: "moe.karashiror.klink.profile#shaderBackground",
+        $type: "moe.karashiiro.klink.profile#shaderBackground",
         type: "shader",
         value: {
           $type: "blob",
@@ -126,7 +126,7 @@ describe("BackgroundRenderer", () => {
 
     it("does not render ShaderCanvas when no pdsUrl/did available for blob reference", () => {
       const background: Background = {
-        $type: "moe.karashiror.klink.profile#shaderBackground",
+        $type: "moe.karashiiro.klink.profile#shaderBackground",
         type: "shader",
         value: {
           $type: "blob",
@@ -152,7 +152,7 @@ describe("BackgroundRenderer", () => {
       globalThis.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
 
       const background: Background = {
-        $type: "moe.karashiror.klink.profile#shaderBackground",
+        $type: "moe.karashiiro.klink.profile#shaderBackground",
         type: "shader",
         value: {
           $type: "blob",

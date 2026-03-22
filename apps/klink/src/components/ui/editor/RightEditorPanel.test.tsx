@@ -90,10 +90,10 @@ describe("RightEditorPanel", () => {
       store.set(editorPanelsOpenAtom, true);
       store.set(mobileActivePanelAtom, "right");
       store.set(currentProfileAtom, {
-        uri: "at://did:plc:test/moe.karashiror.klink.profile/self",
+        uri: "at://did:plc:test/moe.karashiiro.klink.profile/self",
         cid: "abc123",
         value: {
-          $type: "moe.karashiror.klink.profile",
+          $type: "moe.karashiiro.klink.profile",
           bio: "Test",
           background: { type: "color", value: "#000" },
           links: [],
@@ -130,10 +130,10 @@ describe("RightEditorPanel", () => {
       store.set(editorPanelsOpenAtom, true);
       store.set(mobileActivePanelAtom, "right");
       store.set(currentProfileAtom, {
-        uri: "at://did:plc:test/moe.karashiror.klink.profile/self",
+        uri: "at://did:plc:test/moe.karashiiro.klink.profile/self",
         cid: "abc123",
         value: {
-          $type: "moe.karashiror.klink.profile",
+          $type: "moe.karashiiro.klink.profile",
           bio: "Test",
           background: { type: "color", value: "#000" },
           links: [],
