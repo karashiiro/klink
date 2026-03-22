@@ -133,7 +133,7 @@ describe("profile atoms", () => {
         const image = {
           $type: "moe.karashiiro.klink.profile#urlImage" as const,
           type: "url" as const,
-          value: "https://example.com/avatar.jpg",
+          value: "https://example.com/avatar.jpg" as `${string}:${string}`,
         };
         store.set(profileAtom, {
           ...store.get(profileAtom),
@@ -376,6 +376,7 @@ describe("profile atoms", () => {
         $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
         value: {
+          $type: "blob" as const,
           ref: { $link: "bafyreicid" },
           mimeType: "image/png",
           size: 100,
@@ -410,7 +411,7 @@ describe("profile atoms", () => {
       const existingIcon = {
         $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
-        value: { ref: { $link: "cid" }, mimeType: "image/png", size: 50 },
+        value: { $type: "blob" as const, ref: { $link: "cid" }, mimeType: "image/png", size: 50 },
       };
       store.set(currentProfileAtom, {
         uri: "at://...",
@@ -443,7 +444,7 @@ describe("profile atoms", () => {
       const urlIcon = {
         $type: "moe.karashiiro.klink.profile#urlImage" as const,
         type: "url" as const,
-        value: "https://example.com/icon.png",
+        value: "https://example.com/icon.png" as `${string}:${string}`,
       };
       store.set(currentProfileAtom, {
         uri: "at://...",

@@ -51,6 +51,7 @@ describe("backgroundUtils", () => {
           $type: "moe.karashiiro.klink.profile#shaderBackground" as const,
           type: "shader" as const,
           value: {
+            $type: "blob" as const,
             ref: { $link: "bafyrei..." },
             mimeType: "text/plain",
             size: 100,
@@ -114,6 +115,7 @@ describe("backgroundUtils", () => {
           $type: "moe.karashiiro.klink.profile#blobBackground" as const,
           type: "blob" as const,
           value: {
+            $type: "blob" as const,
             ref: { $link: "bafyreicid12345" },
             mimeType: "image/png",
             size: 5000,
@@ -176,6 +178,7 @@ describe("backgroundUtils", () => {
             $type: "moe.karashiiro.klink.profile#blobBackground" as const,
             type: "blob" as const,
             value: {
+              $type: "blob" as const,
               ref: { $link: "bafyreicid" },
               mimeType: "image/png",
               size: 100,
@@ -201,7 +204,7 @@ describe("backgroundUtils", () => {
         const blobBg = {
           $type: "moe.karashiiro.klink.profile#blobBackground" as const,
           type: "blob" as const,
-          value: { ref: { $link: "cid" }, mimeType: "image/png", size: 1 },
+          value: { $type: "blob" as const, ref: { $link: "cid" }, mimeType: "image/png", size: 1 },
           objectFit: "cover",
         };
 
@@ -217,7 +220,7 @@ describe("backgroundUtils", () => {
         const background = {
           $type: "moe.karashiiro.klink.profile#blobBackground" as const,
           type: "blob" as const,
-          value: { ref: { $link: "bafyrei" }, mimeType: "image/png", size: 1 },
+          value: { $type: "blob" as const, ref: { $link: "bafyrei" }, mimeType: "image/png", size: 1 },
           objectFit: "cover",
         };
 

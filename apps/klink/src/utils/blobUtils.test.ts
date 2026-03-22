@@ -5,6 +5,7 @@ describe("blobUtils", () => {
   describe("getAtProtoBlobCid", () => {
     it("extracts CID from modern blob format (ref.$link)", () => {
       const blob = {
+        $type: "blob" as const,
         ref: { $link: "bafyreicid12345" },
         mimeType: "image/png",
         size: 1234,
@@ -23,6 +24,7 @@ describe("blobUtils", () => {
     it("handles various CID formats", () => {
       // CIDv1 base32
       const blobV1 = {
+        $type: "blob" as const,
         ref: {
           $link: "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
         },

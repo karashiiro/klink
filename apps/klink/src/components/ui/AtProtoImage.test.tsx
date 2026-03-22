@@ -66,9 +66,12 @@ describe("AtProtoImage", () => {
       const blobImage = {
         $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
-        ref: { $link: "bafytest123" },
-        mimeType: "image/png",
-        size: 1234,
+        value: {
+          $type: "blob" as const,
+          ref: { $link: "bafytest123" },
+          mimeType: "image/png",
+          size: 1234,
+        },
       };
 
       renderWithProviders(

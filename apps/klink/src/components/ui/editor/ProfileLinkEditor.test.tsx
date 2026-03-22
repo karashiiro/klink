@@ -134,7 +134,7 @@ describe("ProfileLinkEditor", () => {
         value: {
           $type: "moe.karashiiro.klink.profile",
           bio: "Test",
-          background: { type: "color", value: "#000" },
+          background: { $type: "moe.karashiiro.klink.profile#colorBackground" as const, type: "color" as const, value: "#000" },
           links: [],
         },
       });
@@ -175,7 +175,7 @@ describe("ProfileLinkEditor", () => {
         value: {
           $type: "moe.karashiiro.klink.profile",
           bio: "Test",
-          background: { type: "color", value: "#000" },
+          background: { $type: "moe.karashiiro.klink.profile#colorBackground" as const, type: "color" as const, value: "#000" },
           links: [],
         },
       });
