@@ -48,16 +48,36 @@ const ProfileView = lazy(() =>
     .catch(reloadOnFailure),
 );
 
+// Resolve a DID to its handle via the PDS
+async function resolveHandleFromDid(
+  pdsUrl: string,
+  did: string,
+): Promise<string> {
+  const cleanPdsUrl = pdsUrl.endsWith("/") ? pdsUrl.slice(0, -1) : pdsUrl;
+  const url = `${cleanPdsUrl}/xrpc/com.atproto.repo.describeRepo?repo=${encodeURIComponent(did)}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to describe repo: ${res.status}`);
+  }
+  const data = await res.json();
+  return data.handle;
+}
+
 // Profile loader function
 async function profileLoader({ params }: LoaderFunctionArgs) {
   try {
-    const handle = params.handle;
-    if (!handle) {
+    const identifier = params.handle;
+    if (!identifier) {
       throw new Error("Handle is required");
     }
 
-    // Resolve handle to DID and PDS
-    const { did, pdsUrl } = await resolveUser(handle);
+    // Resolve handle/DID to DID and PDS
+    const { did, pdsUrl } = await resolveUser(identifier);
+
+    // If the URL contained a DID, resolve it to the actual handle
+    const handle = identifier.startsWith("did:")
+      ? await resolveHandleFromDid(pdsUrl, did)
+      : identifier;
 
     // Get the profile record (always at "self")
     const record = await getRecord(
