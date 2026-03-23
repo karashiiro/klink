@@ -87,9 +87,9 @@ describe("profileUtils", () => {
     it("returns url transformation for URL profile images", () => {
       const data = createMockProfileData({
         profileImage: {
-          $type: "moe.karashiiro.klink.profile#urlImage",
-          type: "url",
-          value: "https://example.com/avatar.jpg",
+          $type: "moe.karashiiro.klink.profile#urlImage" as const,
+          type: "url" as const,
+          value: "https://example.com/avatar.jpg" as `${string}:${string}`,
         },
       });
 
@@ -106,9 +106,9 @@ describe("profileUtils", () => {
       const data = createMockProfileData({
         profileImageBlob: blob,
         profileImage: {
-          $type: "moe.karashiiro.klink.profile#urlImage",
-          type: "url",
-          value: "https://example.com/old.jpg",
+          $type: "moe.karashiiro.klink.profile#urlImage" as const,
+          type: "url" as const,
+          value: "https://example.com/old.jpg" as `${string}:${string}`,
         },
       });
 
@@ -122,6 +122,7 @@ describe("profileUtils", () => {
         $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
         value: {
+          $type: "blob" as const,
           ref: { $link: "bafyreicid123" },
           mimeType: "image/png",
           size: 100,
@@ -143,7 +144,7 @@ describe("profileUtils", () => {
         profileImage: {
           $type: "moe.karashiiro.klink.profile#blobImage",
           type: "blob",
-          value: { ref: { $link: "old-cid" }, mimeType: "image/png", size: 50 },
+          value: { $type: "blob" as const, ref: { $link: "old-cid" }, mimeType: "image/png", size: 50 },
         },
       });
       const data = createMockProfileData({ profileImageBlob: newBlob });
@@ -187,10 +188,10 @@ describe("profileUtils", () => {
       const data = createMockProfileData({
         backgroundType: "url",
         background: {
-          $type: "moe.karashiiro.klink.profile#urlBackground",
-          type: "url",
-          value: "https://example.com/bg.jpg",
-          objectFit: "cover",
+          $type: "moe.karashiiro.klink.profile#urlBackground" as const,
+          type: "url" as const,
+          value: "https://example.com/bg.jpg" as `${string}:${string}`,
+          objectFit: "cover" as const,
         },
         backgroundObjectFit: "cover",
       });
@@ -261,6 +262,7 @@ describe("profileUtils", () => {
         $type: "moe.karashiiro.klink.profile#shaderBackground" as const,
         type: "shader" as const,
         value: {
+          $type: "blob" as const,
           ref: { $link: "bafyreishader" },
           mimeType: "text/plain",
           size: 200,
@@ -302,6 +304,7 @@ describe("profileUtils", () => {
         $type: "moe.karashiiro.klink.profile#blobBackground" as const,
         type: "blob" as const,
         value: {
+          $type: "blob" as const,
           ref: { $link: "bafyreibg" },
           mimeType: "image/jpeg",
           size: 5000,
@@ -326,10 +329,10 @@ describe("profileUtils", () => {
       const data = createMockProfileData({
         backgroundType: "url",
         background: {
-          $type: "moe.karashiiro.klink.profile#urlBackground",
-          type: "url",
-          value: "https://example.com/new-bg.jpg",
-          objectFit: "cover",
+          $type: "moe.karashiiro.klink.profile#urlBackground" as const,
+          type: "url" as const,
+          value: "https://example.com/new-bg.jpg" as `${string}:${string}`,
+          objectFit: "cover" as const,
         },
         backgroundObjectFit: "contain",
       });
@@ -385,7 +388,7 @@ describe("profileUtils", () => {
       const urlIcon = {
         $type: "moe.karashiiro.klink.profile#urlImage" as const,
         type: "url" as const,
-        value: "https://example.com/icon.jpg",
+        value: "https://example.com/icon.jpg" as `${string}:${string}`,
       };
 
       const result = transformLinkIcon(urlIcon);
@@ -401,6 +404,7 @@ describe("profileUtils", () => {
         $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
         value: {
+          $type: "blob" as const,
           ref: { $link: "bafyreiicon" },
           mimeType: "image/png",
           size: 50,
@@ -432,6 +436,7 @@ describe("profileUtils", () => {
         $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
         value: {
+          $type: "blob" as const,
           ref: { $link: "bafyreiexisting" },
           mimeType: "image/png",
           size: 100,
@@ -447,7 +452,7 @@ describe("profileUtils", () => {
       const existingUrlIcon = {
         $type: "moe.karashiiro.klink.profile#urlImage" as const,
         type: "url" as const,
-        value: "https://example.com/icon.png",
+        value: "https://example.com/icon.png" as `${string}:${string}`,
       };
 
       const result = transformLinkIconForUpdate(undefined, existingUrlIcon);
@@ -461,7 +466,7 @@ describe("profileUtils", () => {
       const existingIcon = {
         $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
-        value: { ref: { $link: "old" }, mimeType: "image/png", size: 50 },
+        value: { $type: "blob" as const, ref: { $link: "old" }, mimeType: "image/png", size: 50 },
       };
 
       const result = transformLinkIconForUpdate(newBlob, existingIcon);
@@ -540,7 +545,7 @@ describe("profileUtils", () => {
       const existingBlob = {
         $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
-        value: { ref: { $link: "existing" }, mimeType: "image/png", size: 100 },
+        value: { $type: "blob" as const, ref: { $link: "existing" }, mimeType: "image/png", size: 100 },
       };
       const existingProfile = createMockExistingProfile({
         profileImage: existingBlob,
@@ -556,7 +561,7 @@ describe("profileUtils", () => {
       const existingIcon = {
         $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
-        value: { ref: { $link: "icon-cid" }, mimeType: "image/png", size: 50 },
+        value: { $type: "blob" as const, ref: { $link: "icon-cid" }, mimeType: "image/png", size: 50 },
       };
       const existingProfile = createMockExistingProfile({
         links: [{ icon: existingIcon, label: "Link 1", href: "https://a.com" }],
@@ -575,7 +580,7 @@ describe("profileUtils", () => {
       const existingIcon = {
         $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
-        value: { ref: { $link: "old-cid" }, mimeType: "image/png", size: 50 },
+        value: { $type: "blob" as const, ref: { $link: "old-cid" }, mimeType: "image/png", size: 50 },
       };
       const existingProfile = createMockExistingProfile({
         links: [{ icon: existingIcon, label: "Link", href: "https://a.com" }],

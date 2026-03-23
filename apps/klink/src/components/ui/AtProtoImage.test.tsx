@@ -45,7 +45,7 @@ describe("AtProtoImage", () => {
   describe("hook integration", () => {
     it("passes URL image to useImageSource", () => {
       const urlImage = {
-        $type: "moe.karashiror.klink.profile#urlImage" as const,
+        $type: "moe.karashiiro.klink.profile#urlImage" as const,
         type: "url" as const,
         value: "https://example.com/avatar.jpg" as `${string}:${string}`,
       };
@@ -64,11 +64,14 @@ describe("AtProtoImage", () => {
 
     it("passes blob image to useImageSource", () => {
       const blobImage = {
-        $type: "moe.karashiror.klink.profile#blobImage" as const,
+        $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
-        ref: { $link: "bafytest123" },
-        mimeType: "image/png",
-        size: 1234,
+        value: {
+          $type: "blob" as const,
+          ref: { $link: "bafytest123" },
+          mimeType: "image/png",
+          size: 1234,
+        },
       };
 
       renderWithProviders(

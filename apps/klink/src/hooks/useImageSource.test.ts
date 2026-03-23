@@ -43,7 +43,7 @@ describe("useImageSource", () => {
     it("handles Blob wrapped in object with type blob", () => {
       const blob = new Blob(["test"], { type: "image/png" });
       const wrappedBlob = {
-        $type: "moe.karashiiro.klink.profile#blobImage",
+        $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
         value: blob,
       };
@@ -81,9 +81,9 @@ describe("useImageSource", () => {
   describe("URL image object handling", () => {
     it("extracts URL from urlImage object", () => {
       const urlImage = {
-        $type: "moe.karashiiro.klink.profile#urlImage",
+        $type: "moe.karashiiro.klink.profile#urlImage" as const,
         type: "url" as const,
-        value: "https://example.com/avatar.jpg",
+        value: "https://example.com/avatar.jpg" as `${string}:${string}`,
       };
 
       const { result } = renderHook(() => useImageSource(urlImage));
@@ -93,10 +93,10 @@ describe("useImageSource", () => {
 
     it("handles URL background type", () => {
       const urlBackground = {
-        $type: "moe.karashiiro.klink.profile#urlBackground",
+        $type: "moe.karashiiro.klink.profile#urlBackground" as const,
         type: "url" as const,
-        value: "https://example.com/bg.jpg",
-        objectFit: "cover",
+        value: "https://example.com/bg.jpg" as `${string}:${string}`,
+        objectFit: "cover" as const,
       };
 
       const { result } = renderHook(() => useImageSource(urlBackground));
@@ -111,9 +111,10 @@ describe("useImageSource", () => {
 
     it("constructs blob URL from ATProto blob reference", () => {
       const blobRef = {
-        $type: "moe.karashiiro.klink.profile#blobImage",
+        $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
         value: {
+          $type: "blob" as const,
           ref: { $link: "bafyreicid12345" },
           mimeType: "image/png",
           size: 1000,
@@ -129,7 +130,7 @@ describe("useImageSource", () => {
 
     it("handles legacy blob format", () => {
       const legacyBlob = {
-        $type: "moe.karashiiro.klink.profile#blobImage",
+        $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
         value: {
           cid: "bafyreilegacy",
@@ -148,9 +149,10 @@ describe("useImageSource", () => {
 
     it("returns null for blob reference when pdsUrl is missing", () => {
       const blobRef = {
-        $type: "moe.karashiiro.klink.profile#blobImage",
+        $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
         value: {
+          $type: "blob" as const,
           ref: { $link: "bafyreicid" },
           mimeType: "image/png",
           size: 100,
@@ -166,9 +168,10 @@ describe("useImageSource", () => {
 
     it("returns null for blob reference when did is missing", () => {
       const blobRef = {
-        $type: "moe.karashiiro.klink.profile#blobImage",
+        $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
         value: {
+          $type: "blob" as const,
           ref: { $link: "bafyreicid" },
           mimeType: "image/png",
           size: 100,
@@ -215,9 +218,10 @@ describe("useImageSource", () => {
 
     it("updates when pdsUrl changes", () => {
       const blobRef = {
-        $type: "moe.karashiiro.klink.profile#blobImage",
+        $type: "moe.karashiiro.klink.profile#blobImage" as const,
         type: "blob" as const,
         value: {
+          $type: "blob" as const,
           ref: { $link: "bafyreicid" },
           mimeType: "image/png",
           size: 100,

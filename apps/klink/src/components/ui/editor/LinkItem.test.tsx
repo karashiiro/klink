@@ -3,15 +3,22 @@ import { screen, fireEvent } from "@testing-library/react";
 import { createStore, atom } from "jotai";
 import { renderWithProviders } from "../../../test/test-utils";
 import { LinkItem } from "./LinkItem";
+import type { Main } from "@klink-app/lexicon/types";
 
 // Mock useImageSource hook
 vi.mock("../../../hooks/useImageSource", () => ({
   useImageSource: vi.fn(() => null),
 }));
 
+type Link = {
+  icon?: Blob | Main["links"][0]["icon"];
+  label: string;
+  href: string;
+};
+
 describe("LinkItem", () => {
-  const createLinkAtom = (initialValue = { label: "", href: "", icon: undefined }) =>
-    atom(initialValue);
+  const createLinkAtom = (initialValue: Link = { label: "", href: "" }) =>
+    atom<Link>(initialValue);
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -33,7 +40,7 @@ describe("LinkItem", () => {
 
     it("displays current label value", () => {
       const store = createStore();
-      const linkAtom = createLinkAtom({ label: "My Website", href: "", icon: undefined });
+      const linkAtom = createLinkAtom({ label: "My Website", href: "" });
 
       renderWithProviders(
         <LinkItem linkAtom={linkAtom} onRemove={vi.fn()} />,
@@ -45,7 +52,7 @@ describe("LinkItem", () => {
 
     it("displays current href value", () => {
       const store = createStore();
-      const linkAtom = createLinkAtom({ label: "", href: "https://example.com", icon: undefined });
+      const linkAtom = createLinkAtom({ label: "", href: "https://example.com" });
 
       renderWithProviders(
         <LinkItem linkAtom={linkAtom} onRemove={vi.fn()} />,
@@ -83,7 +90,7 @@ describe("LinkItem", () => {
   describe("label editing", () => {
     it("updates label when changed", () => {
       const store = createStore();
-      const linkAtom = createLinkAtom({ label: "", href: "", icon: undefined });
+      const linkAtom = createLinkAtom({ label: "", href: "" });
 
       renderWithProviders(
         <LinkItem linkAtom={linkAtom} onRemove={vi.fn()} />,
@@ -101,7 +108,7 @@ describe("LinkItem", () => {
   describe("href editing", () => {
     it("updates href when changed", () => {
       const store = createStore();
-      const linkAtom = createLinkAtom({ label: "", href: "", icon: undefined });
+      const linkAtom = createLinkAtom({ label: "", href: "" });
 
       renderWithProviders(
         <LinkItem linkAtom={linkAtom} onRemove={vi.fn()} />,
@@ -150,7 +157,7 @@ describe("LinkItem", () => {
 
     it("updates icon to URL type when URL entered", () => {
       const store = createStore();
-      const linkAtom = createLinkAtom({ label: "Test", href: "https://test.com", icon: undefined });
+      const linkAtom = createLinkAtom({ label: "Test", href: "https://test.com" });
 
       renderWithProviders(
         <LinkItem linkAtom={linkAtom} onRemove={vi.fn()} />,
@@ -174,7 +181,7 @@ describe("LinkItem", () => {
         label: "Test",
         href: "https://test.com",
         icon: {
-          $type: "moe.karashiror.klink.profile#urlImage" as const,
+          $type: "moe.karashiiro.klink.profile#urlImage" as const,
           type: "url" as const,
           value: "https://existing-icon.com" as `${string}:${string}`,
         },

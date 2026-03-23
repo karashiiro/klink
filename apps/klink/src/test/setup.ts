@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { vi, beforeEach, afterEach } from "vitest";
 import "@testing-library/jest-dom";
 
 // Mock URL.createObjectURL and URL.revokeObjectURL for blob handling
@@ -75,7 +75,7 @@ HTMLCanvasElement.prototype.getContext = vi.fn(
     }
     return null;
   },
-);
+) as unknown as typeof HTMLCanvasElement.prototype.getContext;
 
 // Mock FileReader for shader blob reading
 class MockFileReader {

@@ -53,7 +53,7 @@ describe("ProfileImageInput", () => {
       store.set(profileAtom, {
         ...profile,
         profileImage: {
-          $type: "moe.karashiror.klink.profile#urlImage",
+          $type: "moe.karashiiro.klink.profile#urlImage",
           type: "url",
           value: "https://example.com/avatar.jpg",
         },
@@ -90,7 +90,7 @@ describe("ProfileImageInput", () => {
       store.set(profileAtom, {
         ...profile,
         profileImage: {
-          $type: "moe.karashiror.klink.profile#urlImage",
+          $type: "moe.karashiiro.klink.profile#urlImage",
           type: "url",
           value: "https://existing.com/image.jpg",
         },
@@ -153,11 +153,14 @@ describe("ProfileImageInput", () => {
       store.set(profileAtom, {
         ...profile,
         profileImage: {
-          $type: "moe.karashiror.klink.profile#blobImage",
-          type: "blob",
-          ref: { $link: "bafytest123" },
-          mimeType: "image/png",
-          size: 1234,
+          $type: "moe.karashiiro.klink.profile#blobImage" as const,
+          type: "blob" as const,
+          value: {
+            $type: "blob" as const,
+            ref: { $link: "bafytest123" },
+            mimeType: "image/png",
+            size: 1234,
+          },
         },
         profileImageBlob: null,
       });
@@ -179,7 +182,7 @@ describe("ProfileImageInput", () => {
         ...profile,
         profileImageBlob: blob,
         profileImage: {
-          $type: "moe.karashiror.klink.profile#urlImage",
+          $type: "moe.karashiiro.klink.profile#urlImage",
           type: "url",
           value: "https://example.com/avatar.jpg",
         },
@@ -228,7 +231,7 @@ describe("ProfileImageInput", () => {
       store.set(profileAtom, {
         ...profile,
         profileImage: {
-          $type: "moe.karashiror.klink.profile#urlImage",
+          $type: "moe.karashiiro.klink.profile#urlImage",
           type: "url",
           value: "https://new-external.com/image.png",
         },
